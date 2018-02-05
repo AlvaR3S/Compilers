@@ -88,27 +88,34 @@ public class Lexer {
     }
     
     public static void main(String[] args) {
-        String input = "a + hat + 100 + 20 - 30$"; //the input that will be tested
+        int i = 1;
+        String input = "a + hat + 100 + 20 - 30$"
+                + "T > l >$"; //the input that will be tested
         
         boolean t = true;
        
-        while(t == true) {
+        while(t = true) {
             
-            int i = 1;
-            System.out.println("LEXER: Lexing program " + i + "...");
-            i++; //Loops title starting from 1
-            
+             
+
             // Outputs a stream of tokens from the given input
             ArrayList<Token> tokens = lex(input);
+            System.out.println("LEXER: Lexing program " + i + "...");
             for(Token token : tokens) {
-                if(token.type == EOP){ // Lex ends program is "$" is found
+                
+                if(token.type == EOP){ // Lex ends program when "$" is found
                     System.out.println("LEXER:" + token);
-                    System.out.println("LEXER: Lex completed successfully");
+                    System.out.println("LEXER: Lex completed successfully\n\n\n");
+                    i = i + 1;
+                    System.out.println("LEXER: Lexing program " + i + "...");
                 } else {
-                    System.out.println("LEXER:" + token); // Prints out tokens
+                    System.out.println("LEXER:" + token); // Prints out tokens  
+                    
                 }
             }
-            t = false;
-        } 
+            break;
+            
+        }  
+         
     }
 }
