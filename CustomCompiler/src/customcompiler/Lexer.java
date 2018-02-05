@@ -5,6 +5,7 @@
  */
 package customcompiler;
 
+import static customcompiler.Lexer.TokenType.EOP;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -77,6 +78,9 @@ public class Lexer {
                 tokens.add(new Token(TokenType.digit, matcher.group(TokenType.digit.name())));            
             } else if(matcher.group(TokenType.symbol.name()) != null) {
                 tokens.add(new Token(TokenType.symbol, matcher.group(TokenType.symbol.name())));            
+            } else if(matcher.group(TokenType.EOP.name()) != null) {
+                tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name())));
+                
             }
         }
     
@@ -84,20 +88,26 @@ public class Lexer {
     }
     
     public static void main(String[] args) {
-        String input = "a + hat + 100 + 20 - 30"; //the input that will be tested
+        String input = "a + hat + 100 + 20 - 30$"; //the input that will be tested
         
-        
-      
         boolean t = true;
+       
         while(t == true) {
+            
             int i = 1;
             System.out.println("LEXER: Lexing program " + i + "...");
-            i++;
+            i++; //Loops title starting from 1
             
             // Outputs a stream of tokens from the given input
             ArrayList<Token> tokens = lex(input);
-            for(Token token : tokens)
-                System.out.println("LEXER:" + token);
+            for(Token token : tokens) {
+                if(token.type == EOP){ // Lex ends program is "$" is found
+                    System.out.println("LEXER:" + token);
+                    System.out.println("LEXER: Lex completed successfully");
+                } else {
+                    System.out.println("LEXER:" + token); // Prints out tokens
+                }
+            }
             t = false;
         } 
     }
