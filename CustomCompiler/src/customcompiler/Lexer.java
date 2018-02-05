@@ -17,7 +17,20 @@ public class Lexer {
     
     // Defining our token types with their corresponding expression names 
     public static enum TokenType {
-        digit("-?[0-9]+"), symbol("[*|/|+|-]"), space("[ \t\f\r\n]+");
+        
+        
+        EOP("[$]"),
+        
+        CHAR("[a|b|c|d|e|f|g|h|i|j|k|l|"
+                + "m|n|o|p|q|r|s|t|u"
+                + "|v|w|x|y|z]"),
+        
+        digit("[1-9][0-9]*"), 
+        
+        symbol("[*|/|+|-]"), 
+        
+        space("[ \t\f\r\n]+");
+        
         
         public final String pattern;
         
@@ -58,10 +71,12 @@ public class Lexer {
         while(matcher.find()) {
             if(matcher.group(TokenType.space.name()) != null) 
                 continue;                
-            else if(matcher.group(TokenType.symbol.name()) != null) {
-                tokens.add(new Token(TokenType.symbol, matcher.group(TokenType.symbol.name())));             
+            else if(matcher.group(TokenType.CHAR.name()) != null) {
+                tokens.add(new Token(TokenType.CHAR, matcher.group(TokenType.CHAR.name())));             
             } else if(matcher.group(TokenType.digit.name()) != null) {
                 tokens.add(new Token(TokenType.digit, matcher.group(TokenType.digit.name())));            
+            } else if(matcher.group(TokenType.symbol.name()) != null) {
+                tokens.add(new Token(TokenType.symbol, matcher.group(TokenType.symbol.name())));            
             }
         }
     
@@ -69,11 +84,21 @@ public class Lexer {
     }
     
     public static void main(String[] args) {
-        String input = "100 + 20 - 30"; //the input that will be tested
+        String input = "a + hat + 100 + 20 - 30"; //the input that will be tested
         
-        // Outputs a stream of tokens from the given input
-        ArrayList<Token> tokens = lex(input);
-        for(Token token : tokens) 
-            System.out.println("LEXER:" + token);
+        
+      
+        boolean t = true;
+        while(t == true) {
+            int i = 1;
+            System.out.println("LEXER: Lexing program " + i + "...");
+            i++;
+            
+            // Outputs a stream of tokens from the given input
+            ArrayList<Token> tokens = lex(input);
+            for(Token token : tokens)
+                System.out.println("LEXER:" + token);
+            t = false;
+        } 
     }
 }
