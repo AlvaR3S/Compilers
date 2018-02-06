@@ -146,16 +146,18 @@ public class Lexer extends javax.swing.JFrame {
         typeWhile("while"),
         
         // Identifiers
+        identifier("[a-z][a-z|A-Z|0-9|_]+"),
         
         // Booleans
         boolvalFalse("false"),
         boolvalTrue("true"),
         
         // Letters
-        CHAR("[a-z][A-Z]"), 
+        CHAR("[a-z|A-Z]"), 
+        
         
         // Numbers
-        digit("[1-9][0-9]+"), 
+        digit("[0-9]"), 
         
         
         // --------------------|Symbols|--------------------------- \\
@@ -340,6 +342,8 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.boolvalFalse, matcher.group(TokenType.boolvalFalse.name()))); 
             } else if(matcher.group(TokenType.boolvalTrue.name()) != null) {
                 tokens.add(new Token(TokenType.boolvalTrue, matcher.group(TokenType.boolvalTrue.name()))); 
+            } else if(matcher.group(TokenType.identifier.name()) != null) {
+                tokens.add(new Token(TokenType.identifier, matcher.group(TokenType.identifier.name()))); 
             } else if(matcher.group(TokenType.CHAR.name()) != null) {
                 tokens.add(new Token(TokenType.CHAR, matcher.group(TokenType.CHAR.name())));             
             } else if(matcher.group(TokenType.digit.name()) != null) {
@@ -664,7 +668,7 @@ public class Lexer extends javax.swing.JFrame {
         int errorCount = 0;
         int warningCount = 0;
       
-        if((input.isEmpty()) || (input.contains(" "))) { //Error if there is no input
+        if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
             outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
