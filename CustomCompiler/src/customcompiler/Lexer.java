@@ -11,6 +11,8 @@ import static customcompiler.Lexer.TokenType.openBracket;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -23,8 +25,63 @@ public class Lexer extends javax.swing.JFrame {
      */
     public Lexer() {
         initComponents();
-        
+        buttonChange();
+          
     }
+
+    private void buttonChange() {
+        // Starts with buttons turned off
+        clearInput.setEnabled(false);
+        clearOutput.setEnabled(false);
+        clearAll.setEnabled(false);
+        
+        // Checks to see if outputArea is empty or not, then changes button
+        outputArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                outputChanged();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                outputChanged();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                outputChanged();
+            }
+            public void outputChanged() {
+                if(outputArea.getText().isEmpty()) {
+                    clearOutput.setEnabled(false);   
+                    clearAll.setEnabled(false);
+                } else {
+                    clearOutput.setEnabled(true);
+                    clearAll.setEnabled(true);
+                }
+            }
+        });
+        
+        // Checks to see if inputArea is empty or not, then changes button
+        inputArea.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                inputChanged();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                inputChanged();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                inputChanged();
+            }
+            public void inputChanged() {
+                if(inputArea.getText().isEmpty()) {
+                    clearInput.setEnabled(false);
+                    clearAll.setEnabled(false);
+                } else {
+                    clearInput.setEnabled(true);
+                    clearAll.setEnabled(true);
+                }
+            }
+        });
+    }
+
+   
+    
     // Defining our token typeS with their corresponding expression names 
     public static enum TokenType {
         
@@ -88,6 +145,8 @@ public class Lexer extends javax.swing.JFrame {
         typeSuper("super"),
         typeWhile("while"),
         
+        // Identifiers
+        
         // Booleans
         boolvalFalse("false"),
         boolvalTrue("true"),
@@ -130,6 +189,8 @@ public class Lexer extends javax.swing.JFrame {
         // Semicolon and colon
         SEMICOLON(";"),
         COLON(":"),
+        
+        // Comments
         
         // Whitespace
         space("[ \t\f\r\n+]");
@@ -324,6 +385,7 @@ public class Lexer extends javax.swing.JFrame {
    
         return tokens;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -345,15 +407,15 @@ public class Lexer extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        inputArea = new javax.swing.JTextArea();
+        runCode = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        outputArea = new javax.swing.JTextArea();
+        clearOutput = new javax.swing.JButton();
+        clearInput = new javax.swing.JButton();
+        clearAll = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -408,18 +470,20 @@ public class Lexer extends javax.swing.JFrame {
         jToggleButton1.setText("jToggleButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAutoRequestFocus(false);
+        setLocation(new java.awt.Point(300, 23));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        inputArea.setColumns(20);
+        inputArea.setRows(5);
+        jScrollPane2.setViewportView(inputArea);
 
-        jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton1.setText("Run");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        runCode.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        runCode.setText("Run");
+        runCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                runCodeActionPerformed(evt);
             }
         });
 
@@ -429,31 +493,31 @@ public class Lexer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel1.setText("Input");
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
+        outputArea.setColumns(20);
+        outputArea.setRows(5);
+        jScrollPane3.setViewportView(outputArea);
 
-        jButton2.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton2.setText("Clear Output");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        clearOutput.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        clearOutput.setText("Clear Output");
+        clearOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                clearOutputActionPerformed(evt);
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton3.setText("Clear Input");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        clearInput.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        clearInput.setText("Clear Input");
+        clearInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                clearInputActionPerformed(evt);
             }
         });
 
-        jButton4.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton4.setText("Clear All");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        clearAll.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        clearAll.setText("Clear All");
+        clearAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                clearAllActionPerformed(evt);
             }
         });
 
@@ -477,36 +541,34 @@ public class Lexer extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(184, 184, 184))
+                .addGap(166, 166, 166))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(254, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(208, 208, 208))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(82, 82, 82)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(149, 149, 149))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(76, 76, 76))))
+                .addGap(156, 156, 156)
+                .addComponent(clearInput)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(clearOutput)
+                .addGap(149, 149, 149))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(119, 119, 119)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton1))
+                        .addGap(59, 59, 59)
+                        .addComponent(runCode))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(jButton4)))
+                        .addGap(49, 49, 49)
+                        .addComponent(clearAll)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -514,32 +576,32 @@ public class Lexer extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(clearOutput)
+                    .addComponent(clearInput))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addComponent(jButton5))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(runCode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)))
-                .addGap(137, 137, 137))
+                        .addComponent(clearAll)))
+                .addGap(42, 42, 42))
         );
 
-        jButton1.getAccessibleContext().setAccessibleName("Lex");
-        jButton1.getAccessibleContext().setAccessibleDescription("");
+        runCode.getAccessibleContext().setAccessibleName("Lex");
+        runCode.getAccessibleContext().setAccessibleDescription("");
+        clearOutput.getAccessibleContext().setAccessibleName("ClearOutput");
 
         jMenu1.setText("File");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -569,7 +631,7 @@ public class Lexer extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -579,43 +641,56 @@ public class Lexer extends javax.swing.JFrame {
         // TODO add your handling code here:
     }                                      
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        jTextArea2.setText(null);
-        jTextArea3.setText(null);        // TODO add your handling code here:
+    private void clearAllActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        inputArea.setText(null);
+        outputArea.setText(null);       
     }                                        
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        jTextArea2.setText(null);        // TODO add your handling code here:
-    }                                        
+    private void clearInputActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        inputArea.setText(null);       
+    }                                          
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        jTextArea3.setText(null);        // TODO add your handling code here:
-    }                                        
+    private void clearOutputActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        outputArea.setText(null);       
+    }                                           
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void runCodeActionPerformed(java.awt.event.ActionEvent evt) {                                        
 
         int i = 1;
-
-        //the input that will be tested
-
-        // Outputs a stream of tokens from the given input
-        ArrayList<Token> tokens = lex(jTextArea2.getText());
-        for(Token token : tokens) {
-            if(token.type == openBracket) {
-                jTextArea3.append("LEXER: Lexing program " + i + "...\n");
-                i = i + 1;
+        
+        String input = inputArea.getText();
+        String output = outputArea.getText();
+        
+        int errorCount = 0;
+        int warningCount = 0;
+      
+        if((input.isEmpty()) || (input.contains(" "))) { //Error if there is no input
+            outputArea.append("~ERROR: No input found~\n");
+            errorCount++;
+            outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
+                    + "and [" + errorCount + "] Error(s).\n\n"); 
+        } else if(!(input.endsWith("$"))) {
+            outputArea.append("~ERROR: Incorrect syntax. Must end with '$'~\n");
+            warningCount++;
+            outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
+                    + "and [" + errorCount + "] Error(s).\n\n"); 
+        } else {
+            // Outputs a stream of tokens from the given input
+            ArrayList<Token> tokens = lex(input);
+            for(Token token : tokens) {
+                if(token.type == openBracket) {
+                    outputArea.append("LEXER: Lexing program " + i + "...\n");
+                    i = i + 1; // Increment Lex program count
+                }
+                if(token.type == EOP){ // Lex ends program when "$" is found
+                    outputArea.append("LEXER:" + token + "\n");
+                    outputArea.append("LEXER: Lex completed successfully\n\n");
+                } else {
+                    outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+                }
             }
-            if(token.type == EOP){ // Lex ends program when "$" is found
-                jTextArea3.append("LEXER:" + token + "\n");
-                jTextArea3.append("LEXER: Lex completed successfully\n\n");
-
-            } else {
-                jTextArea3.append("LEXER:" + token + "\n"); // Prints out tokens
-            }
-        }
-        // TODO add your handling code here:
-
-    }                                        
+        } 
+    }                                       
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
@@ -624,32 +699,27 @@ public class Lexer extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
-        jTextArea2.append("CODE EXAMPLE");
+        inputArea.append("{}$");
     }                                        
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        //</editor-fold>
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Lexer().setVisible(true);
+                
             }
         });
+       
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton clearAll;
+    private javax.swing.JButton clearInput;
+    private javax.swing.JButton clearOutput;
+    private javax.swing.JTextArea inputArea;
     private javax.swing.JButton jButton5;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
@@ -668,8 +738,8 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JTextArea outputArea;
+    private javax.swing.JButton runCode;
     // End of variables declaration                   
 }
