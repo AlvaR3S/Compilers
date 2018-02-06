@@ -9,3 +9,6 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 You will need to download Netbeans and Java JDK 8. [Download them here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+
+#### How to run the app
+Click on the CustomCompilers file. Next download the file and you will be able to run it on your computer.
