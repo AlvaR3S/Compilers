@@ -7,7 +7,6 @@ package customcompiler;
 
 
 import static customcompiler.Lexer.TokenType.EOP;
-import static customcompiler.Lexer.TokenType.openBracket;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -218,6 +217,16 @@ public class Lexer extends javax.swing.JFrame {
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type.name());
         }
+    }
+    
+    // Allows a string to be placed before a desired string
+    public static String before(String value, String a) {
+        // Return substring containing all characters before a string.
+        int posA = value.indexOf(a);
+        if (posA == -1) {
+            return "";
+        }
+        return value.substring(0, posA);
     }
     
     
@@ -716,46 +725,46 @@ public class Lexer extends javax.swing.JFrame {
         int warningCount = 0;
         
         boolean lexComplete = false;
-        boolean endToken = false;
-        boolean startToken = false;
+        //boolean endToken = false;
+        boolean errorToken = false;
       
         if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
         } else {
+            
+                
+            outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+            
+
             // Outputs a stream of tokens from the given input
             ArrayList<Token> tokens = lex(input);
             for(Token token : tokens) {
-                if(0 <= token.data.indexOf(input.charAt(0))) {
-                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                     // Increment Lex program count
-                    i = i + 1;
-                }
+                int index = token.data.indexOf("$");
+                boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
                 
-                if(!(input.endsWith("$"))) {
-                    outputArea.append("LEXER:" + token + "\n");
-                    endToken = true;
-                    warningCount++;
-                }
-                
-                 if((warningCount == 0) && (errorCount == 0)) {
-                    outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
-                    if(token.type == EOP) {
-                        outputArea.append("LEXER: Lex completed successfully\n\n");
+                outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+              
+                if((warningCount == 0) && (errorCount == 0)) {
+                        if(token.type == EOP) {
+                            outputArea.append("LEXER: Lex completed successfully\n\n");
+                        }
                     }
+               
+                if(moreThanOnce == true){
+                    i++;
+                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
                 }
-                
-                
                 
                
-                
             }
             
+            
         } 
-        if(endToken == true) {
-            outputArea.append("~ERROR: Incorrect syntax. Must end with '$'~\n\n");
-        }
-       
+        if(errorToken == true) {
+                outputArea.append("\nLEXER Error: Unrecognized Token.\n");
+               
+            }
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                     + "and [" + errorCount + "] Error(s).\n\n"); 
     }                                       
@@ -771,8 +780,8 @@ public class Lexer extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.append("{}$\n" +
             "{{{{{{}}}}}}$\n" +
-            "{{{{{{}}} /* comments are ignored */ }}}}$\n" +
-            "{ /* comments are still ignored */ int @}$");
+            "{{{{{{}}}}}}}$\n" +
+            "{int @}$");
     }                                        
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
