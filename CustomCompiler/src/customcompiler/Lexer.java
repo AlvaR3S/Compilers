@@ -84,8 +84,6 @@ public class Lexer extends javax.swing.JFrame {
     // Defining our token keywordS with their corresponding expression names 
     public static enum TokenType {
         
-        
-        
         // -----------------|End of Program Marker|--------------------- \\
         EOP("[$]"),
         
@@ -731,11 +729,10 @@ public class Lexer extends javax.swing.JFrame {
         if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
-        } else {
             
+        } else {           
                 
             outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-            
 
             // Outputs a stream of tokens from the given input
             ArrayList<Token> tokens = lex(input);
@@ -746,28 +743,25 @@ public class Lexer extends javax.swing.JFrame {
                 outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
               
                 if((warningCount == 0) && (errorCount == 0)) {
-                        if(token.type == EOP) {
-                            outputArea.append("LEXER: Lex completed successfully\n\n");
-                        }
+                    if(token.type == EOP) {
+                        outputArea.append("LEXER: Lex completed successfully\n\n");
                     }
+                }
                
-                if(moreThanOnce == true){
+                if(moreThanOnce == true) {
                     i++;
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                }
-                
-               
+                }  
             }
-            
-            
         } 
+        
         if(errorToken == true) {
-                outputArea.append("\nLEXER Error: Unrecognized Token.\n");
-               
-            }
+            outputArea.append("\nLEXER Error: Unrecognized Token.\n");       
+        }
+        
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                     + "and [" + errorCount + "] Error(s).\n\n"); 
-    }                                       
+        }                                       
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.exit(0);
@@ -775,7 +769,7 @@ public class Lexer extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.append("{}$");
-    }                                        
+    }                               
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.append("{}$\n" +
@@ -812,7 +806,7 @@ public class Lexer extends javax.swing.JFrame {
             "    }\n" +
             "}$");
     }                                        
-
+    
     /**
      * @param args the command line arguments
      */
