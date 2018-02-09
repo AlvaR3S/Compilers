@@ -79,334 +79,8 @@ public class Lexer extends javax.swing.JFrame {
         });
     }
 
-   
-    
-    // Defining our token keywordS with their corresponding expression names 
-    public static enum TokenType {
-        
-        // -----------------|End of Program Marker|--------------------- \\
-        EOP("[$]"),
-        
-        
-        // -------------|Keywords|Numbers|Letters|Booleans|---------------- \\
-        // Keywords
-        keywordInt("int"),
-        keywordString("String"),
-        keywordBoolean("boolean"),
-        keywordAbstract("abstract"),
-        keywordContinue("continue"),
-        keywordFor("for"),
-        keywordNew("new"),
-        keywordSwitch("switch"),
-        keywordAssert("assert"),
-        keywordDefault("default"),
-        keywordGoto("goto"),
-        keywordPackage("package"),
-        keywordSynchronized("synchronized"),
-        keywordDo("do"),
-        keywordIf("if"),
-        keywordPrivate("private"),
-        keywordThis("this"),
-        keywordBreak("break"),
-        keywordDouble("double"),
-        keywordImplements("implements"),
-        keywordProtected("protected"),
-        keywordThrow("throw"),
-        keywordByte("byte"),
-        keywordElse("else"),
-        keywordImport("import"),
-        keywordPublic("public"),
-        keywordThrows("throws"),
-        keywordCase("case"),
-        keywordEnum("enum"),
-        keywordInstanceof("instanceof"),
-        keywordReturn("return"),
-        keywordTransient("transient"),
-        keywordCatch("catch"),
-        keywordExtends("extends"),
-        keywordShort("short"),
-        keywordTry("try"),
-        keywordChar("char"),
-        keywordFinal("final"),
-        keywordInterface("interface"),
-        keywordStatic("static"),
-        keywordVoid("void"),
-        keywordClass("class"),
-        keywordFinally("finally"),
-        keywordLong("long"),
-        keywordStrictfp("strictfp"),
-        keywordVolatile("volatile"),
-        keywordConst("const"),
-        keywordFloat("float"),
-        keywordNative("native"),
-        keywordSuper("super"),
-        keywordWhile("while"),
-        
-        // Identifiers
-        identifier("[a-z][a-z|A-Z|0-9|_]+"),
-        
-        // Booleans
-        boolvalFalse("false"),
-        boolvalTrue("true"),
-        
-        // Letters
-        CHAR("[a-z|A-Z]"), 
-        
-        
-        // Numbers
-        digit("[0-9]"), 
-        
-        
-        // --------------------|Symbols|--------------------------- \\
-        // Assignment Operator
-        intopAssignment("="),
-        
-        // Arithmetic Operator
-        intopRemainder("[%]"),
-        intopSubstraction("[-]"),
-        intopAddition("[+]"),
-        intopMultiplication("[*]"), 
-        intopDivision("[/]"),
-        
-        // Unary Operator
-        boolopNotEqualTo("!="),
-        boolopGreaterThan(">"),
-        boolopLessThan("<"),
-        boolopAND("&&"),
-        
-        // Brackets
-        openBracket("[{]"),
-        closeBracket("[}]"),
-        
-        // Parenthesis
-        openParenthesis("[(]"),
-        closeParenthesis("[)]"),
-        
-        // Quotation Mark
-        QUOTE("\""),
-        
-        // Semicolon and colon
-        SEMICOLON(";"),
-        COLON(":"),
-        
-        // Comments
-        
-        // Whitespace
-        space("[ \t\f\r\n+]");
-        
-        public final String pattern;
-        
-        private TokenType(String pattern) {
-            this.pattern = pattern;
-        }
-    }
-    
-    // Stores token type and data
-    public static class Token {
-        public TokenType type;
-        public String data;
-        
-        public Token(TokenType type, String data) {
-            this.type = type;
-            this.data = data;
-        }
-        
-        @Override
-        public String toString() { // Structures token type and data for output
-            return String.format("\"%s\" --> [%s]", data, type.name());
-        }
-    }
-    
-    // Allows a string to be placed before a desired string
-    public static String before(String value, String a) {
-        // Return substring containing all characters before a string.
-        int posA = value.indexOf(a);
-        if (posA == -1) {
-            return "";
-        }
-        return value.substring(0, posA);
-    }
-    
-    
-    public static ArrayList<Token> lex(String input) {
-        // Returns tokens using the stored and formatted token information
-        ArrayList<Token> tokens = new ArrayList<Token>(); 
-        
-        // Lexer takes the input, finds the patterns and places them into token format
-        StringBuffer tokenPatternsBuffer = new StringBuffer();
-        for (TokenType tokenType : TokenType.values())
-            tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-        Pattern tokenPatterns = Pattern.compile(new String(tokenPatternsBuffer.substring(1)));
-        
-        // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
-        Matcher matcher = tokenPatterns.matcher(input);
-        while(matcher.find()) {
-            if(matcher.group(TokenType.space.name()) != null) 
-                continue;                
-            else if(matcher.group(TokenType.keywordInt.name()) != null) {
-                tokens.add(new Token(TokenType.keywordInt, matcher.group(TokenType.keywordInt.name()))); 
-            } else if(matcher.group(TokenType.keywordString.name()) != null) {
-                tokens.add(new Token(TokenType.keywordString, matcher.group(TokenType.keywordString.name()))); 
-            } else if(matcher.group(TokenType.keywordBoolean.name()) != null) {
-                tokens.add(new Token(TokenType.keywordBoolean, matcher.group(TokenType.keywordBoolean.name()))); 
-            } else if(matcher.group(TokenType.keywordAbstract.name()) != null) {
-                tokens.add(new Token(TokenType.keywordAbstract, matcher.group(TokenType.keywordAbstract.name()))); 
-            } else if(matcher.group(TokenType.keywordContinue.name()) != null) {
-                tokens.add(new Token(TokenType.keywordContinue, matcher.group(TokenType.keywordContinue.name()))); 
-            } else if(matcher.group(TokenType.keywordFor.name()) != null) {
-                tokens.add(new Token(TokenType.keywordFor, matcher.group(TokenType.keywordFor.name()))); 
-            } else if(matcher.group(TokenType.keywordNew.name()) != null) {
-                tokens.add(new Token(TokenType.keywordNew, matcher.group(TokenType.keywordNew.name()))); 
-            } else if(matcher.group(TokenType.keywordSwitch.name()) != null) {
-                tokens.add(new Token(TokenType.keywordSwitch, matcher.group(TokenType.keywordSwitch.name()))); 
-            } else if(matcher.group(TokenType.keywordAssert.name()) != null) {
-                tokens.add(new Token(TokenType.keywordAssert, matcher.group(TokenType.keywordAssert.name()))); 
-            } else if(matcher.group(TokenType.keywordDefault.name()) != null) {
-                tokens.add(new Token(TokenType.keywordDefault, matcher.group(TokenType.keywordDefault.name()))); 
-            } else if(matcher.group(TokenType.keywordGoto.name()) != null) {
-                tokens.add(new Token(TokenType.keywordGoto, matcher.group(TokenType.keywordGoto.name()))); 
-            } else if(matcher.group(TokenType.keywordPackage.name()) != null) {
-                tokens.add(new Token(TokenType.keywordPackage, matcher.group(TokenType.keywordPackage.name()))); 
-            } else if(matcher.group(TokenType.keywordSynchronized.name()) != null) {
-                tokens.add(new Token(TokenType.keywordSynchronized, matcher.group(TokenType.keywordSynchronized.name()))); 
-            } else if(matcher.group(TokenType.keywordDo.name()) != null) {
-                tokens.add(new Token(TokenType.keywordDo, matcher.group(TokenType.keywordDo.name()))); 
-            } else if(matcher.group(TokenType.keywordIf.name()) != null) {
-                tokens.add(new Token(TokenType.keywordIf, matcher.group(TokenType.keywordIf.name()))); 
-            } else if(matcher.group(TokenType.keywordPrivate.name()) != null) {
-                tokens.add(new Token(TokenType.keywordPrivate, matcher.group(TokenType.keywordPrivate.name()))); 
-            } else if(matcher.group(TokenType.keywordThis.name()) != null) {
-                tokens.add(new Token(TokenType.keywordThis, matcher.group(TokenType.keywordThis.name()))); 
-            } else if(matcher.group(TokenType.keywordBreak.name()) != null) {
-                tokens.add(new Token(TokenType.keywordBreak, matcher.group(TokenType.keywordBreak.name()))); 
-            } else if(matcher.group(TokenType.keywordDouble.name()) != null) {
-                tokens.add(new Token(TokenType.keywordDouble, matcher.group(TokenType.keywordDouble.name()))); 
-            } else if(matcher.group(TokenType.keywordImplements.name()) != null) {
-                tokens.add(new Token(TokenType.keywordImplements, matcher.group(TokenType.keywordImplements.name()))); 
-            } else if(matcher.group(TokenType.keywordProtected.name()) != null) {
-                tokens.add(new Token(TokenType.keywordProtected, matcher.group(TokenType.keywordProtected.name()))); 
-            } else if(matcher.group(TokenType.keywordThrow.name()) != null) {
-                tokens.add(new Token(TokenType.keywordThrow, matcher.group(TokenType.keywordThrow.name()))); 
-            } else if(matcher.group(TokenType.keywordByte.name()) != null) {
-                tokens.add(new Token(TokenType.keywordByte, matcher.group(TokenType.keywordByte.name()))); 
-            } else if(matcher.group(TokenType.keywordElse.name()) != null) {
-                tokens.add(new Token(TokenType.keywordElse, matcher.group(TokenType.keywordElse.name()))); 
-            } else if(matcher.group(TokenType.keywordImport.name()) != null) {
-                tokens.add(new Token(TokenType.keywordImport, matcher.group(TokenType.keywordImport.name()))); 
-            } else if(matcher.group(TokenType.keywordPublic.name()) != null) {
-                tokens.add(new Token(TokenType.keywordPublic, matcher.group(TokenType.keywordPublic.name()))); 
-            } else if(matcher.group(TokenType.keywordThrows.name()) != null) {
-                tokens.add(new Token(TokenType.keywordThrows, matcher.group(TokenType.keywordThrows.name()))); 
-            } else if(matcher.group(TokenType.keywordCase.name()) != null) {
-                tokens.add(new Token(TokenType.keywordCase, matcher.group(TokenType.keywordCase.name()))); 
-            } else if(matcher.group(TokenType.keywordEnum.name()) != null) {
-                tokens.add(new Token(TokenType.keywordEnum, matcher.group(TokenType.keywordEnum.name()))); 
-            } else if(matcher.group(TokenType.keywordInstanceof.name()) != null) {
-                tokens.add(new Token(TokenType.keywordInstanceof, matcher.group(TokenType.keywordInstanceof.name()))); 
-            } else if(matcher.group(TokenType.keywordReturn.name()) != null) {
-                tokens.add(new Token(TokenType.keywordReturn, matcher.group(TokenType.keywordReturn.name()))); 
-            } else if(matcher.group(TokenType.keywordTransient.name()) != null) {
-                tokens.add(new Token(TokenType.keywordTransient, matcher.group(TokenType.keywordTransient.name()))); 
-            } else if(matcher.group(TokenType.keywordCatch.name()) != null) {
-                tokens.add(new Token(TokenType.keywordCatch, matcher.group(TokenType.keywordCatch.name()))); 
-            } else if(matcher.group(TokenType.keywordExtends.name()) != null) {
-                tokens.add(new Token(TokenType.keywordExtends, matcher.group(TokenType.keywordExtends.name()))); 
-            } else if(matcher.group(TokenType.keywordShort.name()) != null) {
-                tokens.add(new Token(TokenType.keywordShort, matcher.group(TokenType.keywordShort.name()))); 
-            } else if(matcher.group(TokenType.keywordTry.name()) != null) {
-                tokens.add(new Token(TokenType.keywordTry, matcher.group(TokenType.keywordTry.name()))); 
-            } else if(matcher.group(TokenType.keywordChar.name()) != null) {
-                tokens.add(new Token(TokenType.keywordChar, matcher.group(TokenType.keywordChar.name()))); 
-            } else if(matcher.group(TokenType.keywordFinal.name()) != null) {
-                tokens.add(new Token(TokenType.keywordFinal, matcher.group(TokenType.keywordFinal.name()))); 
-            } else if(matcher.group(TokenType.keywordInterface.name()) != null) {
-                tokens.add(new Token(TokenType.keywordInterface, matcher.group(TokenType.keywordInterface.name()))); 
-            } else if(matcher.group(TokenType.keywordStatic.name()) != null) {
-                tokens.add(new Token(TokenType.keywordStatic, matcher.group(TokenType.keywordStatic.name()))); 
-            } else if(matcher.group(TokenType.keywordVoid.name()) != null) {
-                tokens.add(new Token(TokenType.keywordVoid, matcher.group(TokenType.keywordVoid.name()))); 
-            } else if(matcher.group(TokenType.keywordClass.name()) != null) {
-                tokens.add(new Token(TokenType.keywordClass, matcher.group(TokenType.keywordClass.name()))); 
-            } else if(matcher.group(TokenType.keywordFinally.name()) != null) {
-                tokens.add(new Token(TokenType.keywordFinally, matcher.group(TokenType.keywordFinally.name()))); 
-            } else if(matcher.group(TokenType.keywordLong.name()) != null) {
-                tokens.add(new Token(TokenType.keywordLong, matcher.group(TokenType.keywordLong.name()))); 
-            } else if(matcher.group(TokenType.keywordStrictfp.name()) != null) {
-                tokens.add(new Token(TokenType.keywordStrictfp, matcher.group(TokenType.keywordStrictfp.name()))); 
-            } else if(matcher.group(TokenType.keywordVolatile.name()) != null) {
-                tokens.add(new Token(TokenType.keywordVolatile, matcher.group(TokenType.keywordVolatile.name()))); 
-            } else if(matcher.group(TokenType.keywordConst.name()) != null) {
-                tokens.add(new Token(TokenType.keywordConst, matcher.group(TokenType.keywordConst.name()))); 
-            } else if(matcher.group(TokenType.keywordFloat.name()) != null) {
-                tokens.add(new Token(TokenType.keywordFloat, matcher.group(TokenType.keywordFloat.name()))); 
-            } else if(matcher.group(TokenType.keywordNative.name()) != null) {
-                tokens.add(new Token(TokenType.keywordNative, matcher.group(TokenType.keywordNative.name()))); 
-            } else if(matcher.group(TokenType.keywordSuper.name()) != null) {
-                tokens.add(new Token(TokenType.keywordSuper, matcher.group(TokenType.keywordSuper.name()))); 
-            } else if(matcher.group(TokenType.keywordWhile.name()) != null) {
-                tokens.add(new Token(TokenType.keywordWhile, matcher.group(TokenType.keywordWhile.name()))); 
-            } else if(matcher.group(TokenType.boolvalFalse.name()) != null) {
-                tokens.add(new Token(TokenType.boolvalFalse, matcher.group(TokenType.boolvalFalse.name()))); 
-            } else if(matcher.group(TokenType.boolvalTrue.name()) != null) {
-                tokens.add(new Token(TokenType.boolvalTrue, matcher.group(TokenType.boolvalTrue.name()))); 
-            } else if(matcher.group(TokenType.identifier.name()) != null) {
-                tokens.add(new Token(TokenType.identifier, matcher.group(TokenType.identifier.name()))); 
-            } else if(matcher.group(TokenType.CHAR.name()) != null) {
-                tokens.add(new Token(TokenType.CHAR, matcher.group(TokenType.CHAR.name())));             
-            } else if(matcher.group(TokenType.digit.name()) != null) {
-                tokens.add(new Token(TokenType.digit, matcher.group(TokenType.digit.name())));
-            } else if(matcher.group(TokenType.intopAssignment.name()) != null) {
-                tokens.add(new Token(TokenType.intopAssignment, matcher.group(TokenType.intopAssignment.name()))); 
-            } else if(matcher.group(TokenType.intopRemainder.name()) != null) {
-                tokens.add(new Token(TokenType.intopRemainder, matcher.group(TokenType.intopRemainder.name())));            
-            } else if(matcher.group(TokenType.intopSubstraction.name()) != null) {
-                tokens.add(new Token(TokenType.intopSubstraction, matcher.group(TokenType.intopSubstraction.name()))); 
-            } else if(matcher.group(TokenType.intopAddition.name()) != null) {
-                tokens.add(new Token(TokenType.intopAddition, matcher.group(TokenType.intopAddition.name()))); 
-            } else if(matcher.group(TokenType.intopMultiplication.name()) != null) {
-                tokens.add(new Token(TokenType.intopMultiplication, matcher.group(TokenType.intopMultiplication.name()))); 
-            } else if(matcher.group(TokenType.intopDivision.name()) != null) {
-                tokens.add(new Token(TokenType.intopDivision, matcher.group(TokenType.intopDivision.name()))); 
-            } else if(matcher.group(TokenType.boolopNotEqualTo.name()) != null) {
-                tokens.add(new Token(TokenType.boolopNotEqualTo, matcher.group(TokenType.boolopNotEqualTo.name()))); 
-            } else if(matcher.group(TokenType.boolopGreaterThan.name()) != null) {
-                tokens.add(new Token(TokenType.boolopGreaterThan, matcher.group(TokenType.boolopGreaterThan.name()))); 
-            } else if(matcher.group(TokenType.boolopLessThan.name()) != null) {
-                tokens.add(new Token(TokenType.boolopLessThan, matcher.group(TokenType.boolopLessThan.name()))); 
-            } else if(matcher.group(TokenType.boolopAND.name()) != null) {
-                tokens.add(new Token(TokenType.boolopAND, matcher.group(TokenType.boolopAND.name()))); 
-            } else if(matcher.group(TokenType.openBracket.name()) != null) {
-                tokens.add(new Token(TokenType.openBracket, matcher.group(TokenType.openBracket.name()))); 
-            } else if(matcher.group(TokenType.closeBracket.name()) != null) {
-                tokens.add(new Token(TokenType.closeBracket, matcher.group(TokenType.closeBracket.name()))); 
-            } else if(matcher.group(TokenType.openParenthesis.name()) != null) {
-                tokens.add(new Token(TokenType.openParenthesis, matcher.group(TokenType.openParenthesis.name()))); 
-            } else if(matcher.group(TokenType.closeParenthesis.name()) != null) {
-                tokens.add(new Token(TokenType.closeParenthesis, matcher.group(TokenType.closeParenthesis.name()))); 
-            } else if(matcher.group(TokenType.SEMICOLON.name()) != null) {
-                tokens.add(new Token(TokenType.SEMICOLON, matcher.group(TokenType.SEMICOLON.name())));
-            } else if(matcher.group(TokenType.COLON.name()) != null) {
-                tokens.add(new Token(TokenType.COLON, matcher.group(TokenType.COLON.name())));
-            } else if(matcher.group(TokenType.QUOTE.name()) != null) {
-                tokens.add(new Token(TokenType.QUOTE, matcher.group(TokenType.QUOTE.name()))); 
-            } else if(matcher.group(TokenType.EOP.name()) != null) {
-                tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name()))); 
-            }
-        }
-   
-        return tokens;
-    }
-    
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
+        
         jInternalFrame1 = new javax.swing.JInternalFrame();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -662,11 +336,6 @@ public class Lexer extends javax.swing.JFrame {
         clearOutput.getAccessibleContext().setAccessibleName("ClearOutput");
 
         jMenu1.setText("File");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_MASK));
         jMenuItem1.setText("Exit");
@@ -693,25 +362,159 @@ public class Lexer extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
-
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        // TODO add your handling code here:
-    }                                      
-
+    }
+       
+    // Defining our tokens with their corresponding expression names 
+    public static enum TokenType {
+        
+        // -----------------|End of Program Marker|--------------------- \\
+        EOP("[$]"),
+        
+        // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
+        // Types
+        typeInt("int"),
+        typeString("string"),
+        typeBoolean("boolean"),
+        
+        // Statemenets
+        ifStatement("if"),
+        whileStatement("while"),
+        printStatement("print"),
+        assignmentStatement("="),
+        
+        // Booleans
+        boolvalFalse("false"),
+        boolvalTrue("true"),
+        
+        // Identifiers
+        ID("[a-z]"), 
+       
+        // Numbers
+        digit("[0-9]"), 
+        
+        
+        // --------------------|Symbols|--------------------------- \\
+        // Arithmetic Operator
+        intopAddition("[+]"),
+        
+        // Unary Operator
+        boolopNotEqualTo("!="),
+        boolopEqualTo("'=='"),
+        
+        // Brackets
+        openBracket("[{]"),
+        closeBracket("[}]"),
+        
+        // Parenthesis
+        openParenthesis("[(]"),
+        closeParenthesis("[)]"),
+        
+        // Comments
+        
+        // Whitespace
+        space("[ \t\f\r\n+]");
+        
+        public final String pattern;
+        
+        private TokenType(String pattern) {
+            this.pattern = pattern;
+        }
+    }
+    
+    // Stores token type and data
+    public static class Token {
+        public TokenType type;
+        public String data;
+        
+        public Token(TokenType type, String data) {
+            this.type = type;
+            this.data = data;
+        }
+        
+        @Override
+        public String toString() { // Structures token type and data for output
+            return String.format("\"%s\" --> [%s]", data, type.name());
+        }
+    }
+    
+    public static ArrayList<Token> lex(String input) {
+        // Returns tokens using the stored and formatted token information
+        ArrayList<Token> tokens = new ArrayList<Token>(); 
+        
+        // Lexer takes the input, finds the patterns and places them into token format
+        StringBuffer tokenPatternsBuffer = new StringBuffer();
+        for (TokenType tokenType : TokenType.values())
+            tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
+        Pattern tokenPatterns = Pattern.compile(new String(tokenPatternsBuffer.substring(1)));
+        
+        // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
+        Matcher matcher = tokenPatterns.matcher(input);
+        while(matcher.find()) {
+            if(matcher.group(TokenType.space.name()) != null) 
+                continue;                
+            else if(matcher.group(TokenType.typeInt.name()) != null) {
+                tokens.add(new Token(TokenType.typeInt, matcher.group(TokenType.typeInt.name()))); 
+            } else if(matcher.group(TokenType.typeString.name()) != null) {
+                tokens.add(new Token(TokenType.typeString, matcher.group(TokenType.typeString.name()))); 
+            } else if(matcher.group(TokenType.typeBoolean.name()) != null) {
+                tokens.add(new Token(TokenType.typeBoolean, matcher.group(TokenType.typeBoolean.name()))); 
+            } else if(matcher.group(TokenType.ifStatement.name()) != null) {
+                tokens.add(new Token(TokenType.ifStatement, matcher.group(TokenType.ifStatement.name()))); 
+            } else if(matcher.group(TokenType.whileStatement.name()) != null) {
+                tokens.add(new Token(TokenType.whileStatement, matcher.group(TokenType.whileStatement.name()))); 
+            } else if(matcher.group(TokenType.printStatement.name()) != null) {
+                tokens.add(new Token(TokenType.printStatement, matcher.group(TokenType.printStatement.name())));
+            } else if(matcher.group(TokenType.assignmentStatement.name()) != null) {
+                tokens.add(new Token(TokenType.assignmentStatement, matcher.group(TokenType.assignmentStatement.name()))); 
+            } else if(matcher.group(TokenType.ID.name()) != null) {
+                tokens.add(new Token(TokenType.ID, matcher.group(TokenType.ID.name()))); 
+            } else if(matcher.group(TokenType.boolvalFalse.name()) != null) {
+                tokens.add(new Token(TokenType.boolvalFalse, matcher.group(TokenType.boolvalFalse.name()))); 
+            } else if(matcher.group(TokenType.boolvalTrue.name()) != null) {
+                tokens.add(new Token(TokenType.boolvalTrue, matcher.group(TokenType.boolvalTrue.name())));          
+            } else if(matcher.group(TokenType.digit.name()) != null) {
+                tokens.add(new Token(TokenType.digit, matcher.group(TokenType.digit.name())));
+            } else if(matcher.group(TokenType.intopAddition.name()) != null) {
+                tokens.add(new Token(TokenType.intopAddition, matcher.group(TokenType.intopAddition.name()))); 
+            } else if(matcher.group(TokenType.boolopNotEqualTo.name()) != null) {
+                tokens.add(new Token(TokenType.boolopNotEqualTo, matcher.group(TokenType.boolopNotEqualTo.name()))); 
+            } else if(matcher.group(TokenType.boolopEqualTo.name()) != null) {
+                tokens.add(new Token(TokenType.boolopEqualTo, matcher.group(TokenType.boolopEqualTo.name()))); 
+            } else if(matcher.group(TokenType.openBracket.name()) != null) {
+                tokens.add(new Token(TokenType.openBracket, matcher.group(TokenType.openBracket.name()))); 
+            } else if(matcher.group(TokenType.closeBracket.name()) != null) {
+                tokens.add(new Token(TokenType.closeBracket, matcher.group(TokenType.closeBracket.name()))); 
+            } else if(matcher.group(TokenType.openParenthesis.name()) != null) {
+                tokens.add(new Token(TokenType.openParenthesis, matcher.group(TokenType.openParenthesis.name()))); 
+            } else if(matcher.group(TokenType.closeParenthesis.name()) != null) {
+                tokens.add(new Token(TokenType.closeParenthesis, matcher.group(TokenType.closeParenthesis.name())));
+            } else if(matcher.group(TokenType.space.name()) != null) {
+                tokens.add(new Token(TokenType.space, matcher.group(TokenType.space.name()))); 
+            } else if(matcher.group(TokenType.EOP.name()) != null) {
+                tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name()))); 
+            }
+        }
+   
+        return tokens;
+    }
+    
+    // Button that deletes both the input and output data
     private void clearAllActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.setText(null);
         outputArea.setText(null);       
     }                                        
-
+    
+    // Button that deletes input data 
     private void clearInputActionPerformed(java.awt.event.ActionEvent evt) {                                           
         inputArea.setText(null);       
     }                                          
-
+    
+    // Button that deletes output data
     private void clearOutputActionPerformed(java.awt.event.ActionEvent evt) {                                            
         outputArea.setText(null);       
     }                                           
-
+    
+    // Button that begins the lexing
     private void runCodeActionPerformed(java.awt.event.ActionEvent evt) {                                        
 
         int i = 1;
@@ -762,15 +565,18 @@ public class Lexer extends javax.swing.JFrame {
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                     + "and [" + errorCount + "] Error(s).\n\n"); 
         }                                       
-
+    
+    // The file option in the menu that allows for a different quiting method
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
         System.exit(0);
     }                                          
-
+    
+    // Button that places Test case: simple code onto input box
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.append("{}$");
     }                               
-
+    
+    // Button that places Test case: Alan's code onto input box
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.append("{}$\n" +
             "{{{{{{}}}}}}$\n" +
@@ -778,46 +584,24 @@ public class Lexer extends javax.swing.JFrame {
             "{int @}$");
     }                                        
 
+    // Button that places Test case
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.append("public static String toBinary(int base10Num){\n" +
-       "        boolean isNeg = base10Num < 0;\n" +
-       "        base10Num = Math.abs(base10Num);        \n" +
-       "        String result = \"\";\n" +
-       "        \n" +
-       "        while(base10Num > 1){\n" +
-       "            result = (base10Num % 2) + result;\n" +
-       "            base10Num /= 2;\n" +
-       "        }\n" +
-       "        assert base10Num == 0 || base10Num == 1 : \"value is not <= 1: \" + base10Num;\n" +
-       "        \n" +
-       "        result = base10Num + result;\n" +
-       "        assert all0sAnd1s(result);\n" +
-       "        \n" +
-       "        if( isNeg )\n" +
-       "            result = \"-\" + result;\n" +
-       "        return result;\n" +
-       "    }$");
+        inputArea.append("{}${}$");
     }                                        
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       inputArea.append("short num;\n" +
-            "    	\n" +
-            "    	num = 150;\n" +
-            "    }\n" +
-            "}$");
+       inputArea.append("print()&"
+               + "if(a)$"
+               + "while(true)$");
     }                                        
     
-    /**
-     * @param args the command line arguments
-     */
+    // Main that executes and runs the code 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Lexer().setVisible(true);
-                
+                new Lexer().setVisible(true); // Sets GUI to become visible)
             }
-        });
-       
+        });    
     }
 
     // Variables declaration - do not modify                     
