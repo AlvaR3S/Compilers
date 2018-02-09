@@ -488,11 +488,9 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.openParenthesis, matcher.group(TokenType.openParenthesis.name()))); 
             } else if(matcher.group(TokenType.closeParenthesis.name()) != null) {
                 tokens.add(new Token(TokenType.closeParenthesis, matcher.group(TokenType.closeParenthesis.name())));
-            } else if(matcher.group(TokenType.space.name()) != null) {
-                tokens.add(new Token(TokenType.space, matcher.group(TokenType.space.name()))); 
             } else if(matcher.group(TokenType.EOP.name()) != null) {
                 tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name()))); 
-            }
+            } 
         }
    
         return tokens;
@@ -542,9 +540,15 @@ public class Lexer extends javax.swing.JFrame {
             for(Token token : tokens) {
                 int index = token.data.indexOf("$");
                 boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
-                
+            
                 outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
-              
+                
+                System.out.println(input.substring(0, input.length()));
+                
+
+
+
+                
                 if((warningCount == 0) && (errorCount == 0)) {
                     if(token.type == EOP) {
                         outputArea.append("LEXER: Lex completed successfully\n\n");
@@ -554,7 +558,7 @@ public class Lexer extends javax.swing.JFrame {
                 if(moreThanOnce == true) {
                     i++;
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                }  
+                }          
             }
         } 
         
