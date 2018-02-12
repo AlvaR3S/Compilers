@@ -9,9 +9,9 @@ These instructions will get you a copy of the project up and running on your loc
 ### How to run the app
 
 - Click on the CustomCompilers file. Next download the file and you will be able to run it on your computer.
-- Another way is to run the app from the Command Line by entering these inputs:
-  cd CustomCompiler
-  cd src/
-  javac customcompiler/Lexer.java
+- Another way is to run the app from the Command Line by entering these inputs:<br>
+  cd CustomCompiler <br>
+  cd src/ <br>
+  javac customcompiler/Lexer.java <br>
   java customcompiler.Lexer
 
