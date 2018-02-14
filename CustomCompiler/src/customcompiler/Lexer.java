@@ -6,6 +6,7 @@
 package customcompiler;
 
 
+import customcompiler.Lexer.Token;
 import static customcompiler.Lexer.TokenType.EOP;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -407,12 +408,12 @@ public class Lexer extends javax.swing.JFrame {
         
         // Parenthesis
         openParenthesis("[(]"),
-        closeParenthesis("[)]"),
+        closeParenthesis("[)]");
         
         // Comments
         
         // Whitespace
-        space("[ \t\f\r\n+]");
+        
         
         public final String pattern;
         
@@ -429,7 +430,7 @@ public class Lexer extends javax.swing.JFrame {
         public Token(TokenType type, String data) {
             this.type = type;
             this.data = data;
-        }
+        }        
         
         @Override
         public String toString() { // Structures token type and data for output
@@ -438,9 +439,12 @@ public class Lexer extends javax.swing.JFrame {
     }
     
     public static ArrayList<Token> lex(String input) {
+        
+        
         // Returns tokens using the stored and formatted token information
         ArrayList<Token> tokens = new ArrayList<Token>(); 
         
+       
         // Lexer takes the input, finds the patterns and places them into token format
         StringBuffer tokenPatternsBuffer = new StringBuffer();
         for (TokenType tokenType : TokenType.values())
@@ -449,10 +453,9 @@ public class Lexer extends javax.swing.JFrame {
         
         // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
         Matcher matcher = tokenPatterns.matcher(input);
-        while(matcher.find()) {
-            if(matcher.group(TokenType.space.name()) != null) 
-                continue;                
-            else if(matcher.group(TokenType.typeInt.name()) != null) {
+        while(matcher.find()) {               
+            
+           if(matcher.group(TokenType.typeInt.name()) != null) {
                 tokens.add(new Token(TokenType.typeInt, matcher.group(TokenType.typeInt.name()))); 
             } else if(matcher.group(TokenType.typeString.name()) != null) {
                 tokens.add(new Token(TokenType.typeString, matcher.group(TokenType.typeString.name()))); 
@@ -490,16 +493,27 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.closeParenthesis, matcher.group(TokenType.closeParenthesis.name())));
             } else if(matcher.group(TokenType.EOP.name()) != null) {
                 tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name()))); 
-            } 
-        }
-   
+            }  
+         
+//               if(input.length() > tokens.size()) {
+//                   System.out.println("hello");
+//               }
+              
+           
+            
+//      
+//          
+//           System.out.println(tokens.size());
+//         
+//            System.out.println(input.length());
+        }   
         return tokens;
     }
     
     // Button that deletes both the input and output data
     private void clearAllActionPerformed(java.awt.event.ActionEvent evt) {                                         
         inputArea.setText(null);
-        outputArea.setText(null);       
+        outputArea.setText(null);  
     }                                        
     
     // Button that deletes input data 
@@ -514,25 +528,21 @@ public class Lexer extends javax.swing.JFrame {
     
     // Button that begins the lexing
     private void runCodeActionPerformed(java.awt.event.ActionEvent evt) {                                        
-
+        
         int i = 1;
         
         String input = inputArea.getText();
         String output = outputArea.getText();
+    
         
         int errorCount = 0;
         int warningCount = 0;
         
-        boolean lexComplete = false;
-        //boolean endToken = false;
-        boolean errorToken = false;
       
         if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
-            errorCount++;
-            
-        } else {           
-                
+            errorCount++;  
+        }               
             outputArea.append("\nLEXER: Lexing program " + i + "...\n");
 
             // Outputs a stream of tokens from the given input
@@ -542,33 +552,31 @@ public class Lexer extends javax.swing.JFrame {
                 boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
             
                 outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+               
+                // If there is not a token on the list it is unrecognized
+                if(tokens.size() < input.length()) {
+                    outputArea.append("\nLEXER Error: Unrecognized Token.\n");  
+                    errorCount++;
+                }
+              
+                // If there is more than one $ there is more than one lexeing program
+                if(moreThanOnce == true) {
+                    i++;
+                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+                } 
                 
-                System.out.println(input.substring(0, input.length()));
-                
-
-
-
-                
+                // If no errors or warnings have been found then lexer has succeeded
                 if((warningCount == 0) && (errorCount == 0)) {
                     if(token.type == EOP) {
                         outputArea.append("LEXER: Lex completed successfully\n\n");
                     }
                 }
-               
-                if(moreThanOnce == true) {
-                    i++;
-                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                }          
             }
-        } 
-        
-        if(errorToken == true) {
-            outputArea.append("\nLEXER Error: Unrecognized Token.\n");       
-        }
-        
-        outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
-                    + "and [" + errorCount + "] Error(s).\n\n"); 
-        }                                       
+            
+            // Displays number of errors and warnings at the very end
+            outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
+                        + "and [" + errorCount + "] Error(s).\n\n"); 
+            }                                       
     
     // The file option in the menu that allows for a different quiting method
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -636,7 +644,7 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JTextArea outputArea;
+    private static javax.swing.JTextArea outputArea;
     private javax.swing.JButton runCode;
     // End of variables declaration                   
 }
