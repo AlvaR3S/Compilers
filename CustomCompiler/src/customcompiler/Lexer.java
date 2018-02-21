@@ -411,7 +411,7 @@ public class Lexer extends javax.swing.JFrame {
         closeParenthesis("[)]"),
         
         // Whitespace
-        whtieSpace("[\t\f\r\n]+");
+        whtieSpace("[ \t\f\r\n]+");
         
         public final String pattern;
         
@@ -455,7 +455,7 @@ public class Lexer extends javax.swing.JFrame {
     // Button that begins the lexing
     private void runCodeActionPerformed(java.awt.event.ActionEvent evt) {                                        
         int i = 1;
-        int errorCount = 1;
+        int errorCount = 0;
         int warningCount = 0;
         
         String input = inputArea.getText();
@@ -550,11 +550,8 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
-        // Displays number of errors and warnings at the very end
-        if(matcher.hitEnd()) {
             outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                                 + "and [" + errorCount + "] Error(s).\n\n");  
-        }
     }          
     
              
