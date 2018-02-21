@@ -437,12 +437,6 @@ public class Lexer extends javax.swing.JFrame {
             return String.format("\"%s\" --> [%s]", data, type.name());
         }   
     }
-//    
-//    public static ArrayList<Token> lex(String input) {
-//        
-//           
-//        return tokens;
-//    }
     
     // Button that deletes both the input and output data
     private void clearAllActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -469,9 +463,7 @@ public class Lexer extends javax.swing.JFrame {
         String input = inputArea.getText();
         String output = outputArea.getText();
         boolean errorToken = false;
-        
-        
-       
+    
         // Lexer takes the input, finds the patterns and places them into token format
         StringBuffer tokenPatternsBuffer = new StringBuffer();
         for (TokenType tokenType : TokenType.values()) 
@@ -486,7 +478,7 @@ public class Lexer extends javax.swing.JFrame {
         // Returns tokens using the stored and formatted token information
         ArrayList<Token> tokens = new ArrayList<Token>(); 
         boolean found = false;
-       // while(matcher.find()) { 
+    
         for(int check = 0; check < input.length(); check++) {
             if(matcher.find()) {  
                 if(matcher.group(TokenType.typeInt.name()) != null) {
@@ -529,12 +521,11 @@ public class Lexer extends javax.swing.JFrame {
                     tokens.add(new Token(TokenType.EOP, matcher.group(TokenType.EOP.name()))); 
                 }
             } else {
-                System.out.println("h");
+                System.out.println("Unrecognized token found.");
                 errorCount++;
-                errorCount = errorCount - 1;
             }
         }
-        // }
+        
        
 
         if((input.isEmpty())) { //Error if there is no input
@@ -559,16 +550,7 @@ public class Lexer extends javax.swing.JFrame {
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
                 }                         
             }
-//            if(!input.contains(token.data)) {
-//                System.out.println("o");
-//            }
-        }
-       
-        
-//            if(!matcher.find()) {
-//                System.out.println("o");
-//            }
-//        
+        }              
         if(matcher.hitEnd()) {
             // Displays number of errors and warnings at the very end
             outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
