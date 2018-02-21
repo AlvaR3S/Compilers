@@ -487,7 +487,7 @@ public class Lexer extends javax.swing.JFrame {
         ArrayList<Token> tokens = new ArrayList<Token>(); 
         boolean found = false;
        // while(matcher.find()) { 
-        for(int check = 0; check <= input.length(); check++) {
+        for(int check = 0; check < input.length(); check++) {
             if(matcher.find()) {  
                 if(matcher.group(TokenType.typeInt.name()) != null) {
                      tokens.add(new Token(TokenType.typeInt, matcher.group(TokenType.typeInt.name()))); 
