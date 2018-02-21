@@ -408,12 +408,10 @@ public class Lexer extends javax.swing.JFrame {
         
         // Parenthesis
         openParenthesis("[(]"),
-        closeParenthesis("[)]");
-        
-        // Comments
+        closeParenthesis("[)]"),
         
         // Whitespace
-        
+        whtieSpace("[\t\f\r\n]+");
         
         public final String pattern;
         
@@ -469,16 +467,16 @@ public class Lexer extends javax.swing.JFrame {
         for (TokenType tokenType : TokenType.values()) 
             tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
         
-     
-            Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1));
-        
-            // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
-            Matcher matcher = tokenPatterns.matcher(input);
+        Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1));
+
+        // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
+        Matcher matcher = tokenPatterns.matcher(input);
         
         // Returns tokens using the stored and formatted token information
         ArrayList<Token> tokens = new ArrayList<Token>(); 
         boolean found = false;
-    
+        
+        // Loops through the input and finds valid tokens
         for(int check = 0; check < input.length(); check++) {
             if(matcher.find()) {  
                 if(matcher.group(TokenType.typeInt.name()) != null) {
@@ -526,16 +524,15 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
-       
-
         if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;  
         }               
-            outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+        
+        // Prints first at the top once
+        outputArea.append("\nLEXER: Lexing program " + i + "...\n");
            
-            // Outputs a stream of tokens from the given input
-            // ArrayList<Token> tokens = lex(input);
+        // Outputs a stream of tokens from the given input
         for(Token token : tokens) {
             int index = token.data.indexOf("$");
             boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
@@ -544,15 +541,17 @@ public class Lexer extends javax.swing.JFrame {
             // If no errors or warnings have been found then lexer has succeeded
             if(token.type == EOP) {
                 outputArea.append("LEXER: Lex completed successfully\n\n");
+                
                 // If there is more than one $ there is more than one lexeing program
-                if(moreThanOnce == true) {
+                if(moreThanOnce) {
                     i++;
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
                 }                         
             }
-        }              
+        }
+        
+        // Displays number of errors and warnings at the very end
         if(matcher.hitEnd()) {
-            // Displays number of errors and warnings at the very end
             outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                                 + "and [" + errorCount + "] Error(s).\n\n");  
         }
