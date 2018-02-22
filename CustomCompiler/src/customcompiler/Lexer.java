@@ -373,8 +373,8 @@ public class Lexer extends javax.swing.JFrame {
         
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
-        typeInt("int"),
-        typeString("string"),
+        typeInt("[i|n|t]+"),
+        typeString("'string'"),
         typeBoolean("boolean"),
         
         // Statemenets
@@ -550,8 +550,8 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
-            outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
-                                + "and [" + errorCount + "] Error(s).\n\n");  
+        outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
+                            + "and [" + errorCount + "] Error(s).\n\n");  
     }          
     
              
