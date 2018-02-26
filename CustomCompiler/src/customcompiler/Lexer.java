@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+
 /**
  *
  * @author reynaldoalvarez
@@ -392,7 +393,6 @@ public class Lexer extends javax.swing.JFrame {
         // Numbers
         digit("[0-9]"), 
         
-        
         // --------------------|Symbols|--------------------------- \\
         // Arithmetic Operator
         intopAddition("[+]"),
@@ -417,7 +417,7 @@ public class Lexer extends javax.swing.JFrame {
         
         private TokenType(String pattern) {
             this.pattern = pattern;
-        }
+        } 
     }
     
     // Stores token type and data
@@ -461,72 +461,72 @@ public class Lexer extends javax.swing.JFrame {
         String input = inputArea.getText();
         String output = outputArea.getText();
         boolean errorToken = false;
+        
+        
     
         // Lexer takes the input, finds the patterns and places them into token format
         StringBuffer tokenPatternsBuffer = new StringBuffer();
         for (TokenType tokenType : TokenType.values()) 
             tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-        
-        Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1));
+   
+        Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1), Pattern.CASE_INSENSITIVE);
 
         // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
         Matcher tokenMatcher = tokenPatterns.matcher(input);
-        
+           
         // Returns tokens using the stored and formatted token information
         ArrayList<Token> tokens = new ArrayList<Token>(); 
-        boolean found = false;
             
         // Loops through the input and finds valid tokens
-        for(int check = 0; check < input.length(); check++) {
-            if(tokenMatcher.find()) {   
-                if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name()))); 
-                } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
-                    tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name()))); 
-                } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
-                    tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name()))); 
-                } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name()))); 
-                } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name()))); 
-                } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-                } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name()))); 
-                } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
-                    tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name()))); 
-                } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
-                    tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name()))); 
-                } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
-                    tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));          
-                } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
-                    tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
-                } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
-                    tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name()))); 
-                } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
-                    tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name()))); 
-                } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
-                    tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name()))); 
-                } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
-                    tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name()))); 
-                } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
-                    tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name()))); 
-                } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
-                    tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name()))); 
-                } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
-                    tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
-                } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
-                    tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name()))); 
-                } 
+        while(tokenMatcher.find()) {     
+            if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
+                tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name()))); 
+            } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
+                tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
+            } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
+                tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name()))); 
+            } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
+                tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name()))); 
+            } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
+                tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name()))); 
+            } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
+                tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
+            } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
+                tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name()))); 
+            } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
+                tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name()))); 
+            } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
+                tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name()))); 
+            } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
+                tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));          
+            } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
+                tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
+            } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
+                tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name()))); 
+            } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
+                tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name()))); 
+            } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
+                tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name()))); 
+            } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
+                tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name()))); 
+            } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
+                tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name()))); 
+            } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
+                tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name()))); 
+            } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
+                tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
+            } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
+                tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));  
             } else {
                 System.out.println("Unrecognized token found.");
+                errorToken = true;
                 errorCount++;
-            }
+            }        
         }
         
         if((input.isEmpty())) { //Error if there is no input
             outputArea.append("~ERROR: No input found~\n");
-            errorCount++;  
+            errorCount++;
         }               
         
         // Prints first at the top once
@@ -548,6 +548,7 @@ public class Lexer extends javax.swing.JFrame {
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
                 }                         
             }
+            
         }
         
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
