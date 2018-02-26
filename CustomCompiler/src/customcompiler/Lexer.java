@@ -479,7 +479,9 @@ public class Lexer extends javax.swing.JFrame {
             
         // Loops through the input and finds valid tokens
         while(tokenMatcher.find()) {     
-            if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
+            if(tokenMatcher.group(TokenType.whtieSpace.name()) != null) { 
+                continue;
+            } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                 tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name()))); 
             } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
                 tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
@@ -529,7 +531,7 @@ public class Lexer extends javax.swing.JFrame {
             errorCount++;
         }               
         
-        // Prints first at the top once
+        // Prints befeore anything else at the top once
         outputArea.append("\nLEXER: Lexing program " + i + "...\n");
            
         // Outputs a stream of tokens from the given input
@@ -551,6 +553,22 @@ public class Lexer extends javax.swing.JFrame {
             
         }
         
+        // Spits out a warning when input string does not end with a $ symbol
+        if(!input.endsWith("$")) {
+            warningCount++;
+        }
+        
+        // Spits out an error when input contains ("&") OR ('$')
+        if(input.contains("\"$\"") || input.contains("\'$\'")) {
+            System.out.println("Wrong");
+            errorCount++;
+        }
+        
+        // Ignoring comments (NOT FINISHED YET)
+        if(input.contains("//")) {
+            System.out.print("ignore");
+        }
+ 
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n");  
     }          
@@ -576,7 +594,8 @@ public class Lexer extends javax.swing.JFrame {
 
     // Button that places Test case
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.append("{int @}$");
+        inputArea.append("{int @}$"
+                + "{\"$\"}$");
     }                                        
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
