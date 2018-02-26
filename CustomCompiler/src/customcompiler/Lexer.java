@@ -411,7 +411,12 @@ public class Lexer extends javax.swing.JFrame {
         closeParenthesis("[)]"),
         
         // Whitespace
-        whtieSpace("[ \t\f\r\n]+");
+        whtieSpace("[ \t\f\r\n]+"),
+        
+        // Letters in between quotes are chars
+        CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
+        intCHAR("\"int\""),
+        capitalChar("[A-Z]");
         
         public final String pattern;
         
@@ -519,6 +524,11 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
             } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
                 tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));  
+            } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
+                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
+            } else if(tokenMatcher.group(TokenType.intCHAR.name()) != null) {
+                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.intCHAR.name())));
+                // Needs to print individual letters
             } else {
                 System.out.println("Unrecognized token found.");
                 errorToken = true;
@@ -548,9 +558,9 @@ public class Lexer extends javax.swing.JFrame {
                 if(moreThanOnce) {
                     i++;
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
-                }                         
+                }
             }
-            
+             
         }
         
         // Spits out a warning when input string does not end with a $ symbol
@@ -560,7 +570,6 @@ public class Lexer extends javax.swing.JFrame {
         
         // Spits out an error when input contains ("&") OR ('$')
         if(input.contains("\"$\"") || input.contains("\'$\'")) {
-            System.out.println("Wrong");
             errorCount++;
         }
         
@@ -601,7 +610,8 @@ public class Lexer extends javax.swing.JFrame {
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
        inputArea.append("print()&"
                + "if(a)$"
-               + "while(true)$");
+               + "while(true)$\n"
+               + "{print(\"b\")}$");
     }                                        
     
     // Main that executes and runs the code 
