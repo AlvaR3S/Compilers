@@ -5,6 +5,9 @@
  */
 package customcompiler;
 
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 /**
  *
  * @author reynaldoalvarez
@@ -16,7 +19,61 @@ public class runCC extends javax.swing.JFrame {
      */
     public runCC() {
         initComponents();
+        //buttonChange();
     }
+    
+//    private void buttonChange() {
+//        // Starts with buttons turned off
+//        clearInput.setEnabled(false);
+//        clearOutput.setEnabled(false);
+//        clearAll.setEnabled(false);
+//        
+//        // Checks to see if outputArea is empty or not, then changes button
+//        outputArea.getDocument().addDocumentListener(new DocumentListener() {
+//            public void changedUpdate(DocumentEvent e) {
+//                outputChanged();
+//            }
+//            public void removeUpdate(DocumentEvent e) {
+//                outputChanged();
+//            }
+//            public void insertUpdate(DocumentEvent e) {
+//                outputChanged();
+//            }
+//            public void outputChanged() {
+//                if(outputArea.getText().isEmpty()) {
+//                    clearOutput.setEnabled(false);   
+//                    clearAll.setEnabled(false);
+//                } else {
+//                    clearOutput.setEnabled(true);
+//                    clearAll.setEnabled(true);
+//                }
+//            }
+//        });
+//        
+//        // Checks to see if inputArea is empty or not, then changes button
+//        inputArea.getDocument().addDocumentListener(new DocumentListener() {
+//            public void changedUpdate(DocumentEvent e) {
+//                inputChanged();
+//            }
+//            public void removeUpdate(DocumentEvent e) {
+//                inputChanged();
+//            }
+//            public void insertUpdate(DocumentEvent e) {
+//                inputChanged();
+//            }
+//            public void inputChanged() {
+//                if(inputArea.getText().isEmpty()) {
+//                    clearInput.setEnabled(false);
+//                    clearAll.setEnabled(false);
+//                } else {
+//                    clearInput.setEnabled(true);
+//                    clearAll.setEnabled(true);
+//                }
+//            }
+//        });
+//    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,21 +84,137 @@ public class runCC extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        labelTitle = new javax.swing.JLabel();
+        buttonQuitMain = new javax.swing.JButton();
+        buttonParser = new javax.swing.JButton();
+        buttonProject3 = new javax.swing.JButton();
+        buttonProject4 = new javax.swing.JButton();
+        buttonLexer = new javax.swing.JButton();
+        menu = new javax.swing.JMenuBar();
+        menufile = new javax.swing.JMenu();
+        menuItemQuit = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CustomCompiler");
+        setAlwaysOnTop(true);
+        setAutoRequestFocus(false);
+        setBounds(new java.awt.Rectangle(20, 20, 0, 0));
+        setName("runFrame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1237, 520));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelTitle.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
+        labelTitle.setText("Custom Compiler");
+        labelTitle.setAlignmentX(45.0F);
+        labelTitle.setAlignmentY(15.0F);
+        getContentPane().add(labelTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 50, -1, -1));
+
+        buttonQuitMain.setFont(new java.awt.Font("Helvetica", 0, 24)); // NOI18N
+        buttonQuitMain.setText("Quit");
+        buttonQuitMain.setToolTipText("Exits the program");
+        buttonQuitMain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonQuitMainActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonQuitMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 390, 130, 50));
+
+        buttonParser.setBackground(new java.awt.Color(132, 206, 235));
+        buttonParser.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        buttonParser.setText("PARSER");
+        buttonParser.setToolTipText("Goes to Parser");
+        buttonParser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonParserActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonParser, new org.netbeans.lib.awtextra.AbsoluteConstraints(365, 150, 230, 190));
+
+        buttonProject3.setBackground(new java.awt.Color(90, 185, 234));
+        buttonProject3.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        buttonProject3.setText("Unavailable");
+        buttonProject3.setToolTipText("Project 3 coming soon...");
+        buttonProject3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonProject3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonProject3, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 150, 230, 190));
+
+        buttonProject4.setBackground(new java.awt.Color(136, 96, 208));
+        buttonProject4.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        buttonProject4.setText("Unavailable");
+        buttonProject4.setToolTipText("Project 4 coming soon...");
+        buttonProject4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonProject4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonProject4, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 150, 230, 190));
+
+        buttonLexer.setBackground(new java.awt.Color(102, 111, 255));
+        buttonLexer.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        buttonLexer.setText("LEXER");
+        buttonLexer.setToolTipText("Goes to Lexer");
+        buttonLexer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLexerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonLexer, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 150, 230, 190));
+
+        menufile.setText("File");
+
+        menuItemQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemQuit.setText("Quit");
+        menuItemQuit.setToolTipText("Exit Program");
+        menuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemQuitActionPerformed(evt);
+            }
+        });
+        menufile.add(menuItemQuit);
+
+        menu.add(menufile);
+        menufile.getAccessibleContext().setAccessibleName("menuFile");
+
+        menuHelp.setText("Help");
+        menuHelp.setVerifyInputWhenFocusTarget(false);
+        menu.add(menuHelp);
+        menuHelp.getAccessibleContext().setAccessibleName("menuHelp");
+
+        setJMenuBar(menu);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonProject3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonProject3ActionPerformed
+
+    private void buttonProject4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonProject4ActionPerformed
+
+    private void buttonLexerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonLexerActionPerformed
+
+    private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonParserActionPerformed
+    
+    // Exits the program from the main window/menu
+    private void buttonQuitMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuitMainActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_buttonQuitMainActionPerformed
+    
+    // Exits the program from menu item File --> Quit
+    private void menuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemQuitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_menuItemQuitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +252,15 @@ public class runCC extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonLexer;
+    private javax.swing.JButton buttonParser;
+    private javax.swing.JButton buttonProject3;
+    private javax.swing.JButton buttonProject4;
+    private javax.swing.JButton buttonQuitMain;
+    private javax.swing.JLabel labelTitle;
+    private javax.swing.JMenuBar menu;
+    private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenuItem menuItemQuit;
+    private javax.swing.JMenu menufile;
     // End of variables declaration//GEN-END:variables
 }
