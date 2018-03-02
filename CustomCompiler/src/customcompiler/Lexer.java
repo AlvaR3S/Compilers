@@ -8,8 +8,6 @@ package customcompiler;
 
 import customcompiler.Lexer.Token;
 import static customcompiler.Lexer.TokenType.EOP;
-import static customcompiler.Lexer.TokenType.unrecognizedToken;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -116,7 +114,6 @@ public class Lexer extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         jInternalFrame1.setVisible(true);
-        
 
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
         jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
@@ -166,6 +163,8 @@ public class Lexer extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
         setLocation(new java.awt.Point(300, 23));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
 
         inputArea.setColumns(20);
         inputArea.setRows(5);
@@ -353,20 +352,17 @@ public class Lexer extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        setLocation(new java.awt.Point(20, 20));
-        setPreferredSize(new java.awt.Dimension(1400, 800));
-        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1400, Short.MAX_VALUE) 
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        
+
         pack();
     }
        
@@ -420,9 +416,7 @@ public class Lexer extends javax.swing.JFrame {
         // Letters in between quotes are chars
         CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
         intCHAR("\"int\""),
-        unrecognizedToken("[A-Z|*|&|^|%|#|@|!|`|~|-|:|_|?|<|>|'|,|.|/]");
-        
-        //comments(); -- Trying to ignore comments
+        capitalChar("[A-Z]");
         
         public final String pattern;
         
@@ -535,9 +529,6 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokenMatcher.group(TokenType.intCHAR.name()) != null) {
                 tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.intCHAR.name())));
                 // Needs to print individual letters
-            } else if(tokenMatcher.group(TokenType.unrecognizedToken.name()) != null) {
-                tokens.add(new Token(TokenType.unrecognizedToken, tokenMatcher.group(TokenType.unrecognizedToken.name())));
-                warningCount++;
             } else {
                 System.out.println("Unrecognized token found.");
                 errorToken = true;
@@ -569,10 +560,7 @@ public class Lexer extends javax.swing.JFrame {
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
                 }
             }
-            
-            if(token.type == unrecognizedToken) {
-                outputArea.append("WARNING: Unrecognized Token -->" + token + "\n");
-            } 
+             
         }
         
         // Spits out a warning when input string does not end with a $ symbol
@@ -631,7 +619,6 @@ public class Lexer extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Lexer().setVisible(true); // Sets GUI to become visible)
-                
             }
         });    
     }
