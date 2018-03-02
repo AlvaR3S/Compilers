@@ -5,6 +5,7 @@
  */
 package customcompiler;
 
+import java.awt.EventQueue;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -198,8 +199,19 @@ public class runCC extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonProject4ActionPerformed
 
+    // Takes user to lexer
     private void buttonLexerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexerActionPerformed
-        // TODO add your handling code here:
+        EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                        try {
+                                Lexer frame = new Lexer();
+                                frame.setVisible(true);
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                }
+        });
+       this.dispose();
     }//GEN-LAST:event_buttonLexerActionPerformed
 
     private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
