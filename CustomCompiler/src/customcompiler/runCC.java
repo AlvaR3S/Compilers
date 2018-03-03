@@ -20,62 +20,8 @@ public class runCC extends javax.swing.JFrame {
      */
     public runCC() {
         initComponents();
-        //buttonChange();
     }
     
-//    private void buttonChange() {
-//        // Starts with buttons turned off
-//        clearInput.setEnabled(false);
-//        clearOutput.setEnabled(false);
-//        clearAll.setEnabled(false);
-//        
-//        // Checks to see if outputArea is empty or not, then changes button
-//        outputArea.getDocument().addDocumentListener(new DocumentListener() {
-//            public void changedUpdate(DocumentEvent e) {
-//                outputChanged();
-//            }
-//            public void removeUpdate(DocumentEvent e) {
-//                outputChanged();
-//            }
-//            public void insertUpdate(DocumentEvent e) {
-//                outputChanged();
-//            }
-//            public void outputChanged() {
-//                if(outputArea.getText().isEmpty()) {
-//                    clearOutput.setEnabled(false);   
-//                    clearAll.setEnabled(false);
-//                } else {
-//                    clearOutput.setEnabled(true);
-//                    clearAll.setEnabled(true);
-//                }
-//            }
-//        });
-//        
-//        // Checks to see if inputArea is empty or not, then changes button
-//        inputArea.getDocument().addDocumentListener(new DocumentListener() {
-//            public void changedUpdate(DocumentEvent e) {
-//                inputChanged();
-//            }
-//            public void removeUpdate(DocumentEvent e) {
-//                inputChanged();
-//            }
-//            public void insertUpdate(DocumentEvent e) {
-//                inputChanged();
-//            }
-//            public void inputChanged() {
-//                if(inputArea.getText().isEmpty()) {
-//                    clearInput.setEnabled(false);
-//                    clearAll.setEnabled(false);
-//                } else {
-//                    clearInput.setEnabled(true);
-//                    clearAll.setEnabled(true);
-//                }
-//            }
-//        });
-//    }
-    
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,6 +41,7 @@ public class runCC extends javax.swing.JFrame {
         menufile = new javax.swing.JMenu();
         menuItemQuit = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
+        menuHelpNavigation = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CustomCompiler");
@@ -182,6 +129,16 @@ public class runCC extends javax.swing.JFrame {
 
         menuHelp.setText("Help");
         menuHelp.setVerifyInputWhenFocusTarget(false);
+
+        menuHelpNavigation.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        menuHelpNavigation.setText("Navigation");
+        menuHelpNavigation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuHelpNavigationActionPerformed(evt);
+            }
+        });
+        menuHelp.add(menuHelpNavigation);
+
         menu.add(menuHelp);
         menuHelp.getAccessibleContext().setAccessibleName("menuHelp");
 
@@ -214,6 +171,7 @@ public class runCC extends javax.swing.JFrame {
        this.dispose();
     }//GEN-LAST:event_buttonLexerActionPerformed
 
+    // Opens parser window
     private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonParserActionPerformed
@@ -227,6 +185,16 @@ public class runCC extends javax.swing.JFrame {
     private void menuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemQuitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_menuItemQuitActionPerformed
+
+    // Opens the navigation instructions
+    private void menuHelpNavigationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuHelpNavigationActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new runCCHelpNavigation().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+    }//GEN-LAST:event_menuHelpNavigationActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,6 +240,7 @@ public class runCC extends javax.swing.JFrame {
     private javax.swing.JLabel labelTitle;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenuItem menuHelpNavigation;
     private javax.swing.JMenuItem menuItemQuit;
     private javax.swing.JMenu menufile;
     // End of variables declaration//GEN-END:variables

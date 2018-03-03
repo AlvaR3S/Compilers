@@ -5,15 +5,13 @@
  */
 package customcompiler;
 
-
-import customcompiler.Lexer.Token;
 import static customcompiler.Lexer.TokenType.EOP;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 
 /**
  *
@@ -26,15 +24,18 @@ public class Lexer extends javax.swing.JFrame {
      */
     public Lexer() {
         initComponents();
-        buttonChange();
-          
+        buttonChange();    
     }
-
+        
+    public JTextArea getInputArea() {
+        return inputArea;
+    }
+    
     private void buttonChange() {
         // Starts with buttons turned off
-        clearInput.setEnabled(false);
-        clearOutput.setEnabled(false);
-        clearAll.setEnabled(false);
+        buttonClearInput.setEnabled(false);
+        buttonClearOutput.setEnabled(false);
+        buttonClearAll.setEnabled(false);
         
         // Checks to see if outputArea is empty or not, then changes button
         outputArea.getDocument().addDocumentListener(new DocumentListener() {
@@ -49,11 +50,11 @@ public class Lexer extends javax.swing.JFrame {
             }
             public void outputChanged() {
                 if(outputArea.getText().isEmpty()) {
-                    clearOutput.setEnabled(false);   
-                    clearAll.setEnabled(false);
+                    buttonClearOutput.setEnabled(false);   
+                    buttonClearAll.setEnabled(false);
                 } else {
-                    clearOutput.setEnabled(true);
-                    clearAll.setEnabled(true);
+                    buttonClearOutput.setEnabled(true);
+                    buttonClearAll.setEnabled(true);
                 }
             }
         });
@@ -71,301 +72,15 @@ public class Lexer extends javax.swing.JFrame {
             }
             public void inputChanged() {
                 if(inputArea.getText().isEmpty()) {
-                    clearInput.setEnabled(false);
-                    clearAll.setEnabled(false);
+                    buttonClearInput.setEnabled(false);
+                    buttonClearAll.setEnabled(false);
                 } else {
-                    clearInput.setEnabled(true);
-                    clearAll.setEnabled(true);
+                    buttonClearInput.setEnabled(true);
+                    buttonClearAll.setEnabled(true);
                 }
             }
         });
     }
-
-    private void initComponents() {
-        
-        jInternalFrame1 = new javax.swing.JInternalFrame();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jFrame1 = new javax.swing.JFrame();
-        jFrame2 = new javax.swing.JFrame();
-        jMenuBar2 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        inputArea = new javax.swing.JTextArea();
-        runCode = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        outputArea = new javax.swing.JTextArea();
-        clearOutput = new javax.swing.JButton();
-        clearInput = new javax.swing.JButton();
-        clearAll = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-
-        jInternalFrame1.setVisible(true);
-
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
-        jFrame2.getContentPane().setLayout(jFrame2Layout);
-        jFrame2Layout.setHorizontalGroup(
-            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jFrame2Layout.setVerticalGroup(
-            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        jMenu3.setText("File");
-        jMenuBar2.add(jMenu3);
-
-        jMenu4.setText("Edit");
-        jMenuBar2.add(jMenu4);
-
-        jToggleButton1.setText("jToggleButton1");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setAutoRequestFocus(false);
-        setLocation(new java.awt.Point(300, 23));
-
-        jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
-
-        inputArea.setColumns(20);
-        inputArea.setRows(5);
-        jScrollPane2.setViewportView(inputArea);
-
-        runCode.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        runCode.setText("Run");
-        runCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                runCodeActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel2.setText("Output");
-
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
-        jLabel1.setText("Input");
-
-        outputArea.setColumns(20);
-        outputArea.setRows(5);
-        jScrollPane3.setViewportView(outputArea);
-
-        clearOutput.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        clearOutput.setText("Clear Output");
-        clearOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearOutputActionPerformed(evt);
-            }
-        });
-
-        clearInput.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        clearInput.setText("Clear Input");
-        clearInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearInputActionPerformed(evt);
-            }
-        });
-
-        clearAll.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        clearAll.setText("Clear All");
-        clearAll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearAllActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
-        jLabel3.setText("Custom Java Lexer");
-        jLabel3.setSize(new java.awt.Dimension(45, 15));
-
-        jButton5.setText("Empty brackets");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
-        jLabel4.setText("Test Cases: ");
-
-        jButton6.setText("Alan's code");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
-        jButton7.setText("Advanced code");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
-        jButton8.setText("Simple code");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(202, 202, 202)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(166, 166, 166))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(254, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(208, 208, 208))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(156, 156, 156)
-                .addComponent(clearInput)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(clearOutput)
-                .addGap(149, 149, 149))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8)))
-                .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addComponent(runCode))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(clearAll)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(clearOutput)
-                    .addComponent(clearInput))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(runCode)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearAll))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton5)
-                            .addComponent(jButton6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton7)
-                            .addComponent(jButton8))))
-                .addGap(19, 19, 19))
-        );
-
-        runCode.getAccessibleContext().setAccessibleName("Lex");
-        runCode.getAccessibleContext().setAccessibleDescription("");
-        clearOutput.getAccessibleContext().setAccessibleName("ClearOutput");
-
-        jMenu1.setText("File");
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_MASK));
-        jMenuItem1.setText("Exit");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        pack();
-    }
-       
     // Defining our tokens with their corresponding expression names 
     public static enum TokenType {
         
@@ -440,25 +155,246 @@ public class Lexer extends javax.swing.JFrame {
             return String.format("\"%s\" --> [%s]", data, type.name());
         }   
     }
-    
-    // Button that deletes both the input and output data
-    private void clearAllActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.setText(null);
-        outputArea.setText(null);  
-    }                                        
-    
-    // Button that deletes input data 
-    private void clearInputActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        inputArea.setText(null);       
-    }                                          
-    
-    // Button that deletes output data
-    private void clearOutputActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        outputArea.setText(null);       
-    }                                           
-    
-    // Button that begins the lexing
-    private void runCodeActionPerformed(java.awt.event.ActionEvent evt) {                                        
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        scrollPaneInput = new javax.swing.JScrollPane();
+        inputArea = new javax.swing.JTextArea();
+        scrollPaneOutput = new javax.swing.JScrollPane();
+        outputArea = new javax.swing.JTextArea();
+        buttonParser = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        buttonRun = new javax.swing.JButton();
+        buttonProject4 = new javax.swing.JButton();
+        buttonProject3 = new javax.swing.JButton();
+        buttonQuit = new javax.swing.JButton();
+        labelTitle = new javax.swing.JLabel();
+        labelInput = new javax.swing.JLabel();
+        labelOutput = new javax.swing.JLabel();
+        buttonMain = new javax.swing.JButton();
+        buttonClearAll = new javax.swing.JButton();
+        buttonClearInput = new javax.swing.JButton();
+        buttonClearOutput = new javax.swing.JButton();
+        buttonTestCases = new javax.swing.JButton();
+        menuLexer = new javax.swing.JMenuBar();
+        menuFile = new javax.swing.JMenu();
+        menuItemQuit = new javax.swing.JMenuItem();
+        menuTools = new javax.swing.JMenu();
+        menuItemTestCases = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Custom Compiler: Lexer");
+        setBounds(new java.awt.Rectangle(20, 20, 0, 0));
+        setLocation(new java.awt.Point(20, 20));
+        setName("frameLexer"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1156, 805));
+        setSize(new java.awt.Dimension(0, 0));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        inputArea.setColumns(20);
+        inputArea.setFont(new java.awt.Font("Helvetica Neue", 0, 20)); // NOI18N
+        inputArea.setRows(5);
+        inputArea.setTabSize(2);
+        inputArea.setToolTipText("");
+        inputArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        inputArea.setVerifyInputWhenFocusTarget(false);
+        scrollPaneInput.setViewportView(inputArea);
+
+        getContentPane().add(scrollPaneInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 460, 380));
+
+        outputArea.setEditable(false);
+        outputArea.setColumns(20);
+        outputArea.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        outputArea.setRows(5);
+        outputArea.setTabSize(2);
+        outputArea.setToolTipText("");
+        outputArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        outputArea.setVerifyInputWhenFocusTarget(false);
+        scrollPaneOutput.setViewportView(outputArea);
+
+        getContentPane().add(scrollPaneOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 200, 460, 380));
+
+        buttonParser.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonParser.setText("PARSER");
+        buttonParser.setToolTipText("Opens parser window");
+        buttonParser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonParserActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonParser, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 710, 120, 30));
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
+        jLabel1.setText("Navigate through the Custom Compiler with the buttons down below:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, -1, 20));
+
+        buttonRun.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonRun.setText("Run");
+        buttonRun.setToolTipText("Execute program");
+        buttonRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRunActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonRun, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 640, 90, 30));
+
+        buttonProject4.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonProject4.setText("Unavailable");
+        buttonProject4.setToolTipText("Project 4 coming soon...");
+        buttonProject4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonProject4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonProject4, new org.netbeans.lib.awtextra.AbsoluteConstraints(459, 710, 140, 30));
+
+        buttonProject3.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonProject3.setText("Unavailable");
+        buttonProject3.setToolTipText("Project 3 coming soon...");
+        buttonProject3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonProject3ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonProject3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 710, 140, 30));
+
+        buttonQuit.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonQuit.setText("Quit");
+        buttonQuit.setToolTipText("Exits Program");
+        buttonQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonQuitActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonQuit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 710, 90, 30));
+
+        labelTitle.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
+        labelTitle.setText("Custom Compiler: Lexer");
+        labelTitle.setAlignmentX(45.0F);
+        labelTitle.setAlignmentY(15.0F);
+        getContentPane().add(labelTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 70, -1, -1));
+
+        labelInput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelInput.setText("Input");
+        getContentPane().add(labelInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, -1, -1));
+
+        labelOutput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelOutput.setText("Output");
+        getContentPane().add(labelOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, -1, -1));
+
+        buttonMain.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonMain.setText("HOME");
+        buttonMain.setToolTipText("Goes to main menu window");
+        buttonMain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonMainActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 710, 90, 30));
+
+        buttonClearAll.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearAll.setText("Clear All");
+        buttonClearAll.setToolTipText("Removes text from input and output fields");
+        buttonClearAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearAllActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonClearAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 640, 90, 30));
+
+        buttonClearInput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearInput.setText("Clear Input");
+        buttonClearInput.setToolTipText("Removes text from input field");
+        buttonClearInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearInputActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonClearInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 590, -1, 30));
+
+        buttonClearOutput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearOutput.setText("Clear Output");
+        buttonClearOutput.setToolTipText("Removes text from Output field");
+        buttonClearOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearOutputActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonClearOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 590, -1, 30));
+
+        buttonTestCases.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonTestCases.setText("Test Cases");
+        buttonTestCases.setToolTipText("Opens the test case menu");
+        buttonTestCases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTestCasesActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonTestCases, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 710, -1, 30));
+
+        menuLexer.setToolTipText("");
+
+        menuFile.setText("File");
+
+        menuItemQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemQuit.setText("Quit");
+        menuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemQuitActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuItemQuit);
+
+        menuLexer.add(menuFile);
+
+        menuTools.setText("Tools");
+
+        menuItemTestCases.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemTestCases.setText("Test Cases");
+        menuItemTestCases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemTestCasesActionPerformed(evt);
+            }
+        });
+        menuTools.add(menuItemTestCases);
+
+        menuLexer.add(menuTools);
+
+        menuHelp.setText("Help");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("User help");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuHelp.add(jMenuItem1);
+
+        menuLexer.add(menuHelp);
+
+        setJMenuBar(menuLexer);
+
+        getAccessibleContext().setAccessibleParent(this);
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonParserActionPerformed
+
+    private void buttonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRunActionPerformed
         int i = 1;
         int errorCount = 0;
         int warningCount = 0;
@@ -536,7 +472,8 @@ public class Lexer extends javax.swing.JFrame {
             }        
         }
         
-        if((input.isEmpty())) { //Error if there is no input
+        // Error if there is no input
+        if((input.isEmpty())) { 
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
         }               
@@ -560,9 +497,7 @@ public class Lexer extends javax.swing.JFrame {
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
                 }
             }
-             
         }
-        
         // Spits out a warning when input string does not end with a $ symbol
         if(!input.endsWith("$")) {
             warningCount++;
@@ -580,78 +515,142 @@ public class Lexer extends javax.swing.JFrame {
  
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n");  
-    }          
-    
-             
-    // The file option in the menu that allows for a different quiting method
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }//GEN-LAST:event_buttonRunActionPerformed
+
+    private void buttonProject4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonProject4ActionPerformed
+
+    private void buttonProject3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonProject3ActionPerformed
+
+    // Exits the Lexer
+    private void menuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemQuitActionPerformed
         System.exit(0);
-    }                                          
+    }//GEN-LAST:event_menuItemQuitActionPerformed
     
-    // Button that places Test case: simple code onto input box
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.append("{}$");
-    }                               
-    
-    // Button that places Test case: Alan's code onto input box
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.append("{}$\n" +
-            "{{{{{{}}}}}}$\n" +
-            "{{{{{{}}}}}}}$\n" +
-            "{int @}$");
-    }                                        
+    // Exits the lexer
+    private void buttonQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_buttonQuitActionPerformed
 
-    // Button that places Test case
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        inputArea.append("{int @}$"
-                + "{\"$\"}$");
-    }                                        
+    // Button that deletes both the input and output data
+    private void buttonClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAllActionPerformed
+        inputArea.setText(null);
+        outputArea.setText(null);  
+    }//GEN-LAST:event_buttonClearAllActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-       inputArea.append("print()&"
-               + "if(a)$"
-               + "while(true)$\n"
-               + "{print(\"b\")}$");
-    }                                        
-    
-    // Main that executes and runs the code 
-    public static void main(String args[]) {
+    // Button that deletes input data
+    private void buttonClearInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearInputActionPerformed
+        inputArea.setText(null);    
+    }//GEN-LAST:event_buttonClearInputActionPerformed
+
+    // Button that deletes output data
+    private void buttonClearOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutputActionPerformed
+        outputArea.setText(null); 
+    }//GEN-LAST:event_buttonClearOutputActionPerformed
+
+    private void buttonMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMainActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Lexer().setVisible(true); // Sets GUI to become visible)
+                new runCC().setVisible(true);
             }
-        });    
+        });
+        this.dispose();
+    }//GEN-LAST:event_buttonMainActionPerformed
+
+    private void menuItemTestCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTestCasesActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LexerTestCasesFrame().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_menuItemTestCasesActionPerformed
+
+    // Opens the test cases menu
+    private void buttonTestCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCasesActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LexerTestCasesFrame().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_buttonTestCasesActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LexerTestCasesHelpFrame().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Lexer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Lexer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Lexer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Lexer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Lexer().setVisible(true);
+            }
+        });
     }
 
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton clearAll;
-    private javax.swing.JButton clearInput;
-    private javax.swing.JButton clearOutput;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonClearAll;
+    private javax.swing.JButton buttonClearInput;
+    private javax.swing.JButton buttonClearOutput;
+    private javax.swing.JButton buttonMain;
+    private javax.swing.JButton buttonParser;
+    private javax.swing.JButton buttonProject3;
+    private javax.swing.JButton buttonProject4;
+    private javax.swing.JButton buttonQuit;
+    private javax.swing.JButton buttonRun;
+    private javax.swing.JButton buttonTestCases;
     private javax.swing.JTextArea inputArea;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JFrame jFrame1;
-    private javax.swing.JFrame jFrame2;
-    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private static javax.swing.JTextArea outputArea;
-    private javax.swing.JButton runCode;
-    // End of variables declaration                   
+    private javax.swing.JLabel labelInput;
+    private javax.swing.JLabel labelOutput;
+    private javax.swing.JLabel labelTitle;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenuItem menuItemQuit;
+    private javax.swing.JMenuItem menuItemTestCases;
+    private javax.swing.JMenuBar menuLexer;
+    private javax.swing.JMenu menuTools;
+    private javax.swing.JTextArea outputArea;
+    private javax.swing.JScrollPane scrollPaneInput;
+    private javax.swing.JScrollPane scrollPaneOutput;
+    // End of variables declaration//GEN-END:variables
 }
