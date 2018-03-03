@@ -6,6 +6,7 @@
 package customcompiler;
 
 import static customcompiler.Lexer.TokenType.EOP;
+import static customcompiler.Lexer.TokenType.unrecognized;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -131,7 +132,7 @@ public class Lexer extends javax.swing.JFrame {
         // Letters in between quotes are chars
         CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
         intCHAR("\"int\""),
-        capitalChar("[A-Z]");
+        unrecognized("[A-Z|~|!|@|#|%|^||&|*|_|:|<|>|?|;|'|,|.|/]");
         
         public final String pattern;
         
@@ -170,7 +171,7 @@ public class Lexer extends javax.swing.JFrame {
         scrollPaneOutput = new javax.swing.JScrollPane();
         outputArea = new javax.swing.JTextArea();
         buttonParser = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        labelNavigateInfo = new javax.swing.JLabel();
         buttonRun = new javax.swing.JButton();
         buttonProject4 = new javax.swing.JButton();
         buttonProject3 = new javax.swing.JButton();
@@ -189,7 +190,7 @@ public class Lexer extends javax.swing.JFrame {
         menuTools = new javax.swing.JMenu();
         menuItemTestCases = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuItemHelp = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Custom Compiler: Lexer");
@@ -233,9 +234,9 @@ public class Lexer extends javax.swing.JFrame {
         });
         getContentPane().add(buttonParser, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 710, 120, 30));
 
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
-        jLabel1.setText("Navigate through the Custom Compiler with the buttons down below:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, -1, 20));
+        labelNavigateInfo.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
+        labelNavigateInfo.setText("Navigate through the Custom Compiler with the buttons down below:");
+        getContentPane().add(labelNavigateInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, -1, 20));
 
         buttonRun.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonRun.setText("Run");
@@ -371,14 +372,14 @@ public class Lexer extends javax.swing.JFrame {
 
         menuHelp.setText("Help");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("User help");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuItemHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemHelp.setText("User help");
+        menuItemHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuItemHelpActionPerformed(evt);
             }
         });
-        menuHelp.add(jMenuItem1);
+        menuHelp.add(menuItemHelp);
 
         menuLexer.add(menuHelp);
 
@@ -465,6 +466,9 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokenMatcher.group(TokenType.intCHAR.name()) != null) {
                 tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.intCHAR.name())));
                 // Needs to print individual letters
+            } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
+                tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
+                errorCount++;
             } else {
                 System.out.println("Unrecognized token found.");
                 errorToken = true;
@@ -485,8 +489,13 @@ public class Lexer extends javax.swing.JFrame {
         for(Token token : tokens) {
             int index = token.data.indexOf("$");
             boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
-
-            outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+            
+            if(token.type == unrecognized) {
+                outputArea.append("Unrecognized token:" + token + "\n");
+            } else {
+                outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+            }
+            
             // If no errors or warnings have been found then lexer has succeeded
             if(token.type == EOP) {
                 outputArea.append("LEXER: Lex completed successfully\n\n");
@@ -494,9 +503,10 @@ public class Lexer extends javax.swing.JFrame {
                 // If there is more than one $ there is more than one lexeing program
                 if(moreThanOnce) {
                     i++;
-                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
-                }
+                   outputArea.append("\nLEXER: Lexing program " + i + "...\n");  
+                }  
             }
+            
         }
         // Spits out a warning when input string does not end with a $ symbol
         if(!input.endsWith("$")) {
@@ -512,7 +522,8 @@ public class Lexer extends javax.swing.JFrame {
         if(input.contains("//")) {
             System.out.print("ignore");
         }
- 
+        
+        
         outputArea.append("Lexer crashed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n");  
     }//GEN-LAST:event_buttonRunActionPerformed
@@ -552,12 +563,9 @@ public class Lexer extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonClearOutputActionPerformed
 
     private void buttonMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMainActionPerformed
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new runCC().setVisible(true);
-            }
-        });
-        this.dispose();
+        runCC main = new runCC();
+        main.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_buttonMainActionPerformed
 
     private void menuItemTestCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTestCasesActionPerformed
@@ -581,7 +589,7 @@ public class Lexer extends javax.swing.JFrame {
         this.setEnabled(false);
     }//GEN-LAST:event_buttonTestCasesActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemHelpActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LexerTestCasesHelpFrame().setVisible(true);
@@ -589,7 +597,7 @@ public class Lexer extends javax.swing.JFrame {
         });
         this.setVisible(false);
         this.setEnabled(false);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menuItemHelpActionPerformed
 
     /**
      * @param args the command line arguments
@@ -638,13 +646,13 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonRun;
     private javax.swing.JButton buttonTestCases;
     private javax.swing.JTextArea inputArea;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JLabel labelInput;
+    private javax.swing.JLabel labelNavigateInfo;
     private javax.swing.JLabel labelOutput;
     private javax.swing.JLabel labelTitle;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;
+    private javax.swing.JMenuItem menuItemHelp;
     private javax.swing.JMenuItem menuItemQuit;
     private javax.swing.JMenuItem menuItemTestCases;
     private javax.swing.JMenuBar menuLexer;

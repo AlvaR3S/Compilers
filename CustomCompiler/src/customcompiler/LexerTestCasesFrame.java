@@ -53,10 +53,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelTitle1.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
-        labelTitle1.setText("Custom Compiler: Test Cases");
+        labelTitle1.setText("Test Cases");
         labelTitle1.setAlignmentX(45.0F);
         labelTitle1.setAlignmentY(15.0F);
-        getContentPane().add(labelTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, 520, -1));
+        getContentPane().add(labelTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 200, -1));
 
         checkBox2.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox2.setText("Chars and Quotes");
@@ -109,7 +109,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 buttonConfirmActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 360, -1, -1));
+        getContentPane().add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 360, 100, 30));
 
         checkBox5.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox5.setText("Random");

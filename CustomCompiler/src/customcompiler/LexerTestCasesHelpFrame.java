@@ -54,7 +54,7 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
                 buttonReturnActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 400, 130, 40));
+        getContentPane().add(buttonReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 130, 40));
 
         menuLexer.setToolTipText("");
 

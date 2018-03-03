@@ -158,22 +158,16 @@ public class runCC extends javax.swing.JFrame {
 
     // Takes user to lexer
     private void buttonLexerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexerActionPerformed
-        EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                        try {
-                                Lexer frame = new Lexer();
-                                frame.setVisible(true);
-                        } catch (Exception e) {
-                                e.printStackTrace();
-                        }
-                }
-        });
-       this.dispose();
+        Lexer lex = new Lexer();
+        lex.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_buttonLexerActionPerformed
 
     // Opens parser window
     private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
-        // TODO add your handling code here:
+        Parser parse = new Parser();
+        parse.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_buttonParserActionPerformed
     
     // Exits the program from the main window/menu

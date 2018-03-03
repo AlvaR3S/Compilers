@@ -40,10 +40,10 @@ public class runCCHelpNavigation extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelTitle.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
-        labelTitle.setText("Custome Compiler: Navigation");
+        labelTitle.setText("Custom Compiler: Navigation");
         labelTitle.setAlignmentX(45.0F);
         labelTitle.setAlignmentY(15.0F);
-        getContentPane().add(labelTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
+        getContentPane().add(labelTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, -1, -1));
 
         buttonReturn.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonReturn.setText("Return");
@@ -53,7 +53,7 @@ public class runCCHelpNavigation extends javax.swing.JFrame {
                 buttonReturnActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 360, 130, 40));
+        getContentPane().add(buttonReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 360, 130, 40));
 
         menuLexer.setToolTipText("");
 

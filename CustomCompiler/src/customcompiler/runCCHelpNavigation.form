@@ -65,13 +65,13 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Helvetica Neue" size="36" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Custome Compiler: Navigation"/>
+        <Property name="text" type="java.lang.String" value="Custom Compiler: Navigation"/>
         <Property name="alignmentX" type="float" value="45.0"/>
         <Property name="alignmentY" type="float" value="15.0"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="100" y="60" width="-1" height="-1"/>
+          <AbsoluteConstraints x="110" y="60" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -88,7 +88,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="280" y="360" width="130" height="40"/>
+          <AbsoluteConstraints x="290" y="360" width="130" height="40"/>
         </Constraint>
       </Constraints>
     </Component>
