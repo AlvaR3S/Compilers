@@ -176,12 +176,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         Lexer lex = new Lexer();
         JTextArea inputArea = lex.getInputArea();
         
+       // inputArea
+        
         if(checkBox1.isSelected()) {
-            
             inputArea.append("{}$");
-            
-            
-            
         }
         
         if(checkBox2.isSelected()) {

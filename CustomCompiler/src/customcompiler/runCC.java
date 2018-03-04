@@ -5,10 +5,6 @@
  */
 package customcompiler;
 
-import java.awt.EventQueue;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 /**
  *
  * @author reynaldoalvarez
@@ -165,9 +161,7 @@ public class runCC extends javax.swing.JFrame {
 
     // Opens parser window
     private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
-        Parser parse = new Parser();
-        parse.setVisible(true);
-        this.dispose();
+        
     }//GEN-LAST:event_buttonParserActionPerformed
     
     // Exits the program from the main window/menu
