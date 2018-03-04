@@ -145,7 +145,7 @@ public class Lexer extends javax.swing.JFrame {
         closeParenthesis("[)]"),
         
         // Whitespace
-        whtieSpace("[ \t\f\r\n]+"),
+        whiteSpace("[ \t\f\r\n]+"),
         
         // Letters in between quotes are chars
         CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
@@ -239,6 +239,8 @@ public class Lexer extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1156, 825));
         setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTabbedPane1.setFont(new java.awt.Font("Helvetica", 1, 16)); // NOI18N
 
         panelLexer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -521,7 +523,7 @@ public class Lexer extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Parser", panelParser);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1150, 790));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1150, 800));
 
         menuLexer.setToolTipText("");
 
@@ -588,6 +590,7 @@ public class Lexer extends javax.swing.JFrame {
         int warningCount = 0;
         int line = 0;
         int numberOfEOP = 0;
+        int curLine = 1;
         
         String input = inputArea.getText();
         String output = outputArea.getText();
@@ -610,7 +613,7 @@ public class Lexer extends javax.swing.JFrame {
             
         // Loops through the input and finds valid tokens
         while(tokenMatcher.find()) {     
-            if(tokenMatcher.group(TokenType.whtieSpace.name()) != null) { 
+            if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) { 
                 continue;
             } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                 tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name()))); 
@@ -668,6 +671,8 @@ public class Lexer extends javax.swing.JFrame {
             }        
         }
         
+       
+        
         // Error if there is no input
         if((input.isEmpty())) { 
             outputArea.append("~ERROR: No input found~\n");
@@ -676,8 +681,6 @@ public class Lexer extends javax.swing.JFrame {
         
         // Prints befeore anything else at the top once
         outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-        
-        
            
         // Outputs a stream of tokens from the given input
         for(Token token : tokens) {
@@ -690,12 +693,11 @@ public class Lexer extends javax.swing.JFrame {
             } else if(token.type == unrecognizedEOP) {
                 outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + "\n");
             } else {
-                outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
+                outputArea.append("LEXER:" + token + " on line " + curLine + "\n"); // Prints out tokens
             }
             
             // If no errors or warnings have been found then lexer has succeeded
             if(token.type == EOP) {
-                //numberOfEOP++;
                 outputArea.append("LEXER: Lex completed successfully\n\n");
                 
                 // If there is more than one $ there is more than one lexeing program
@@ -703,12 +705,11 @@ public class Lexer extends javax.swing.JFrame {
                     i++;
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");
                 }
-            }    
-        }   
+            }
+        }
         
-//        System.out.println("eop: " + numberOfEOP);
-//        System.out.println("i: " + i);
-
+        
+        
         // Spits out a warning when input string does not end with a $ symbol
         if(!input.endsWith("$")) {
             outputArea.append("LEXER: WARNING: Missing a \"$\"\n");
@@ -836,7 +837,7 @@ public class Lexer extends javax.swing.JFrame {
 
         // Loops through the input and finds valid tokens
         while(tokenMatcher.find()) {
-            if(tokenMatcher.group(TokenType.whtieSpace.name()) != null) {
+            if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                 continue;
             } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                 tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
