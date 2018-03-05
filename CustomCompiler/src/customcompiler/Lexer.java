@@ -9,6 +9,7 @@ import static customcompiler.Lexer.TokenType.EOP;
 import static customcompiler.Lexer.TokenType.unrecognized;
 import static customcompiler.Lexer.TokenType.unrecognizedEOP;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextArea;
@@ -26,9 +27,9 @@ public class Lexer extends javax.swing.JFrame {
      */
     public Lexer() {
         initComponents();
-        buttonChange();    
+        buttonChange();
     }
-        
+       
     public JTextArea getInputArea() {
         return inputArea;
     }
@@ -123,7 +124,7 @@ public class Lexer extends javax.swing.JFrame {
         boolvalTrue("true"),
         
         // Identifiers
-        ID("[a-z]"), 
+
        
         // Numbers
         digit("[0-9]"), 
@@ -150,32 +151,70 @@ public class Lexer extends javax.swing.JFrame {
         
         // Letters in between quotes are chars
         CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
+        CHARS("[a-z]"), 
+        
         intCHAR("\"int\""),
         unrecognized("[A-Z|~|!|@|#|%|^||&|*|_|:|<|>|?|;|'|,|.|/]"),
         unrecognizedEOP("[\"$\"]");
         
         public final String pattern;
         
+        private Pattern tokenPatterns;
+        
         private TokenType(String pattern) {
             this.pattern = pattern;
         } 
+        
+        public Pattern getPattern() {
+            return this.tokenPatterns;
+        }
+        
+        public TokenType getType() {
+            return this;
+        }
     }
     
     // Stores token type and data
-    public static class Token {
+    public class Token {
         public TokenType type;
         public String data;
         
+        // Creating the characteristics of a token
         public Token(TokenType type, String data) {
             this.type = type;
             this.data = data;
         }        
         
+        // Getter method for getting Token types
+        public TokenType getType() {
+            return type;
+        }
+        
+        // Getter method for getting Token Data;
+        public String getData() {
+            return data;
+        } 
+        
+        // A toString method that formates tokens
         @Override
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type.name());
+        }
+    }
+    
+    
+  
+    // Exceptions are thrown when tokens are not found
+    public class TokenException extends Exception {
+        public TokenException() { }
+
+        // Formates the exception to return a message that details the error and gives the error
+        public TokenException(String errorMessage, Throwable error) {
+          super(errorMessage, error);
         }   
     }
+    
+    
     
 //    public class parse {
 //
@@ -582,6 +621,8 @@ public class Lexer extends javax.swing.JFrame {
         boolean errorToken = false;
         
         
+        
+        
     
         // Lexer takes the input, finds the patterns and places them into token format
         StringBuffer tokenPatternsBuffer = new StringBuffer();
@@ -592,7 +633,7 @@ public class Lexer extends javax.swing.JFrame {
 
         // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
         Matcher tokenMatcher = tokenPatterns.matcher(input);
-           
+        
         // Returns tokens using the stored and formatted token information
         ArrayList<Token> tokens = new ArrayList<Token>(); 
             
@@ -614,8 +655,8 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
             } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                 tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name()))); 
-            } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
-                tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name()))); 
+            } else if(tokenMatcher.group(TokenType.CHARS.name()) != null) {
+                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHARS.name()))); 
             } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
                 tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name()))); 
             } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
@@ -713,10 +754,10 @@ public class Lexer extends javax.swing.JFrame {
         
         inputAreaParser.append(outputArea.getText());
         
-        //------------------------- Parser ---------------------------------------
+        //-------------------------------------------
         
         
-       
+        
         
     }//GEN-LAST:event_buttonLexActionPerformed
 
