@@ -100,6 +100,7 @@ public class Lexer extends javax.swing.JFrame {
             }
         });
     }
+    
     // Defining our tokens with their corresponding expression names 
     public static enum TokenType {
         
@@ -175,6 +176,97 @@ public class Lexer extends javax.swing.JFrame {
             return String.format("\"%s\" --> [%s]", data, type.name());
         }   
     }
+    
+//    public class parse {
+//
+//            String root = null;  // Note the NULL root node of this tree.
+//            String cur = "{}";     // Note the EMPTY current node of the tree we're building.
+//
+//
+//            // Add a node: kind in {branch, leaf}.
+//            public addNode(String name, String kind) {
+//                // Construct the node object.
+//                this.node = { name: name,
+//                             children: [],
+//                             parent: {}
+//                           };
+//
+//                // Check to see if it needs to be the root node.
+//                if ( (this.root == null) || (!this.root) )
+//                {
+//                    // We are the root node.
+//                    this.root = node;
+//                }
+//                else
+//                {
+//                    // We are the children.
+//                    // Make our parent the CURrent node...
+//                    node.parent = this.cur;
+//                    // ... and add ourselves (via the unfrotunately-named
+//                    // "push" function) to the children array of the current node.
+//                    this.cur.children.push(node);
+//                }
+//                // If we are an interior/branch node, then...
+//                if (kind == "branch")
+//                {
+//                    // ... update the CURrent node pointer to ourselves.
+//                    this.cur = node;
+//                }
+//            };
+//
+//            // Note that we're done with this branch of the tree...
+//            this.endChildren = function() {
+//                // ... by moving "up" to our parent node (if possible).
+//                if ((this.cur.parent !== null) && (this.cur.parent.name !== undefined))
+//                {
+//                    this.cur = this.cur.parent;
+//                }
+//                else
+//                {
+//                    // TODO: Some sort of error logging.
+//                    // This really should not happen, but it will, of course.
+//                }
+//            };
+//
+//            // Return a string representation of the tree.
+//            this.toString = function() {
+//                // Initialize the result string.
+//                var traversalResult = "";
+//
+//                // Recursive function to handle the expansion of the nodes.
+//                function expand(node, depth)
+//                {
+//                    // Space out based on the current depth so
+//                    // this looks at least a little tree-like.
+//                    for (var i = 0; i < depth; i++)
+//                    {
+//                        traversalResult += "-";
+//                    }
+//
+//                    // If there are no children (i.e., leaf nodes)...
+//                    if (!node.children || node.children.length === 0)
+//                    {
+//                        // ... note the leaf node.
+//                        traversalResult += "[" + node.name + "]";
+//                        traversalResult += "\n";
+//                    }
+//                    else
+//                    {
+//                        // There are children, so note these interior/branch nodes and ...
+//                        traversalResult += "<" + node.name + "> \n";
+//                        // .. recursively expand them.
+//                        for (var i = 0; i < node.children.length; i++)
+//                        {
+//                            expand(node.children[i], depth + 1);
+//                        }
+//                    }
+//                }
+//                // Make the initial call to expand from the root.
+//                expand(this.root, 0);
+//                // Return the result.
+//                return traversalResult;
+//            };
+//        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -191,15 +283,10 @@ public class Lexer extends javax.swing.JFrame {
         inputArea = new javax.swing.JTextArea();
         scrollPaneOutput = new javax.swing.JScrollPane();
         outputArea = new javax.swing.JTextArea();
-        buttonParser = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         buttonLex = new javax.swing.JButton();
-        buttonProject4 = new javax.swing.JButton();
-        buttonProject3 = new javax.swing.JButton();
         buttonQuit = new javax.swing.JButton();
         labelInput = new javax.swing.JLabel();
         labelOutput = new javax.swing.JLabel();
-        buttonMain = new javax.swing.JButton();
         buttonClearAll = new javax.swing.JButton();
         buttonClearInput = new javax.swing.JButton();
         buttonClearOutput = new javax.swing.JButton();
@@ -216,11 +303,6 @@ public class Lexer extends javax.swing.JFrame {
         buttonClearOutput1 = new javax.swing.JButton();
         buttonClearAll1 = new javax.swing.JButton();
         buttonParse = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        buttonMain1 = new javax.swing.JButton();
-        buttonLexer = new javax.swing.JButton();
-        buttonProject5 = new javax.swing.JButton();
-        buttonProject6 = new javax.swing.JButton();
         buttonTestCases1 = new javax.swing.JButton();
         buttonQuit1 = new javax.swing.JButton();
         menuLexer = new javax.swing.JMenuBar();
@@ -236,7 +318,7 @@ public class Lexer extends javax.swing.JFrame {
         setBounds(new java.awt.Rectangle(20, 20, 0, 0));
         setLocation(new java.awt.Point(20, 20));
         setName("frameLexer"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1156, 825));
+        setPreferredSize(new java.awt.Dimension(1156, 835));
         setSize(new java.awt.Dimension(0, 0));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -267,20 +349,6 @@ public class Lexer extends javax.swing.JFrame {
 
         panelLexer.add(scrollPaneOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 200, 460, 380));
 
-        buttonParser.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonParser.setText("PARSER");
-        buttonParser.setToolTipText("Opens parser window");
-        buttonParser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonParserActionPerformed(evt);
-            }
-        });
-        panelLexer.add(buttonParser, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 710, 120, 30));
-
-        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
-        jLabel1.setText("Navigate through the Custom Compiler with the buttons down below:");
-        panelLexer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, -1, 20));
-
         buttonLex.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonLex.setText("Run");
         buttonLex.setToolTipText("Execute program");
@@ -289,27 +357,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonLexActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonLex, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 640, 90, 30));
-
-        buttonProject4.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonProject4.setText("Unavailable");
-        buttonProject4.setToolTipText("Project 4 coming soon...");
-        buttonProject4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonProject4ActionPerformed(evt);
-            }
-        });
-        panelLexer.add(buttonProject4, new org.netbeans.lib.awtextra.AbsoluteConstraints(459, 710, 140, 30));
-
-        buttonProject3.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonProject3.setText("Unavailable");
-        buttonProject3.setToolTipText("Project 3 coming soon...");
-        buttonProject3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonProject3ActionPerformed(evt);
-            }
-        });
-        panelLexer.add(buttonProject3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 710, 140, 30));
+        panelLexer.add(buttonLex, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 90, 30));
 
         buttonQuit.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonQuit.setText("Quit");
@@ -319,7 +367,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonQuitActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonQuit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 710, 90, 30));
+        panelLexer.add(buttonQuit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 720, 90, 30));
 
         labelInput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput.setText("Input");
@@ -329,16 +377,6 @@ public class Lexer extends javax.swing.JFrame {
         labelOutput.setText("Output");
         panelLexer.add(labelOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, -1, -1));
 
-        buttonMain.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonMain.setText("HOME");
-        buttonMain.setToolTipText("Goes to main menu window");
-        buttonMain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMainActionPerformed(evt);
-            }
-        });
-        panelLexer.add(buttonMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 710, 90, 30));
-
         buttonClearAll.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearAll.setText("Clear All");
         buttonClearAll.setToolTipText("Removes text from input and output fields");
@@ -347,7 +385,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearAllActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonClearAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 640, 90, 30));
+        panelLexer.add(buttonClearAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 720, 90, 30));
 
         buttonClearInput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearInput.setText("Clear Input");
@@ -377,7 +415,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonTestCasesActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonTestCases, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 710, -1, 30));
+        panelLexer.add(buttonTestCases, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 720, 110, 30));
 
         labelTitle.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
         labelTitle.setText("Custom Compiler: Lexer");
@@ -445,7 +483,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearAll1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonClearAll1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 640, 90, 30));
+        panelParser.add(buttonClearAll1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 720, 90, 30));
 
         buttonParse.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonParse.setText("Run");
@@ -455,51 +493,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonParseActionPerformed(evt);
             }
         });
-        panelParser.add(buttonParse, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 630, 90, 30));
-
-        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
-        jLabel2.setText("Navigate through the Custom Compiler with the buttons down below:");
-        panelParser.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 680, -1, 20));
-
-        buttonMain1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonMain1.setText("HOME");
-        buttonMain1.setToolTipText("Goes to main menu window");
-        buttonMain1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMain1ActionPerformed(evt);
-            }
-        });
-        panelParser.add(buttonMain1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 710, 90, 30));
-
-        buttonLexer.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonLexer.setText("LEXER");
-        buttonLexer.setToolTipText("Opens parser window");
-        buttonLexer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonLexerActionPerformed(evt);
-            }
-        });
-        panelParser.add(buttonLexer, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 710, 120, 30));
-
-        buttonProject5.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonProject5.setText("Unavailable");
-        buttonProject5.setToolTipText("Project 3 coming soon...");
-        buttonProject5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonProject5ActionPerformed(evt);
-            }
-        });
-        panelParser.add(buttonProject5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 710, 140, 30));
-
-        buttonProject6.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonProject6.setText("Unavailable");
-        buttonProject6.setToolTipText("Project 4 coming soon...");
-        buttonProject6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonProject6ActionPerformed(evt);
-            }
-        });
-        panelParser.add(buttonProject6, new org.netbeans.lib.awtextra.AbsoluteConstraints(459, 710, 140, 30));
+        panelParser.add(buttonParse, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 90, 30));
 
         buttonTestCases1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonTestCases1.setText("Test Cases");
@@ -509,7 +503,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonTestCases1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonTestCases1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 710, -1, 30));
+        panelParser.add(buttonTestCases1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 720, -1, 30));
 
         buttonQuit1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonQuit1.setText("Quit");
@@ -519,7 +513,7 @@ public class Lexer extends javax.swing.JFrame {
                 buttonQuit1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonQuit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 710, 90, 30));
+        panelParser.add(buttonQuit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 720, 90, 30));
 
         jTabbedPane1.addTab("Parser", panelParser);
 
@@ -574,15 +568,6 @@ public class Lexer extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     
-    // Opens the Parser window
-    private void buttonParserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParserActionPerformed
-        //Parser parse = new Parser();
-        //parse.setVisible(true);
-        //parse.setEnabled(true);
-        //this.setVisible(false);
-        //this.setEnabled(false);
-    }//GEN-LAST:event_buttonParserActionPerformed
-
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
         int i = 1;
@@ -727,15 +712,13 @@ public class Lexer extends javax.swing.JFrame {
                             + "and [" + errorCount + "] Error(s).\n\n");
         
         inputAreaParser.append(outputArea.getText());
+        
+        //------------------------- Parser ---------------------------------------
+        
+        
+       
+        
     }//GEN-LAST:event_buttonLexActionPerformed
-
-    private void buttonProject4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonProject4ActionPerformed
-
-    private void buttonProject3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonProject3ActionPerformed
 
     // Exits the Lexer
     private void menuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemQuitActionPerformed
@@ -762,13 +745,6 @@ public class Lexer extends javax.swing.JFrame {
     private void buttonClearOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutputActionPerformed
         outputArea.setText(null); 
     }//GEN-LAST:event_buttonClearOutputActionPerformed
-
-    // Returns to the main menu window
-    private void buttonMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMainActionPerformed
-        runCC main = new runCC();
-        main.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_buttonMainActionPerformed
 
     // Opens the Test Cases frame which you can add onto the lexer input box
     private void menuItemTestCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTestCasesActionPerformed
@@ -813,161 +789,8 @@ public class Lexer extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonClearAll1ActionPerformed
 
     private void buttonParseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParseActionPerformed
-        int i = 1;
-        int errorCount = 0;
-        int warningCount = 0;
-        int line = 0;
-
-        String input = inputAreaParser.getText();
-        String output = outputArea.getText();
-        boolean errorToken = false;
-
-        // Lexer takes the input, finds the patterns and places them into token format
-        StringBuffer tokenPatternsBuffer = new StringBuffer();
-        for (TokenType tokenType : TokenType.values())
-        tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-
-        Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1), Pattern.CASE_INSENSITIVE);
-
-        // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
-        Matcher tokenMatcher = tokenPatterns.matcher(input);
-
-        // Returns tokens using the stored and formatted token information
-        ArrayList<Token> tokens = new ArrayList<Token>();
-
-        // Loops through the input and finds valid tokens
-        while(tokenMatcher.find()) {
-            if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
-                continue;
-            } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-                tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-            } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
-                tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
-            } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
-                tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
-            } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
-                tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
-            } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
-                tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
-            } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
-                tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-            } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
-                tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
-            } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
-                tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name())));
-            } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
-                tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
-            } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
-                tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
-            } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
-                tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
-            } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
-                tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name())));
-            } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
-                tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name())));
-            } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
-                tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name())));
-            } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
-                tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name())));
-            } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
-                tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name())));
-            } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
-                tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name())));
-            } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
-                tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
-            } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
-                tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));
-            } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
-                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-            } else if(tokenMatcher.group(TokenType.intCHAR.name()) != null) {
-                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.intCHAR.name())));
-                // Needs to print individual letters
-            } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
-                tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
-                errorCount++;
-            } else {
-                System.out.println("Unrecognized token found.");
-                errorToken = true;
-                errorCount++;
-            }
-        }
-
-        // Error if there is no input
-        if((input.isEmpty())) {
-            outputArea.append("~ERROR: No input found~\n");
-            errorCount++;
-        }
-
-        // Prints befeore anything else at the top once
-        outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-
-        // Outputs a stream of tokens from the given input
-        for(Token token : tokens) {
-            int index = token.data.indexOf("$");
-            boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
-
-            // When an unrecognized token is found print error message else print the token
-            if(token.type == unrecognized) {
-                outputArea.append("LEXER: ERROR: Unrecognized token: " + token.data + "\n");
-            } else {
-                outputArea.append("LEXER:" + token + "\n"); // Prints out tokens
-            }
-
-            // If no errors or warnings have been found then lexer has succeeded
-            if(token.type == EOP) {
-                outputArea.append("LEXER: Lex completed successfully\n\n");
-
-                // If there is more than one $ there is more than one lexeing program
-                if(moreThanOnce) {
-                    i++;
-                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                }
-            }
-        }
-
-        // Spits out a warning when input string does not end with a $ symbol
-        if(!input.endsWith("$")) {
-            outputArea.append("LEXER: WARNING: Missing a \"$\"\n");
-            outputArea.append("LEXER: Lex completed with mistakes\n\n");
-            warningCount++;
-        }
-
-        // Spits out an error when input contains ("&") OR ('$')
-        if(input.contains("\"$\"") || input.contains("\'$\'")) {
-            errorCount++;
-        }
-
-        // Ignoring comments (NOT FINISHED YET)
-        if(input.contains("//")) {
-            System.out.print("ignore");
-        }
-
-        // Prints out total number of errors and warnings at the end of program
-        outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
-            + "and [" + errorCount + "] Error(s).\n\n");
+        
     }//GEN-LAST:event_buttonParseActionPerformed
-
-    private void buttonMain1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMain1ActionPerformed
-        runCC main = new runCC();
-        main.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_buttonMain1ActionPerformed
-
-    private void buttonLexerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexerActionPerformed
-        Lexer lex = new Lexer();
-        lex.setVisible(true);
-        lex.setEnabled(true);
-        this.setVisible(false);
-        this.setEnabled(false);
-    }//GEN-LAST:event_buttonLexerActionPerformed
-
-    private void buttonProject5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonProject5ActionPerformed
-
-    private void buttonProject6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProject6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonProject6ActionPerformed
 
     private void buttonTestCases1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCases1ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1025,23 +848,13 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonClearOutput;
     private javax.swing.JButton buttonClearOutput1;
     private javax.swing.JButton buttonLex;
-    private javax.swing.JButton buttonLexer;
-    private javax.swing.JButton buttonMain;
-    private javax.swing.JButton buttonMain1;
     private javax.swing.JButton buttonParse;
-    private javax.swing.JButton buttonParser;
-    private javax.swing.JButton buttonProject3;
-    private javax.swing.JButton buttonProject4;
-    private javax.swing.JButton buttonProject5;
-    private javax.swing.JButton buttonProject6;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
     private javax.swing.JButton buttonTestCases;
     private javax.swing.JButton buttonTestCases1;
     private javax.swing.JTextArea inputArea;
     private javax.swing.JTextArea inputAreaParser;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
