@@ -5,51 +5,20 @@
  */
 package customcompiler;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author reynaldoalvarez
  */
 
 
-import customcompiler.Lexer.Token;
-import java.util.ArrayList;
-
-
-
-
 public class Parser {
-    Lexer lex = new Lexer();
-    Token token;
+    public Parser() {
     
-    private final ArrayList<Token> tokens;
-    private int currentToken = 0;
-    
-    Parser(ArrayList<Token> tokens) {
-        this.tokens = tokens;
-    } 
-    
-    void nextToken() {
-        
     }
-    
-    // Exceptions are thrown when Parser discovers an error
-    public class ParserException extends Exception {
-        public ParserException() { }
 
-        // Formates the exception to return a message that details the error and gives the error
-        public ParserException(String errorMessage, Throwable error) {
-          super(errorMessage, error);
-        }   
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+}
     /**
      * 
      * 
@@ -79,6 +48,12 @@ public class Parser {
 
 
     
-}
+    
+
+    
+    
+    
+    
+
 
     

@@ -8,8 +8,12 @@ package customcompiler;
 import static customcompiler.Lexer.TokenType.EOP;
 import static customcompiler.Lexer.TokenType.unrecognized;
 import static customcompiler.Lexer.TokenType.unrecognizedEOP;
+import static customcompiler.Lexer.TokenType.whiteSpace;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextArea;
@@ -21,19 +25,26 @@ import javax.swing.event.DocumentListener;
  * @author reynaldoalvarez
  */
 public class Lexer extends javax.swing.JFrame {
-
     /**
      * Creates new form Lexer
      */
     public Lexer() {
+        // Components for the Jframe
         initComponents();
+        
+        // Method that pays attention to an empty input and output area
         buttonChange();
     }
-       
+
     public JTextArea getInputArea() {
         return inputArea;
     }
-
+    
+    public String getInput() {
+        String input = inputArea.getText();
+        return input;
+    }
+    
     public String getOutputArea() {
         String output = outputArea.getText();
         return output;
@@ -157,22 +168,23 @@ public class Lexer extends javax.swing.JFrame {
         unrecognized("[A-Z|~|!|@|#|%|^||&|*|_|:|<|>|?|;|'|,|.|/]"),
         unrecognizedEOP("[\"$\"]");
         
-        public final String pattern;
+        //public final String pattern;
         
-        private Pattern tokenPatterns;
+        Pattern pattern;
         
         private TokenType(String pattern) {
-            this.pattern = pattern;
+            this.pattern = Pattern.compile(pattern);
         } 
         
         public Pattern getPattern() {
-            return this.tokenPatterns;
+            return this.pattern;
         }
         
         public TokenType getType() {
             return this;
         }
     }
+
     
     // Stores token type and data
     public class Token {
@@ -183,7 +195,7 @@ public class Lexer extends javax.swing.JFrame {
         public Token(TokenType type, String data) {
             this.type = type;
             this.data = data;
-        }        
+        }
         
         // Getter method for getting Token types
         public TokenType getType() {
@@ -193,119 +205,16 @@ public class Lexer extends javax.swing.JFrame {
         // Getter method for getting Token Data;
         public String getData() {
             return data;
-        } 
+        }
         
         // A toString method that formates tokens
         @Override
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type.name());
-        }
+        }    
     }
     
     
-  
-    // Exceptions are thrown when tokens are not found
-    public class TokenException extends Exception {
-        public TokenException() { }
-
-        // Formates the exception to return a message that details the error and gives the error
-        public TokenException(String errorMessage, Throwable error) {
-          super(errorMessage, error);
-        }   
-    }
-    
-    
-    
-//    public class parse {
-//
-//            String root = null;  // Note the NULL root node of this tree.
-//            String cur = "{}";     // Note the EMPTY current node of the tree we're building.
-//
-//
-//            // Add a node: kind in {branch, leaf}.
-//            public addNode(String name, String kind) {
-//                // Construct the node object.
-//                this.node = { name: name,
-//                             children: [],
-//                             parent: {}
-//                           };
-//
-//                // Check to see if it needs to be the root node.
-//                if ( (this.root == null) || (!this.root) )
-//                {
-//                    // We are the root node.
-//                    this.root = node;
-//                }
-//                else
-//                {
-//                    // We are the children.
-//                    // Make our parent the CURrent node...
-//                    node.parent = this.cur;
-//                    // ... and add ourselves (via the unfrotunately-named
-//                    // "push" function) to the children array of the current node.
-//                    this.cur.children.push(node);
-//                }
-//                // If we are an interior/branch node, then...
-//                if (kind == "branch")
-//                {
-//                    // ... update the CURrent node pointer to ourselves.
-//                    this.cur = node;
-//                }
-//            };
-//
-//            // Note that we're done with this branch of the tree...
-//            this.endChildren = function() {
-//                // ... by moving "up" to our parent node (if possible).
-//                if ((this.cur.parent !== null) && (this.cur.parent.name !== undefined))
-//                {
-//                    this.cur = this.cur.parent;
-//                }
-//                else
-//                {
-//                    // TODO: Some sort of error logging.
-//                    // This really should not happen, but it will, of course.
-//                }
-//            };
-//
-//            // Return a string representation of the tree.
-//            this.toString = function() {
-//                // Initialize the result string.
-//                var traversalResult = "";
-//
-//                // Recursive function to handle the expansion of the nodes.
-//                function expand(node, depth)
-//                {
-//                    // Space out based on the current depth so
-//                    // this looks at least a little tree-like.
-//                    for (var i = 0; i < depth; i++)
-//                    {
-//                        traversalResult += "-";
-//                    }
-//
-//                    // If there are no children (i.e., leaf nodes)...
-//                    if (!node.children || node.children.length === 0)
-//                    {
-//                        // ... note the leaf node.
-//                        traversalResult += "[" + node.name + "]";
-//                        traversalResult += "\n";
-//                    }
-//                    else
-//                    {
-//                        // There are children, so note these interior/branch nodes and ...
-//                        traversalResult += "<" + node.name + "> \n";
-//                        // .. recursively expand them.
-//                        for (var i = 0; i < node.children.length; i++)
-//                        {
-//                            expand(node.children[i], depth + 1);
-//                        }
-//                    }
-//                }
-//                // Make the initial call to expand from the root.
-//                expand(this.root, 0);
-//                // Return the result.
-//                return traversalResult;
-//            };
-//        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -609,6 +518,7 @@ public class Lexer extends javax.swing.JFrame {
     
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
+
         int i = 1;
         int errorCount = 0;
         int warningCount = 0;
@@ -619,26 +529,22 @@ public class Lexer extends javax.swing.JFrame {
         String input = inputArea.getText();
         String output = outputArea.getText();
         boolean errorToken = false;
-        
-        
-        
-        
+
     
         // Lexer takes the input, finds the patterns and places them into token format
         StringBuffer tokenPatternsBuffer = new StringBuffer();
-        for (TokenType tokenType : TokenType.values()) 
+        for(TokenType tokenType : TokenType.values()) 
             tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-   
         Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1), Pattern.CASE_INSENSITIVE);
 
         // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
         Matcher tokenMatcher = tokenPatterns.matcher(input);
         
         // Returns tokens using the stored and formatted token information
-        ArrayList<Token> tokens = new ArrayList<Token>(); 
+        ArrayList<Token> tokens = new ArrayList<Token>();
             
         // Loops through the input and finds valid tokens
-        while(tokenMatcher.find()) {     
+        while(tokenMatcher.find()) {
             if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) { 
                 continue;
             } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
@@ -696,17 +602,23 @@ public class Lexer extends javax.swing.JFrame {
                 errorCount++;
             }        
         }
-        
-       
+
+
         
         // Error if there is no input
         if((input.isEmpty())) { 
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
-        }               
+        }
         
         // Prints befeore anything else at the top once
         outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+        
+        for(int check = 0; check < input.length(); check++) {
+           if(input.contentEquals("\n")) {
+                curLine++;
+            } 
+        }
            
         // Outputs a stream of tokens from the given input
         for(Token token : tokens) {
@@ -722,6 +634,7 @@ public class Lexer extends javax.swing.JFrame {
                 outputArea.append("LEXER:" + token + " on line " + curLine + "\n"); // Prints out tokens
             }
             
+            
             // If no errors or warnings have been found then lexer has succeeded
             if(token.type == EOP) {
                 outputArea.append("LEXER: Lex completed successfully\n\n");
@@ -733,8 +646,8 @@ public class Lexer extends javax.swing.JFrame {
                 }
             }
         }
-        
-        
+
+
         
         // Spits out a warning when input string does not end with a $ symbol
         if(!input.endsWith("$")) {
@@ -754,10 +667,9 @@ public class Lexer extends javax.swing.JFrame {
         
         inputAreaParser.append(outputArea.getText());
         
-        //-------------------------------------------
-        
-        
-        
+//        ParseTree tree = new ParseTree();
+//        System.out.println(tree);
+//        System.out.println(tree.eval());
         
     }//GEN-LAST:event_buttonLexActionPerformed
 
