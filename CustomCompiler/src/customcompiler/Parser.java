@@ -13,9 +13,17 @@ import java.util.regex.Pattern;
  */
 
 
-public class Parser {
+public class Parser extends Lexer {
     public Parser() {
     
+    }
+    
+    public void nextToken() {
+            
+    }
+    
+    public void Expr() {
+        
     }
 
 }

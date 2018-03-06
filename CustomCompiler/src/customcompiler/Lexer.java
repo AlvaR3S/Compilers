@@ -211,7 +211,11 @@ public class Lexer extends javax.swing.JFrame {
         @Override
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type.name());
-        }    
+        }
+        
+        public void nextToken() {
+            
+        }
     }
     
     
@@ -665,11 +669,11 @@ public class Lexer extends javax.swing.JFrame {
         outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n");
         
+        // Prints lexer output to parser input
         inputAreaParser.append(outputArea.getText());
         
-//        ParseTree tree = new ParseTree();
-//        System.out.println(tree);
-//        System.out.println(tree.eval());
+
+
         
     }//GEN-LAST:event_buttonLexActionPerformed
 
