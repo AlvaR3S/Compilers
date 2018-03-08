@@ -5,7 +5,7 @@
  */
 package customcompiler;
 
-import static customcompiler.Lexer.TokenType;
+import static customcompiler.Lexer.TokenType.*;
 
 /**
  *
@@ -15,13 +15,17 @@ import static customcompiler.Lexer.TokenType;
 
 public class Parser {
     
-    
-    
-    public Parser() {
-    
-    }
-    
-    
+//    Lexer lex = new Lexer();
+//    
+//    public void parse() {
+//        parseProgram();
+//    }
+//    
+//    private void parseProgram() {
+//        
+//    }
+//    
+//    
     /**
      * 
      * 
@@ -30,10 +34,9 @@ public class Parser {
      *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
      *      ::== ID             ::== char
      */
-    public void Expr() {
+    private void Expr() {
         
     }
-
 }
     
     
