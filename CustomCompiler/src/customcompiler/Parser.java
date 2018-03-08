@@ -5,7 +5,7 @@
  */
 package customcompiler;
 
-import java.util.regex.Pattern;
+import static customcompiler.Lexer.TokenType;
 
 /**
  *
@@ -13,20 +13,15 @@ import java.util.regex.Pattern;
  */
 
 
-public class Parser extends Lexer {
+public class Parser {
+    
+    
+    
     public Parser() {
     
     }
     
-    public void nextToken() {
-            
-    }
     
-    public void Expr() {
-        
-    }
-
-}
     /**
      * 
      * 
@@ -35,6 +30,12 @@ public class Parser extends Lexer {
      *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
      *      ::== ID             ::== char
      */
+    public void Expr() {
+        
+    }
+
+}
+    
     
 //    public static int Expr(ArrayList<Token> token) {
 //
@@ -52,16 +53,3 @@ public class Parser extends Lexer {
      *           ::== IfStatement           ::== if BooleanExpr Block
      *           ::== Block                 ::== Program
      */ 
-
-
-
-    
-    
-
-    
-    
-    
-    
-
-
-    
