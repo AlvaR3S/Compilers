@@ -254,12 +254,12 @@ public class Lexer extends javax.swing.JFrame {
                 outputArea.append("\nLEXER: Lexing program " + i + "...\n");
             }
             
-            if(token.equals(tokens.get(currentTokenPosition))) {
-                System.out.println(token.data);
-                currentTokenPosition++;
-            } else {
-                System.out.println("HEY! Token position not found");
-            }
+//            if(token.equals(tokens.get(currentTokenPosition))) {
+//                System.out.println(token.data);
+//                currentTokenPosition++;
+//            } else {
+//                System.out.println("HEY! Token position not found");
+//            }
           
                 
             
@@ -469,25 +469,40 @@ public class Lexer extends javax.swing.JFrame {
  
     
  
-    public final class Parser {
+    public class Parser {
         
         
-        TokenType viewNextTokenType;
-        int root = 0;
-        char nextToken;
-        
+       
+        String input = inputArea.getText();
         
         /**
         * 
         * 
         * @param correctToken
         */        
+        
+        
+        private void getNextToken() {
+           
+            for(Token token : tokens) {
+                if(token.equals(tokens.get(currentTokenPosition))) {
+                    System.out.print(currentTokenPosition);
+                    System.out.println("nextToken: " + token.data);
+                    currentTokenPosition++;
+                } else {
+                    System.out.println("NOT FOOD TO DEVOUR");
+                    System.out.println("currentTokenPosition: " + currentTokenPosition);
+                }
+            }
+        }
+        
 //        // If the current token is a match then eat it
-        public void matchAndDevour(TokenType correctToken) {
-            if(correctToken.equals(viewNextTokenType)) {
-                currentTokenPosition++;
+        private void matchAndDevour(String nextToken) {
+           // this.nextToken = nextToken;
+            if(nextToken.equals(input.charAt(0))) {
+                getNextToken();
             } else {
-                System.out.println("NOT FOOD TO DEVOUR");
+                System.out.println("token does not match or not found");
             }
            
         }
@@ -505,18 +520,19 @@ public class Lexer extends javax.swing.JFrame {
         * StatementList ::== Statement StatementList
         *               ::== ε <-- (empty set)
         */        
-        public void Program() {
+        private void Program() {
             Block();
         } 
 
-        public void Block() {
-            matchAndDevour(viewNextTokenType.openBracket);
-            
+        private void Block() {            
+            matchAndDevour("{");
             //StatementList();
+            matchAndDevour("}");
+            matchAndDevour("$");
             System.out.println("success");
         }
 
-//        private void StatementList() {
+//        public void StatementList() {
 //            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //        }
         
@@ -857,13 +873,14 @@ public class Lexer extends javax.swing.JFrame {
         
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
+       lexTokens();
        
         // Creates a variable for the Parser class
         Parser parser = new Parser();
         
         
         
-        lexTokens();
+        
         
        // parser.
 
