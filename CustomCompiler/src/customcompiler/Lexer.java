@@ -252,38 +252,6 @@ public class Lexer extends javax.swing.JFrame {
         return null;
     }
     
-    class TokenTracker {
-        
-        
-        Lexer lex;
-        String input = lex.getInput();;
-        char nextToken;
-        
-        /**
-         * If current token successfully Matches 
-         * then it will be eaten 
-         * and currentPostion moves to next input
-         * @param curToken
-         * @return 
-         */
-        public void tokenTracker(Token curToken) {
-            if(curToken.equals(tokens.get(currentTokenPosition))) {
-                System.out.println(curToken.data);
-                currentTokenPosition++;
-            } else {
-                System.out.println("HEY! Token position not found");
-            }
-        }
-    
-        public char getNextToken() {
-            if(currentTokenPosition < input.length()) {
-                this.nextToken = input.charAt(currentTokenPosition++);
-                return nextToken;
-            } else {
-                return '$';
-            }
-        }
-    }
     
     
     /**
@@ -463,39 +431,63 @@ public class Lexer extends javax.swing.JFrame {
        
     }
     
-    public class Parser {
+    
+    class TokenTracker {
+        
         
         Lexer lex;
-        Token token; 
-        TokenType tokenType;
-        String input;
-        String output;
+        String input = lex.getInput();;
         char nextToken;
         
-        TokenTracker tok;
-        
+        /**
+         * If current token successfully Matches 
+         * then it will be eaten 
+         * and currentPostion moves to next input
+         * @param curToken
+         * @return 
+         */
+        public void tokenTracker(Token curToken) {
+            if(curToken.equals(tokens.get(currentTokenPosition))) {
+                System.out.println(curToken.data);
+                currentTokenPosition++;
+            } else {
+                System.out.println("HEY! Token position not found");
+            }
+        }
     
+        public char getNextToken() {
+            if(currentTokenPosition < input.length()) {
+                this.nextToken = input.charAt(currentTokenPosition++);
+                return nextToken;
+            } else {
+                return '$';
+            }
+        }
+    }
+    
+    
+    public class Parser {
+        
+        TokenTracker input;
+        
         
         /**
         * Recieving the Lexer's input and output
         * also figures out the next token if there is any
-        * @param input
-        * @param output 
+        * @param input 
         */
-        public Parser(TokenTracker tok) {
-            this.tok = tok;
+        public Parser(TokenTracker input) {
+            this.input = input;
+            viewNextToken();
         }
         
         // Is aware of current token and looks at the next token
         public void viewNextToken() {            
-           currentTokenPosition = tok.getNextToken();
+           currentTokenPosition = input.getNextToken();
         } 
         
         
-        
-        
-        
-        
+
         /**
         * Program       ::== Block $
         * Block         ::== { StatementList }
