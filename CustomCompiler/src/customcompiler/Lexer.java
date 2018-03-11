@@ -452,24 +452,22 @@ public class Lexer extends javax.swing.JFrame {
         * @param input
         * @param output 
         */
-        public Parser() {
+        void Parser() {
             this.input = lex.getInput();
             this.output = lex.getOutputArea();
+            Program();
+            if(currentTokenPosition == input.length()) {
+                System.out.println("End of the Line.");
+            }
         }
         
-        public Token lookAhead() {
-            for(int currentTokenPosition = 0; currentTokenPosition < input.length(); currentTokenPosition++) {
-               if(token == lexTokens()) {
-                   matchAndDevour = true;
-                   getNextToken();
-               }
-            }
-            
-            return token;
+        public String lookAhead() {            
+           
+            return token.data;
         } 
         
         public void getNextToken() {
-            currentTokenPosition++;
+            int currentTokenPosition = currentTokenPosition;
         }
         
         
@@ -488,32 +486,35 @@ public class Lexer extends javax.swing.JFrame {
         
         
         public void Block() {
-            if(lookAhead() == "{") {
-                
+            if("{".equals(lookAhead())) {
+                getNextToken();
+                StatementList();
+            } else {
+                System.out.println("Not a block");
             }
         }
         
                
-    /**
-     * 
-     * 
-     * Expr ::== IntExpr        ::== digit intopExpr, digit
-     *      ::== StringExpr     ::== " CharList "
-     *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
-     *      ::== ID             ::== char
-     */
+        /**
+         * 
+         * 
+         * Expr ::== IntExpr        ::== digit intopExpr, digit
+         *      ::== StringExpr     ::== " CharList "
+         *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
+         *      ::== ID             ::== char
+         */
   
         
           
-    /**
-     * 
-     * Statement ::== Printokentatement        ::== print ( Expr )
-     *           ::== Assignmentokentatement   ::== Id = Expr
-     *           ::== VarDecl               ::== type Id
-     *           ::== WhileStatement        ::== while BooleanExpr Block
-     *           ::== IfStatement           ::== if BooleanExpr Block
-     *           ::== Block                 ::== Program
-     */ 
+        /**
+         * 
+         * Statement ::== Printokentatement        ::== print ( Expr )
+         *           ::== Assignmentokentatement   ::== Id = Expr
+         *           ::== VarDecl               ::== type Id
+         *           ::== WhileStatement        ::== while BooleanExpr Block
+         *           ::== IfStatement           ::== if BooleanExpr Block
+         *           ::== Block                 ::== Program
+         */ 
     
     
         
