@@ -207,7 +207,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                     + "\n"
                     + "\n"
                     + "\t int b \n\n"
-                    + "\t a + a = b"
+                    + "\t b = a + a"
                     + "\n"
                     + "}$");
         }

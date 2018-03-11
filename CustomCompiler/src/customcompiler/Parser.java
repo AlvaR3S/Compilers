@@ -5,27 +5,51 @@
  */
 package customcompiler;
 
-import static customcompiler.Lexer.TokenType.*;
+
 
 /**
  *
- * @author reynaldoalvarez
+ * @author Reynaldo Alvarez
  */
-
-
-public class Parser {
+public class Parser extends Lexer { 
     
-//    Lexer lex = new Lexer();
-//    
-//    public void parse() {
-//        parseProgram();
-//    }
-//    
-//    private void parseProgram() {
-//        
-//    }
-//    
-//    
+    Token token;
+    TokenType tokenType;
+    Lexer lexer;
+    String input;
+    String output;
+    int getNextToken;
+    
+    
+    
+
+    public Parser(String input, String output) {
+        this.input = lexer.getInput();
+        this.output = lexer.getOutputArea();
+        this.getNextToken = lexer.currentTokenPosition;
+    }
+    
+    
+    
+    /**
+     * Program       ::== Block $
+     * Block         ::== { StatementList }
+     * StatementList ::== Statement StatementList
+     *               ::== ε <-- (empty set)
+     */
+    
+    void Program() {
+        Block();
+    }
+
+    private void Block() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+     
+
+
+    
     /**
      * 
      * 
@@ -34,17 +58,7 @@ public class Parser {
      *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
      *      ::== ID             ::== char
      */
-    private void Expr() {
-        
-    }
-}
-    
-    
-//    public static int Expr(ArrayList<Token> token) {
-//
-//    }
-    
-   
+  
     
     
     /**
@@ -56,3 +70,11 @@ public class Parser {
      *           ::== IfStatement           ::== if BooleanExpr Block
      *           ::== Block                 ::== Program
      */ 
+    
+    
+
+   
+    
+    
+  
+}

@@ -8,6 +8,7 @@ package customcompiler;
 
 import static customcompiler.Lexer.TokenType.*;
 
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,13 +41,13 @@ public class Lexer extends javax.swing.JFrame {
     ArrayList<Token> tokens = new ArrayList<Token>();
     
     // Gets the current Token position
-    private int currentTokenPosition = 1;
+    public int currentTokenPosition = 0;
     
     // Gets the line number of the current Token
     public int lineNumber = 1;
     
     // Creates a variable for the Parser class
-    Parser parser = new Parser();
+    Parser parser;
     
     
     // ------------------------------------------------------------
@@ -81,18 +82,21 @@ public class Lexer extends javax.swing.JFrame {
      * and make them tokens 
      * if they are in our grammar
      * else they are unrecognized
+     * @return 
      */
-    private void lexTokens() {
+    public Token lexTokens() {
         
         int i = 1;
         int errorCount = 0;
         int warningCount = 0;
-        int line = 0;
-        int numberOfEOP = 0;
-        int curLine = 1;
-
+        int numberOfEop = 0;
+        int lexSuccess = 0;
+        
+        //int lexProg = 0;
+        
         String input = inputArea.getText();
         String output = outputArea.getText();
+        
         boolean errorToken = false;
         
 
@@ -151,8 +155,8 @@ public class Lexer extends javax.swing.JFrame {
                 tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));  
             } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
                 tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-            } else if(tokenMatcher.group(TokenType.intCHAR.name()) != null) {
-                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.intCHAR.name())));
+            } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
+                tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
                 // Needs to print individual letters
             } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
                 tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
@@ -164,6 +168,7 @@ public class Lexer extends javax.swing.JFrame {
                 System.out.println("Unrecognized token found."); // Catches other tokens that aren't allowed if not in (unrecognized)
                 errorToken = true;
                 errorCount++;
+                
             }        
         }
 
@@ -172,72 +177,85 @@ public class Lexer extends javax.swing.JFrame {
             outputArea.append("~ERROR: No input found~\n");
             errorCount++;
         }
+        
+        
+        
+       
 
         // Prints befeore anything else at the top once
-        outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-
+         outputArea.append("\nLEXER: Lexing program 1...\n");
         // Outputs a stream of tokens from the given input
         for(Token token : tokens) {
             int index = token.data.indexOf("$");
+            
             boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
-
+            
+           
+            
             // When an unrecognized token is found print error message else print the token
             if(token.type == unrecognized) {
                 outputArea.append("LEXER: ERROR: Unrecognized token: " + token.data + " on line " + lineNumber + "\n");
             } else if(token.type == unrecognizedEOP) {
-                outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + " on line " + lineNumber + "\n");
+                outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + " on line " + lineNumber + "\n"); 
             } else if(token.type == newLine) { // Gets the current token line number and recognizes if new program is lexing
                 lineNumber++;
-                outputArea.append("\nLEXER: Lexing program " + i + "...\n");    
             } else {
                 outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens
+                
             }
             
-            
-            // If no errors or warnings have been found then lexer has succeeded
+
             if(token.type == EOP) {
-                outputArea.append("LEXER: Lex completed successfully\n\n");
+                outputArea.append("LEXER: Lex completed successfully.\n\n");
+                lexSuccess++;
+                i++;
+                 // If there is more than one $ there is more than one lexeing program
+                numberOfEop++;
 
-                // If there is more than one $ there is more than one lexeing program
-                if(moreThanOnce) {
-                    i++;  
-                }
+                outputArea.append("\nLEXER: Lexing program " + i + "...\n");   
             }
+           
             
-            // Matches the 
-            searchAndDevour(token);
+            System.out.println("numberOfEop: " + numberOfEop);
+            System.out.println("i: " + i);
+            System.out.println("lexSuc: " + lexSuccess);
         }
-
+                
         // Spits out a warning when input string does not end with a $ symbol
         if(!input.endsWith("$")) {
             outputArea.append("LEXER: WARNING: Missing a \"$\"" + " on line " + lineNumber + "\n");
             outputArea.append("LEXER: Lex completed with mistakes\n\n");
             warningCount++;
         }
-
-        // Ignoring comments (NOT FINISHED YET)
+        
+        // Ignoring commentsw (NOT FINISHED YET)
         if(input.contains("//")) {
             System.out.print("ignore");
         }
-
+        
         // Prints out total number of errors and warnings at the end of program
         outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
-                            + "and [" + errorCount + "] Error(s).\n\n");
+                            + "and [" + errorCount + "] Error(s).\n\n"); 
+          
+        return null;        
     }
+     
     
     /**
      * If current token successfully Matches 
      * then it will be eaten 
      * and currentPostion moves to next input
+     * @param curToken
      */
-    private void searchAndDevour(Token curToken) {
+    public void matchAndDevour(Token curToken) {
         if(curToken.equals(tokens.get(currentTokenPosition))) {
-            System.out.println(currentTokenPosition);
+            System.out.println(curToken.data);
             currentTokenPosition++;
         } else {
             System.out.println("HEY! Token position not found");
         }
-    }    
+    }
+    
     
     /**
      * Checks to see if input or output is empty or not
@@ -361,15 +379,14 @@ public class Lexer extends javax.swing.JFrame {
         whiteSpace("[ \t\f\r]+"),
         
         // New line
-        newLine("[\n]"),
+        newLine("[\n|\r]"),
         
         // Letters in between quotes are chars
         CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
         CHARS("[a-z]"), 
-        
-        intCHAR("\"int\""),
-        unrecognized("[A-Z|~|!|@|#|%|^||&|*|_|:|<|>|?|;|'|,|.|/]"),
-        unrecognizedEOP("[\"$\"]");
+        intCHAR("\"[int]\""),
+        unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.|/]"),
+        unrecognizedEOP("[\"$\"]+");
         
         //public final String pattern;
         
@@ -727,13 +744,13 @@ public class Lexer extends javax.swing.JFrame {
         
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
-
+        
         lexTokens();
         //parser.parse();
-        
-        
+
         // Prints lexer output to parser input
         inputAreaParser.append(outputArea.getText());
+        
         
         
         /**
