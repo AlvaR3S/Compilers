@@ -445,7 +445,7 @@ public class Lexer extends javax.swing.JFrame {
         TokenType tokenType;
         String input;
         String output;
-        
+        boolean matchAndDevour;
         /**
         * Recieving the Lexer's input and output
         * also figures out the next token if there is any
@@ -459,10 +459,12 @@ public class Lexer extends javax.swing.JFrame {
         
         public Token lookAhead() {
             for(int currentTokenPosition = 0; currentTokenPosition < input.length(); currentTokenPosition++) {
-               
+               if(token == lexTokens()) {
+                   matchAndDevour = true;
+               }
             }
             
-            return ;
+            return token;
         } 
         
         public void getNextToken() {
@@ -470,17 +472,49 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         
+        
+        /**
+        * Program       ::== Block $
+        * Block         ::== { StatementList }
+        * StatementList ::== Statement StatementList
+        *               ::== ε <-- (empty set)
+        */
+        
         public void Program() {
             Block();
         } 
 
+        
+        
         public void Block() {
             if(lookAhead() == "{") {
                 
             }
         }
         
-              
+               
+    /**
+     * 
+     * 
+     * Expr ::== IntExpr        ::== digit intopExpr, digit
+     *      ::== StringExpr     ::== " CharList "
+     *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
+     *      ::== ID             ::== char
+     */
+  
+        
+          
+    /**
+     * 
+     * Statement ::== Printokentatement        ::== print ( Expr )
+     *           ::== Assignmentokentatement   ::== Id = Expr
+     *           ::== VarDecl               ::== type Id
+     *           ::== WhileStatement        ::== while BooleanExpr Block
+     *           ::== IfStatement           ::== if BooleanExpr Block
+     *           ::== Block                 ::== Program
+     */ 
+    
+    
         
     }
     
