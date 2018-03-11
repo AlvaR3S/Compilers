@@ -48,7 +48,9 @@ public class Lexer extends javax.swing.JFrame {
     
     // Creates a variable for the Parser class
     Parser parser;
-
+    
+    TokenTracker track;
+    
     public ArrayList<Token> getTokens() {
         return tokens;
     }
@@ -101,6 +103,8 @@ public class Lexer extends javax.swing.JFrame {
         
         String input = inputArea.getText();
         String output = outputArea.getText();
+        
+        
         
         boolean errorToken = false;
         
@@ -205,8 +209,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(token.type == newLine) { // Gets the current token line number and recognizes if new program is lexing
                 lineNumber++;
             } else {
-                outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens
-                
+                outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens   
             }
             
 
@@ -217,21 +220,26 @@ public class Lexer extends javax.swing.JFrame {
                  // If there is more than one $ there is more than one lexeing program
                 numberOfEop++;
 
-                outputArea.append("\nLEXER: Lexing program " + i + "...\n");   
+                outputArea.append("\nLEXER: Lexing program " + i + "...\n");
             }
-           
             
+            // Spits out a warning when input string does not end with a $ symbol
+            if(!input.endsWith("$")) {
+                outputArea.append("LEXER: WARNING: Missing a \"$\"" + " on line " + lineNumber + "\n");
+                outputArea.append("LEXER: Lex completed with mistakes\n\n");
+                warningCount++;
+            } 
+          
+                
+            
+           
+            track.tokenTracker(token); //Takes in the tokens and eats them
             System.out.println("numberOfEop: " + numberOfEop);
             System.out.println("i: " + i);
             System.out.println("lexSuc: " + lexSuccess);
         }
                 
-        // Spits out a warning when input string does not end with a $ symbol
-        if(!input.endsWith("$")) {
-            outputArea.append("LEXER: WARNING: Missing a \"$\"" + " on line " + lineNumber + "\n");
-            outputArea.append("LEXER: Lex completed with mistakes\n\n");
-            warningCount++;
-        }
+        
         
         // Ignoring commentsw (NOT FINISHED YET)
         if(input.contains("//")) {
@@ -241,25 +249,41 @@ public class Lexer extends javax.swing.JFrame {
         // Prints out total number of errors and warnings at the end of program
         outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n"); 
-          
-        return null;        
+        return null;
     }
-     
     
-    /**
-     * If current token successfully Matches 
-     * then it will be eaten 
-     * and currentPostion moves to next input
-     * @param curToken
-     */
-//    public void matchAndDevour(Token curToken) {
-//        if(curToken.equals(tokens.get(currentTokenPosition))) {
-//            System.out.println(curToken.data);
-//            currentTokenPosition++;
-//        } else {
-//            System.out.println("HEY! Token position not found");
-//        }
-//    }
+    class TokenTracker {
+        
+        
+        Lexer lex;
+        String input = lex.getInput();;
+        char nextToken;
+        
+        /**
+         * If current token successfully Matches 
+         * then it will be eaten 
+         * and currentPostion moves to next input
+         * @param curToken
+         * @return 
+         */
+        public void tokenTracker(Token curToken) {
+            if(curToken.equals(tokens.get(currentTokenPosition))) {
+                System.out.println(curToken.data);
+                currentTokenPosition++;
+            } else {
+                System.out.println("HEY! Token position not found");
+            }
+        }
+    
+        public char getNextToken() {
+            if(currentTokenPosition < input.length()) {
+                this.nextToken = input.charAt(currentTokenPosition++);
+                return nextToken;
+            } else {
+                return '$';
+            }
+        }
+    }
     
     
     /**
@@ -436,39 +460,39 @@ public class Lexer extends javax.swing.JFrame {
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type);
         }
+       
     }
     
     public class Parser {
         
         Lexer lex;
-        Token token;
+        Token token; 
         TokenType tokenType;
         String input;
         String output;
-        boolean matchAndDevour;
+        char nextToken;
+        
+        TokenTracker tok;
+        
+    
+        
         /**
         * Recieving the Lexer's input and output
         * also figures out the next token if there is any
         * @param input
         * @param output 
         */
-        void Parser() {
-            this.input = lex.getInput();
-            this.output = lex.getOutputArea();
-            Program();
-            if(currentTokenPosition == input.length()) {
-                System.out.println("End of the Line.");
-            }
+        public Parser(TokenTracker tok) {
+            this.tok = tok;
         }
         
-        public String lookAhead() {            
-           
-            return token.data;
+        // Is aware of current token and looks at the next token
+        public void viewNextToken() {            
+           currentTokenPosition = tok.getNextToken();
         } 
         
-        public void getNextToken() {
-            int currentTokenPosition = currentTokenPosition;
-        }
+        
+        
         
         
         
@@ -492,6 +516,10 @@ public class Lexer extends javax.swing.JFrame {
             } else {
                 System.out.println("Not a block");
             }
+        }
+
+        private void StatementList() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
         
                
