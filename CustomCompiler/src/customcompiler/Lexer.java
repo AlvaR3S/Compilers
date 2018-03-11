@@ -461,6 +461,7 @@ public class Lexer extends javax.swing.JFrame {
             for(int currentTokenPosition = 0; currentTokenPosition < input.length(); currentTokenPosition++) {
                if(token == lexTokens()) {
                    matchAndDevour = true;
+                   getNextToken();
                }
             }
             
