@@ -48,15 +48,19 @@ public class Lexer extends javax.swing.JFrame {
     
     // Creates a variable for the Parser class
     Parser parser;
+
+    public ArrayList<Token> getTokens() {
+        return tokens;
+    }
     
     
     // ------------------------------------------------------------
     // -----------------[Getters and Setters]----------------------
     // ------------------------------------------------------------
     
-    public int getCurrentTokenPosition() {
-        return currentTokenPosition;
-    }
+//    public int getCurrentTokenPosition() {
+//        return currentTokenPosition;
+//    }
     
     public JTextArea getInputArea() {
         return inputArea;
@@ -71,6 +75,7 @@ public class Lexer extends javax.swing.JFrame {
         String output = outputArea.getText();
         return output;
     }
+    
     
     
     // ------------------------------------------------------------
@@ -247,14 +252,14 @@ public class Lexer extends javax.swing.JFrame {
      * and currentPostion moves to next input
      * @param curToken
      */
-    public void matchAndDevour(Token curToken) {
-        if(curToken.equals(tokens.get(currentTokenPosition))) {
-            System.out.println(curToken.data);
-            currentTokenPosition++;
-        } else {
-            System.out.println("HEY! Token position not found");
-        }
-    }
+//    public void matchAndDevour(Token curToken) {
+//        if(curToken.equals(tokens.get(currentTokenPosition))) {
+//            System.out.println(curToken.data);
+//            currentTokenPosition++;
+//        } else {
+//            System.out.println("HEY! Token position not found");
+//        }
+//    }
     
     
     /**
@@ -431,6 +436,52 @@ public class Lexer extends javax.swing.JFrame {
         public String toString() { // Structures token type and data for output
             return String.format("\"%s\" --> [%s]", data, type);
         }
+    }
+    
+    public class Parser {
+        
+        Lexer lex;
+        Token token;
+        TokenType tokenType;
+        String input;
+        String output;
+        
+        /**
+        * Recieving the Lexer's input and output
+        * also figures out the next token if there is any
+        * @param input
+        * @param output 
+        */
+        public Parser() {
+            this.input = lex.getInput();
+            this.output = lex.getOutputArea();
+        }
+        
+        public Token lookAhead() {
+            for(int currentTokenPosition = 0; currentTokenPosition < input.length(); currentTokenPosition++) {
+               
+            }
+            
+            return ;
+        } 
+        
+        public void getNextToken() {
+            currentTokenPosition++;
+        }
+        
+        
+        public void Program() {
+            Block();
+        } 
+
+        public void Block() {
+            if(lookAhead() == "{") {
+                
+            }
+        }
+        
+              
+        
     }
     
 

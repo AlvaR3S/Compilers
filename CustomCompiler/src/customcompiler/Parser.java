@@ -5,6 +5,9 @@
  */
 package customcompiler;
 
+import java.util.ArrayList;
+import static java.util.Objects.requireNonNull;
+
 
 
 /**
@@ -13,20 +16,23 @@ package customcompiler;
  */
 public class Parser extends Lexer { 
     
-    Token token;
+
     TokenType tokenType;
     Lexer lexer;
-    String input;
+    Token input;
     String output;
-    int getNextToken;
     
     
     
-
-    public Parser(String input, String output) {
-        this.input = lexer.getInput();
-        this.output = lexer.getOutputArea();
-        this.getNextToken = lexer.currentTokenPosition;
+    /**
+     * Recieving the Lexer's input and output
+     * also figures out the next token if there is any
+     * @param input
+     * @param output 
+     */
+    public Parser(Token input, String output) {
+        input = this.input;
+        output = this.output;
     }
     
     
@@ -37,16 +43,21 @@ public class Parser extends Lexer {
      * StatementList ::== Statement StatementList
      *               ::== ε <-- (empty set)
      */
-    
     void Program() {
         Block();
     }
-
-    private void Block() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    char peek( ) {
+        return currentTokenPosition < input.data.length( ) ? input.data.charAt( currentTokenPosition ) : (char)0;
     }
     
-     
+    
+    
+    void Block() {
+//        if(input.data.equals("{")) {
+//            match(tokenPostion);
+//        }
+    }
 
 
     
