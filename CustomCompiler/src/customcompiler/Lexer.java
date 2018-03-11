@@ -46,8 +46,7 @@ public class Lexer extends javax.swing.JFrame {
     // Gets the line number of the current Token
     public int lineNumber = 1;
     
-    // Creates a variable for the Parser class
-    //Parser parser;
+    
     
     public int tokenID;
     
@@ -96,7 +95,7 @@ public class Lexer extends javax.swing.JFrame {
      * @param tok
      * @return 
      */
-    public Token lexTokens() {
+    public void lexTokens() {
         
         int i = 1;
         int errorCount = 0;
@@ -285,7 +284,6 @@ public class Lexer extends javax.swing.JFrame {
         // Prints out total number of errors and warnings at the end of program
         outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
                             + "and [" + errorCount + "] Error(s).\n\n"); 
-        return null;
        
     }
     
@@ -471,49 +469,32 @@ public class Lexer extends javax.swing.JFrame {
  
     
  
-    public class Parser {
+    public final class Parser {
         
         
-        Token viewNextToken;
+        TokenType viewNextTokenType;
         int root = 0;
         char nextToken;
         
         
         /**
-        * Recieving the Lexer's input
-        * also figures out the next token if there is any
-        * @param input 
-        */
-        public Parser(Token input) {
-            this.input = input;
-            viewNextToken();
-        }
-        
-        public char getNextToken() {
-            if(root < input.data.length()) {
-                return input.data.charAt(root++);
-            } else {
-                return '$';
-            }
-        }
-
-        
-        
-        
-        
-        
-        // If the current token is a match then eat it
-        public void matchAndDevour(char correctToken) {
-            if(currentTokenPosition == correctToken) {
-                viewNextToken();
+        * 
+        * 
+        * @param correctToken
+        */        
+//        // If the current token is a match then eat it
+        public void matchAndDevour(TokenType correctToken) {
+            if(correctToken.equals(viewNextTokenType)) {
+                currentTokenPosition++;
             } else {
                 System.out.println("NOT FOOD TO DEVOUR");
             }
+           
         }
         
         
         // Starts and finishes the parse - will be called through button run
-        public void parse() {
+        public Parser() {
             Program();
         }
         
@@ -529,7 +510,8 @@ public class Lexer extends javax.swing.JFrame {
         } 
 
         public void Block() {
-          //  matchAndDevour('{');
+            matchAndDevour(viewNextTokenType.openBracket);
+            
             //StatementList();
             System.out.println("success");
         }
@@ -876,29 +858,19 @@ public class Lexer extends javax.swing.JFrame {
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
        
+        // Creates a variable for the Parser class
+        Parser parser = new Parser();
         
         
         
+        lexTokens();
         
-        
-        
-        
-        Parser parser = new Parser(lexTokens());
-        
-        parser.parse();
+       // parser.
 
         // Prints lexer output to parser input
         inputAreaParser.append(outputArea.getText());
         
-        
-        
-        /**
-         * Future error case
-         * sudo -->
-         * if ("agafgdfg" + \n + "gafdgardgf") 
-         * then print error;
-         * 
-         */
+      
     }//GEN-LAST:event_buttonLexActionPerformed
     
     // Exits the Lexer
