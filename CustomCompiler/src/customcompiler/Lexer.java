@@ -533,8 +533,10 @@ public class Lexer extends javax.swing.JFrame {
         } 
 
         private void Block() {            
-            
-            //StatementList();
+            if("{".equals(nextToken.data)) {
+                
+            }
+             // StatementList();
 //            matchAndDevour("}");
 //            matchAndDevour("$");
             System.out.println("success");
