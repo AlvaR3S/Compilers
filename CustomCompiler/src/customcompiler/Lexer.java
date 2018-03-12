@@ -46,8 +46,6 @@ public class Lexer extends javax.swing.JFrame {
     // Gets the line number of the current Token
     public int lineNumber = 1;
     
-    
-    
     public int tokenID;
     
     public ArrayList<Token> getTokens() {
@@ -118,15 +116,13 @@ public class Lexer extends javax.swing.JFrame {
         for(TokenType tokenType : TokenType.values()) 
             tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
         Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1), Pattern.CASE_INSENSITIVE);
-
+        
         // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
         Matcher tokenMatcher = tokenPatterns.matcher(input);
 
         // Loops through the input and finds valid tokens
         while(tokenMatcher.find()) {
-            if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
-                continue;
-            } else if(tokenMatcher.group(TokenType.newLine.name()) != null) {
+             if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                 tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                 tokenID = 0;
             } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
@@ -228,8 +224,7 @@ public class Lexer extends javax.swing.JFrame {
             boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
             
             
-           
-           
+            
          
             
             // When an unrecognized token is found print error message else print the token
@@ -262,8 +257,8 @@ public class Lexer extends javax.swing.JFrame {
 //            }
           
                 
-            
-            
+            //TokenTracker track = new TokenTracker();
+            //track.track(token);
             System.out.println("numberOfEop: " + numberOfEop);
             System.out.println("i: " + i);
             System.out.println("lexSuc: " + lexSuccess);
@@ -435,6 +430,8 @@ public class Lexer extends javax.swing.JFrame {
         public TokenType getType() {
             return this;
         }
+        
+        
     }
     
     // Stores token type and data
@@ -468,48 +465,59 @@ public class Lexer extends javax.swing.JFrame {
     
  
     
+    public class TokenTracker {
+        Token nextToken;
+        String input = inputArea.getText();
+        int root = 0;
+        
+        
+        public void track(Token tokenChecked) {
+                     
+            if(tokenChecked.equals(tokens.get(currentTokenPosition))) {
+                System.out.print(currentTokenPosition);
+                System.out.println("nextToken: " + nextToken.data);
+                currentTokenPosition++;
+                
+            } else {
+                System.out.println("NOT FOOD TO DEVOUR");
+                System.out.println("currentTokenPosition: " + currentTokenPosition);
+            }
+            
+        }
+        
+        private void getNextToken() { // gets the next token
+            if(root < input.length()) {
+                System.out.println(root);
+                root++;
+            } else {
+                System.out.println("end of the line");
+            }
+        }
+        // match.run parser in lexTokens....?????
+        // If the current token is a match then eat it
+        private void matchAndDevour(String nextToken) {
+           
+            if(nextToken.equals(input.charAt(0))) {
+                getNextToken();
+            } else {
+                System.out.println("token does not match");
+
+            }
+        }
+    }
+    
  
     public class Parser {
         
         
-       
-        String input = inputArea.getText();
+        Token nextToken;
         
-        /**
-        * 
-        * 
-        * @param correctToken
-        */        
-        
-        
-        private void getNextToken() {
-           
-            for(Token token : tokens) {
-                if(token.equals(tokens.get(currentTokenPosition))) {
-                    System.out.print(currentTokenPosition);
-                    System.out.println("nextToken: " + token.data);
-                    currentTokenPosition++;
-                } else {
-                    System.out.println("NOT FOOD TO DEVOUR");
-                    System.out.println("currentTokenPosition: " + currentTokenPosition);
-                }
-            }
-        }
-        
-//        // If the current token is a match then eat it
-        private void matchAndDevour(String nextToken) {
-           // this.nextToken = nextToken;
-            if(nextToken.equals(input.charAt(0))) {
-                getNextToken();
-            } else {
-                System.out.println("token does not match or not found");
-            }
-           
-        }
-        
+        int root;
+        TokenTracker track;
+                
         
         // Starts and finishes the parse - will be called through button run
-        public Parser() {
+        private void parser() {
             Program();
         }
         
@@ -525,17 +533,18 @@ public class Lexer extends javax.swing.JFrame {
         } 
 
         private void Block() {            
-            matchAndDevour("{");
+            
             //StatementList();
-            matchAndDevour("}");
-            matchAndDevour("$");
+//            matchAndDevour("}");
+//            matchAndDevour("$");
             System.out.println("success");
         }
 
 //        public void StatementList() {
 //            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //        }
-        
+
+       
                
         /**
          * 
@@ -873,12 +882,14 @@ public class Lexer extends javax.swing.JFrame {
         
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
-       lexTokens();
+       
+       
+        lexTokens();
        
         // Creates a variable for the Parser class
-        Parser parser = new Parser();
-        
-        
+        Parser parse = new Parser();
+        parse.parser();
+       // parser.parse();
         
         
         
