@@ -18,19 +18,12 @@ public class ParseTree {
     
     Object root;
     String kind;    
-    Node node = new Node();
+    
     String cur; 
-    String parent;
-        LinkedList<String> children;
+    Object parent;
+    LinkedList<String> children;
 
 
-    
-    
-
-    
-
-    
-   
     
     
     class Node { 
@@ -50,13 +43,8 @@ public class ParseTree {
 
 
     public ParseTree(Object root, String cur) {
-        // ----------
-        // Attributes
-        // ----------
-        
-        this.root = null;  // Note the NULL root node of this tree.
-        this.cur = cur;   // Note the EMPTY current node of the tree we're building.
-        
+       this.root = null;
+       this.cur = cur;
     } 
     
  
@@ -71,14 +59,14 @@ public class ParseTree {
      *
      * @param name
      * @param kind
-     * @param children
-     * @param parent
+     * @return 
      */
     public void addNode(String name, String kind) {
         // Construct the node object.
-        
+        Node node = new Node();
         this.kind = kind;
         node.name = name;
+        
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {
@@ -91,17 +79,18 @@ public class ParseTree {
                 node.parent = this.cur;
             // ... and add ourselves (via the unfrotunately-named
             // "push" function) to the children array of the current node.
-                this.cur.children.push(node.name);
+              node.children.push(node.cur);
         }
         // If we are an interior/branch node, then...
         if (kind.equals("branch")) {
             // ... update the CURrent node pointer to ourselves.
             this.cur = node.cur;
-        }
+        }       
     }
 
     // Note that we're done with this branch of the tree...
     public void endChildren() {
+        Node node = new Node();
         // ... by moving "up" to our parent node (if possible).
         if ((node.parent != null) && (node.name != undefined)) {
             this.cur = node.parent;
@@ -114,7 +103,14 @@ public class ParseTree {
 
 
     // Recursive function to handle the expansion of the nodes.
-    public String expand(Node node, int depth) {
+
+    /**
+     *
+     * @param node
+     * @param depth
+     * @return
+     */
+    String expand(Node node, int depth) {
         
         String traversalResult = "";
 
@@ -125,7 +121,7 @@ public class ParseTree {
         }
 
         // If there are no children (i.e., leaf nodes)...
-        if (node.children.isEmpty()) {
+        if (!node.children.isEmpty()) {
             // ... note the leaf node.
             traversalResult += "[" + node.name + "]";
             traversalResult += "\n";
@@ -145,28 +141,28 @@ public class ParseTree {
     }  
     public static void main(String args[]) {
         
-        ParseTree t = new ParseTree("", "");
-            t.addNode("Root", "branch");
-            t.addNode("Expr", "branch");
-            t.addNode("Term", "branch");
-            t.addNode("Factor", "branch");
-            t.addNode("a", "leaf");
-            t.endChildren();
-            t.endChildren();
-            t.endChildren();
-            // t.endChildren();  // Un-comment this to test guards against moving "up" past the root of the tree.
-
-            t.addNode("Op", "branch");
-            t.addNode("+", "leaf");
-            t.endChildren();
-
-            t.addNode("Term", "branch");
-            t.addNode("Factor", "branch");
-            t.addNode("2", "leaf");
-            t.endChildren();
-            t.endChildren();
-            
-            System.out.println(t.node.cur);
+//        
+//            t.addNode("Root", "branch");
+//            t.addNode("Expr", "branch");
+//            t.addNode("Term", "branch");
+//            t.addNode("Factor", "branch");
+//            t.addNode("a", "leaf");
+//            t.endChildren();
+//            t.endChildren();
+//            t.endChildren();
+//            // t.endChildren();  // Un-comment this to test guards against moving "up" past the root of the tree.
+//
+//            t.addNode("Op", "branch");
+//            t.addNode("+", "leaf");
+//            t.endChildren();
+//
+//            t.addNode("Term", "branch");
+//            t.addNode("Factor", "branch");
+//            t.addNode("2", "leaf");
+//            t.endChildren();
+//            t.endChildren();
+//            
+//            System.out.println(t);
     }
 
   
