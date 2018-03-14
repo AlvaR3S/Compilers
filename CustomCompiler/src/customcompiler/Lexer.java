@@ -532,48 +532,42 @@ public class Lexer extends javax.swing.JFrame {
         Token token;
         int currentToken = 0;
         boolean stillMoreTokens = true;
-        
+         Matcher tokenMatcher = getMatcher();
         
         private void getNextToken() {
             
         }
         
         // Starts and finishes the parse - will be called through button run
-        private Parser(Token token) {
+       private Parser(Token token) {
             
-            outputAreaParser.append("PARSER: Parsing program 1... ");
-            outputAreaParser.append("PARSER: parse()");
-//            if(s)
-            Program();
+            outputAreaParser.append("PARSER: Parsing program 1...\n");
+            outputAreaParser.append("PARSER: parse()\n");
+
+            if(tokenMatcher.find()) {
+                outputAreaParser.append("PARSER: parseProgram()\n");
+                Program();
+            }
+            
+           
         }
         
         
         
-        public void matchAndDevour(String tokenMatch) {
+        public boolean matchAndDevour(String tokenMatch) {
             Lexer lex = new Lexer();
-            Matcher tokenMatcher = getMatcher();
             String input = lex.getInput();
             if(tokenMatcher.find(currentToken)) {
                 if(tokenMatch.equals(tokenMatcher.group())) {
-                    System.out.print("current token: " + tokenMatch + "\n");
+                    System.out.print("current token: " + tokenMatch + "\n"); 
                     System.out.print("current token pos: " + currentToken + "\n");
-                    currentToken++;
-                } else {
                     currentToken++;
                 }
                 
-            } 
-//            else {
-//                System.out.println("No food left to DEVOUR");
-//                stillMoreTokens = false; 
-//            }
-                
-              
-            
-                
-            
-            
-               
+            } else {
+                System.out.print("done"); 
+            }
+            return false;
         }
 
         /**
@@ -583,36 +577,70 @@ public class Lexer extends javax.swing.JFrame {
         *               ::== ε <-- (empty set)
         */        
         private void Program() {
+            if(tokenMatcher.find()) {
+                outputAreaParser.append("PARSER: parseBlock()\n");
+                Block();
+                matchAndDevour("$");     
+                outputAreaParser.append("PARSER: Parse completed successfully\n");
+            }   
+           
+        }
             
-            Block();
-            matchAndDevour("$");
-            System.out.println("bye");
-        } 
+         
+ 
+        /**
+        * Program       ::== Block $
+        * Block         ::== { StatementList }
+        * StatementList ::== Statement StatementList
+        *               ::== ε <-- (empty set)
+        */        
+     
 
-        private void Block() {   
+        private boolean Block() {   
             
-            while(stillMoreTokens) {
-                matchAndDevour("{");
-                StatementList();
-                matchAndDevour("}");   
+            if(matchAndDevour("{")) {
+                return false;
+            } else if(matchAndDevour("}")) {
+                return false;
             }
             
+                return false;
+            
+//                if(!StatementList()) {
+//                    outputAreaParser.append("error\n");
+//                } else {
+//                    ;  
+//                }
+           
+              
         }
 
         private void StatementList() {
-            while(stillMoreTokens) {
-                Statement();
-                matchAndDevour("");
-            }
+                
+//            if(Statement()) {
+//                Statement();
+//            } else if(matchAndDevour("}")) {
+//                outputAreaParser.append("PARSER: parseStatementList()\n");
+//            } else {
+//                return false;
+//            }
+//            return false;
         }
 
         private void Statement() {
+            
 //            PrintStatement();
 //            AssignmentStatement();
 //            VarDecl();
 //            WhileStatement();
 //            IfStatement();
-            Block();
+//              if(Block()) {
+//                  Block();
+//                  return true;
+//              } else {
+//                  Program();
+//              }
+//              return false;
         }
 
         private void PrintStatement() {
@@ -989,7 +1017,7 @@ public class Lexer extends javax.swing.JFrame {
        
 
         // Prints lexer output to parser input
-        outputAreaParser.append(outputArea.getText());
+        //outputAreaParser.append(outputArea.getText());
         
       
     }//GEN-LAST:event_buttonLexActionPerformed
@@ -1007,7 +1035,8 @@ public class Lexer extends javax.swing.JFrame {
     // Button that deletes both the input and output data
     private void buttonClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAllActionPerformed
         inputArea.setText(null);
-        outputArea.setText(null);  
+        outputArea.setText(null); 
+        lineNumber = 1;
     }//GEN-LAST:event_buttonClearAllActionPerformed
 
     // Button that deletes input data
@@ -1017,7 +1046,8 @@ public class Lexer extends javax.swing.JFrame {
 
     // Button that deletes output data
     private void buttonClearOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutputActionPerformed
-        outputArea.setText(null); 
+        outputArea.setText(null);
+        lineNumber = 1;
     }//GEN-LAST:event_buttonClearOutputActionPerformed
 
     // Opens the Test Cases frame which you can add onto the lexer input box
