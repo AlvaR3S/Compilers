@@ -195,18 +195,18 @@ public class Lexer extends javax.swing.JFrame {
         
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
-        typeInt("int"),
-        typeString("string"),
-        typeBoolean("boolean"),
-        
-        // Statemenets
-        ifStatement("if"),
-        whileStatement("while"),
-        printStatement("print"),
-        
-        // Booleans
-        boolvalFalse("false"),
-        boolvalTrue("true"),
+//        typeInt("int"),
+//        typeString("string"),
+//        typeBoolean("boolean"),
+//        
+//        // Statemenets
+//        ifStatement("if"),
+//        whileStatement("while"),
+//        printStatement("print"),
+//        
+//        // Booleans
+//        boolvalFalse("false"),
+//        boolvalTrue("true"),
         
         // Identifiers
 
@@ -288,7 +288,7 @@ public class Lexer extends javax.swing.JFrame {
         // A toString method that formates tokens
         @Override
         public String toString() { // Structures token type and data for output
-            return String.format("\"%s\" --> [%s]", data, type);
+            return String.format("%s", data, type);
         }
        
         /**
@@ -339,36 +339,36 @@ public class Lexer extends javax.swing.JFrame {
                  if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                     tokenID = 0;
-                } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-                    tokenID = 1;
-                } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
-                    tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
-                    tokenID = 2;
-                } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
-                    tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
-                    tokenID = 3;
-                } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
-                    tokenID = 4;
-                } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
-                    tokenID = 5;
-                } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
-                    tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-                    tokenID = 6;
+//                } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
+//                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
+//                    tokenID = 1;
+//                } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
+//                    tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
+//                    tokenID = 2;
+//                } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
+//                    tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
+//                    tokenID = 3;
+//                } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
+//                    tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
+//                    tokenID = 4;
+//                } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
+//                    tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
+//                    tokenID = 5;
+//                } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
+//                    tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
+//                    tokenID = 6;
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
                     tokenID = 7;
                 } else if(tokenMatcher.group(TokenType.CHARS.name()) != null) {
                     tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHARS.name())));
                     tokenID = 8;
-                } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
-                    tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
-                    tokenID = 9;
-                } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
-                    tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
-                    tokenID = 10;
+//                } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
+//                    tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
+//                    tokenID = 9;
+//                } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
+//                    tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
+//                    tokenID = 10;
                 } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
                     tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
                     tokenID = 11;
@@ -529,45 +529,43 @@ public class Lexer extends javax.swing.JFrame {
         
         
         
-        Token token;
+        Token token = new Token();
         int currentToken = 0;
         boolean stillMoreTokens = true;
          Matcher tokenMatcher = getMatcher();
         
-        private void getNextToken() {
-            
-        }
-        
+     
         // Starts and finishes the parse - will be called through button run
        private Parser(Token token) {
             
             outputAreaParser.append("PARSER: Parsing program 1...\n");
             outputAreaParser.append("PARSER: parse()\n");
 
-            if(tokenMatcher.find()) {
+            
                 outputAreaParser.append("PARSER: parseProgram()\n");
                 Program();
-            }
+            
             
            
         }
         
+     
+        
+       
         
         
-        public boolean matchAndDevour(String tokenMatch) {
+        public void matchAndDevour(Token tokenMatch) {
             Lexer lex = new Lexer();
             String input = lex.getInput();
-            if(tokenMatcher.find(currentToken)) {
-                if(tokenMatch.equals(tokenMatcher.group())) {
+            
+                if(tokenMatch.equals(tokens.get(currentToken))) {
                     System.out.print("current token: " + tokenMatch + "\n"); 
                     System.out.print("current token pos: " + currentToken + "\n");
+                    
                     currentToken++;
                 }
-                
-            } else {
-                System.out.print("done"); 
-            }
-            return false;
+            
+          
         }
 
         /**
@@ -577,13 +575,13 @@ public class Lexer extends javax.swing.JFrame {
         *               ::== ε <-- (empty set)
         */        
         private void Program() {
-            if(tokenMatcher.find()) {
+            
+            Block();
                 outputAreaParser.append("PARSER: parseBlock()\n");
-                Block();
-                matchAndDevour("$");     
+                
+           // matchAndDevour("$");
                 outputAreaParser.append("PARSER: Parse completed successfully\n");
-            }   
-           
+
         }
             
          
@@ -596,15 +594,17 @@ public class Lexer extends javax.swing.JFrame {
         */        
      
 
-        private boolean Block() {   
-            
-            if(matchAndDevour("{")) {
-                return false;
-            } else if(matchAndDevour("}")) {
-                return false;
+        private void Block() {  
+            Lexer lex = new Lexer();
+            if(tokens.get(currentToken).toString().equals("{")) {
+                matchAndDevour(tokens.get(currentToken));
+                
+            }
+                
+            if(tokens.get(currentToken).toString().equals("}")) {
+                matchAndDevour(tokens.get(currentToken));
             }
             
-                return false;
             
 //                if(!StatementList()) {
 //                    outputAreaParser.append("error\n");
@@ -1010,7 +1010,7 @@ public class Lexer extends javax.swing.JFrame {
         // Creates a variable for the Parser class
         Parser parse = new Parser(lexer);
         
-        
+        System.out.println(lexer);
         
         
         
