@@ -285,7 +285,6 @@ public class Lexer extends javax.swing.JFrame {
             return data;
         }
         
-        // A toString method that formates tokens
         @Override
         public String toString() { // Structures token type and data for output
             return String.format("%s", data, type);
