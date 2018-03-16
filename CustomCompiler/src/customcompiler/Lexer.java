@@ -42,7 +42,7 @@ public class Lexer extends javax.swing.JFrame {
     // ------------------------------------------------------------
     
     // Creates the ArrayList of Tokens
-    ArrayList<Token> tokens = new ArrayList<Token>();
+    public ArrayList<Token> tokens = new ArrayList<Token>();
     
     // Gets the current Token position
     public int currentTokenPosition = 0;
@@ -52,9 +52,8 @@ public class Lexer extends javax.swing.JFrame {
     
     public int tokenID;
     
-    public ArrayList<Token> getTokens() {
-        return tokens;
-    }
+    
+    
     
     
     // ------------------------------------------------------------
@@ -79,8 +78,18 @@ public class Lexer extends javax.swing.JFrame {
         return output;
     }
 
+    public JTextArea getOutputAreaParser() {
+        return outputAreaParser;
+    }
+    
+    
+
     public int getTokenID() {
         return tokenID;
+    }
+    
+    public ArrayList<Token> getTokens() {
+        return tokens;
     }
     
     public Pattern getPatterns() {
@@ -195,18 +204,18 @@ public class Lexer extends javax.swing.JFrame {
         
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
-//        typeInt("int"),
-//        typeString("string"),
-//        typeBoolean("boolean"),
-//        
-//        // Statemenets
-//        ifStatement("if"),
-//        whileStatement("while"),
-//        printStatement("print"),
-//        
-//        // Booleans
-//        boolvalFalse("false"),
-//        boolvalTrue("true"),
+        typeInt("int"),
+        typeString("string"),
+        typeBoolean("boolean"),
+        
+        // Statemenets
+        ifStatement("if"),
+        whileStatement("while"),
+        printStatement("print"),
+        
+        // Booleans
+        boolvalFalse("false"),
+        boolvalTrue("true"),
         
         // Identifiers
 
@@ -287,7 +296,7 @@ public class Lexer extends javax.swing.JFrame {
         
         @Override
         public String toString() { // Structures token type and data for output
-            return String.format("%s", data, type);
+            return String.format("\"%s\" --> [%s]" , data, type);
         }
        
         /**
@@ -298,11 +307,6 @@ public class Lexer extends javax.swing.JFrame {
          * @param tok
          * @return 
          */
-        
-        
-        
-       
-        
         
         public Token() {
 
@@ -338,36 +342,36 @@ public class Lexer extends javax.swing.JFrame {
                  if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                     tokenID = 0;
-//                } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-//                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-//                    tokenID = 1;
-//                } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
-//                    tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
-//                    tokenID = 2;
-//                } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
-//                    tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
-//                    tokenID = 3;
-//                } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
-//                    tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
-//                    tokenID = 4;
-//                } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
-//                    tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
-//                    tokenID = 5;
-//                } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
-//                    tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-//                    tokenID = 6;
+                } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
+                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
+                    tokenID = 1;
+                } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
+                    tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
+                    tokenID = 2;
+                } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
+                    tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
+                    tokenID = 3;
+                } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
+                    tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
+                    tokenID = 4;
+                } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
+                    tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
+                    tokenID = 5;
+                } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
+                    tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
+                    tokenID = 6;
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
                     tokenID = 7;
                 } else if(tokenMatcher.group(TokenType.CHARS.name()) != null) {
                     tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHARS.name())));
                     tokenID = 8;
-//                } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
-//                    tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
-//                    tokenID = 9;
-//                } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
-//                    tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
-//                    tokenID = 10;
+                } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
+                    tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
+                    tokenID = 9;
+                } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
+                    tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
+                    tokenID = 10;
                 } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
                     tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
                     tokenID = 11;
@@ -455,19 +459,10 @@ public class Lexer extends javax.swing.JFrame {
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");
                 }
 
-    //            if(token.equals(tokens.get(currentTokenPosition))) {
-    //                System.out.println(token.data);
-    //                currentTokenPosition++;
-    //            } else {
-    //                System.out.println("HEY! Token position not found");
-    //            }
 
-
-                //TokenTracker track = new TokenTracker();
-                //track.track(token);
-                System.out.println("numberOfEop: " + numberOfEop);
-                System.out.println("i: " + i);
-                System.out.println("lexSuc: " + lexSuccess);
+//                System.out.println("numberOfEop: " + numberOfEop);
+//                System.out.println("i: " + i);
+//                System.out.println("lexSuc: " + lexSuccess);
             }
 
             // Spits out a warning when input string does not end with a $ symbol
@@ -487,167 +482,137 @@ public class Lexer extends javax.swing.JFrame {
                                 + "and [" + errorCount + "] Error(s).\n\n"); 
         }
     }
+     
     
- 
-    
-//    public class TokenTracker {
-//        Token nextToken;
-//        String input = inputArea.getText();
-//        int root = 0;
-//        
-//        
-//        public void track(Token tokenChecked) {
-//                     
-
-//            
-//        }
-//        
-//        private void getNextToken() { // gets the next token
-//            if(root < input.length()) {
-//                System.out.println(root);
-//                root++;
-//            } else {
-//                System.out.println("end of the line");
-//            }
-//        }
-//        // match.run parser in lexTokens....?????
-//        // If the current token is a match then eat it
-//        private void matchAndDevour(String nextToken) {
-//           
-//            if(nextToken.equals(input.charAt(0))) {
-//                getNextToken();
-//            } else {
-//                System.out.println("token does not match");
-//
-//            }
-//        }
-//    }
-//    
- 
     public class Parser {
-        
-        
-        
-        Token token = new Token();
+        Lexer lex = new Lexer();
         int currentToken = 0;
         boolean stillMoreTokens = true;
-         Matcher tokenMatcher = getMatcher();
-        
-     
+
+
         // Starts and finishes the parse - will be called through button run
-       private Parser(Token token) {
-            
+        /**
+         *
+         * @param token
+         */
+        public Parser(Token token){
+
             outputAreaParser.append("PARSER: Parsing program 1...\n");
             outputAreaParser.append("PARSER: parse()\n");
 
-            
-                outputAreaParser.append("PARSER: parseProgram()\n");
-                Program();
-            
-            
-           
+            System.out.println("yo");
+            outputAreaParser.append("PARSER: parseProgram()\n");
+            Program();
         }
-        
-     
-        
-       
-        
-        
-        public void matchAndDevour(Token tokenMatch) {
-            Lexer lex = new Lexer();
-            String input = lex.getInput();
-            
-                if(tokenMatch.equals(tokens.get(currentToken))) {
-                    System.out.print("current token: " + tokenMatch + "\n"); 
-                    System.out.print("current token pos: " + currentToken + "\n");
-                    
-                    currentToken++;
-                }
-            
-          
+
+        public void matchAndDevour(String tokenMatch) {
+            if(tokenMatch.equals(tokens.get(currentToken).getData())) {
+                System.out.println("current token: " + tokenMatch + "\n"); 
+                System.out.println("current token pos: " + currentToken + "\n");
+                currentToken++;
+            }
         }
 
         /**
         * Program       ::== Block $
-        * Block         ::== { StatementList }
-        * StatementList ::== Statement StatementList
-        *               ::== ε <-- (empty set)
+        * 
         */        
         private void Program() {
-            
             Block();
-                outputAreaParser.append("PARSER: parseBlock()\n");
-                
-           // matchAndDevour("$");
+            if(tokens.get(currentToken).getData().equals("$")) {
+                matchAndDevour("$");
                 outputAreaParser.append("PARSER: Parse completed successfully\n");
+                System.out.println("matched $\n");
 
+                if(currentToken < tokens.size()) {
+                    Program();
+                    System.out.println("im running more than once\n");
+                }
+
+            } else {
+                System.out.println("Syntax Error");
+            }
         }
-            
-         
- 
+
+
+
         /**
-        * Program       ::== Block $
+        * 
         * Block         ::== { StatementList }
         * StatementList ::== Statement StatementList
         *               ::== ε <-- (empty set)
         */        
-     
-
         private void Block() {  
-            Lexer lex = new Lexer();
-            if(tokens.get(currentToken).toString().equals("{")) {
-                matchAndDevour(tokens.get(currentToken));
-                
+            if(tokens.get(currentToken).getData().equals("{")) {
+                matchAndDevour("{");
+                outputAreaParser.append("PARSER: parseBlock()\n");
+                System.out.println("matched {\n");
+
+            } else {
+                System.out.println("Syntax Error");
             }
-                
-            if(tokens.get(currentToken).toString().equals("}")) {
-                matchAndDevour(tokens.get(currentToken));
-            }
-            
-            
-//                if(!StatementList()) {
-//                    outputAreaParser.append("error\n");
-//                } else {
-//                    ;  
-//                }
-           
-              
+
+            StatementList();
+
+            if(tokens.get(currentToken).getData().equals("}")) {
+                matchAndDevour("}");
+                System.out.println("matched }\n");
+            } else {
+                System.out.println("Syntax Error");
+            }              
         }
 
         private void StatementList() {
-                
-//            if(Statement()) {
-//                Statement();
-//            } else if(matchAndDevour("}")) {
-//                outputAreaParser.append("PARSER: parseStatementList()\n");
-//            } else {
-//                return false;
-//            }
-//            return false;
+            if(tokens.get(currentToken).getData().equals("print")) {
+                matchAndDevour("print");
+                System.out.println("matched print\n");
+            } else if(tokens.get(currentToken).getData().equals("int")) {
+                matchAndDevour("int");
+                System.out.println("matched int\n");
+            } else if(tokens.get(currentToken).getData().equals("string")) {
+                matchAndDevour("string");
+                System.out.println("matched string\n");
+            } else if(tokens.get(currentToken).getData().equals("boolean")) {
+                matchAndDevour("boolean");
+                System.out.println("matched booleant\n");
+            } else if(tokens.get(currentToken).getData().equals("if")) {
+                matchAndDevour("if");
+                System.out.println("matched if\n");
+            } else if(tokens.get(currentToken).getData().equals("while")) {
+                matchAndDevour("while");
+                System.out.println("matched while\n");
+            } else if(tokens.get(currentToken).getData().equals("print")) {
+                matchAndDevour("print");
+                System.out.println("matched print\n");
+            } else {
+                System.out.println("Syntax Error");
+            }
+
+
         }
 
         private void Statement() {
-            
-//            PrintStatement();
-//            AssignmentStatement();
-//            VarDecl();
-//            WhileStatement();
-//            IfStatement();
-//              if(Block()) {
-//                  Block();
-//                  return true;
-//              } else {
-//                  Program();
-//              }
-//              return false;
+
+    //            PrintStatement();
+    //            AssignmentStatement();
+    //            VarDecl();
+    //            WhileStatement();
+    //            IfStatement();
+    //              if(Block()) {
+    //                  Block();
+    //                  return true;
+    //              } else {
+    //                  Program();
+    //              }
+    //              return false;
         }
 
         private void PrintStatement() {
-//            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         private void AssignmentStatement() {
-  //          throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //          throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         private void VarDecl() {
@@ -662,10 +627,10 @@ public class Lexer extends javax.swing.JFrame {
         //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-        
 
-       
-               
+
+
+
         /**
          * 
          * 
@@ -674,9 +639,9 @@ public class Lexer extends javax.swing.JFrame {
          *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
          *      ::== ID             ::== char
          */
-  
-        
-          
+
+
+
         /**
          * 
          * Statement ::== Printokentatement        ::== print ( Expr )
@@ -686,11 +651,15 @@ public class Lexer extends javax.swing.JFrame {
          *           ::== IfStatement           ::== if BooleanExpr Block
          *           ::== Block                 ::== Program
          */ 
-    
-    
-        
+
+
+
+
+
+
+
     }
-    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1003,18 +972,14 @@ public class Lexer extends javax.swing.JFrame {
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
        
-       
-        Token lexer = new Token();
+        
+        Token token = new Token();
        
         // Creates a variable for the Parser class
-        Parser parse = new Parser(lexer);
-        
-        System.out.println(lexer);
-        
-        
-        
+        Parser parse = new Parser(token);
+    
        
-
+        // System.out.println(lexer);
         // Prints lexer output to parser input
         //outputAreaParser.append(outputArea.getText());
         
@@ -1141,6 +1106,7 @@ public class Lexer extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Lexer().setVisible(true);
             }
@@ -1158,7 +1124,7 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonClearInput;
     private javax.swing.JButton buttonClearOutput;
     private javax.swing.JButton buttonClearOutput1;
-    private javax.swing.JButton buttonLex;
+    public javax.swing.JButton buttonLex;
     private javax.swing.JButton buttonParse;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
