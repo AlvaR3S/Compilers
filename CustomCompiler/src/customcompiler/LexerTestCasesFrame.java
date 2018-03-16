@@ -85,7 +85,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         getContentPane().add(checkBox4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 230, -1, -1));
 
         checkBox3.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        checkBox3.setText("Unrecognized Token");
+        checkBox3.setText("Alan's Case");
         checkBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkBox3ActionPerformed(evt);

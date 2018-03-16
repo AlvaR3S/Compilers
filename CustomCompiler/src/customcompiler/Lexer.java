@@ -329,15 +329,6 @@ public class Lexer extends javax.swing.JFrame {
             boolean errorToken = false;
 
 
-//            // Lexer takes the input, finds the patterns and places them into token format
-//            StringBuffer tokenPatternsBuffer = new StringBuffer();
-//            for(TokenType tokenType : TokenType.values()) 
-//                tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
-//            this.tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1), Pattern.CASE_INSENSITIVE);
-//
-//            // Lexer Matches the patterns and if they are valid, they will be added to the new tokens array for output
-//            this.tokenMatcher = tokenPatterns.matcher(input);
-
             Matcher tokenMatcher = getMatcher();
 
             // Loops through the input and finds valid tokens
@@ -518,19 +509,20 @@ public class Lexer extends javax.swing.JFrame {
          * 
          */        
         private void Program() {
-            Block();
+            
             if(tokens.get(currentToken).getData().equals("$")) {
-                matchAndDevour("$");
+                matchAndDevour("$"); 
                 outputAreaParser.append("PARSER: Parse completed successfully\n");
                 System.out.println("matched $\n");
+               
 
                 if(currentToken < tokens.size()) {
+                    System.out.println("Program running more than once\n");
                     Program();
-                    System.out.println("im running more than once\n");
                 }
 
             } else {
-                System.out.println("Syntax Error");
+                Block();
             }
         }
 
@@ -546,18 +538,14 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour("{");
                 outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched {\n");
-
-            } else {
-                System.out.println("Syntax Error");
-            }
-
-            StatementList();
-
-            if(tokens.get(currentToken).getData().equals("}")) {
+                
+                StatementList();
+            } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
-                System.out.println("matched }\n");
+                System.out.println("matched: \"}\"\n");
+                Program();  // in case it reaches here go get $ to finish
             } else {
-                System.out.println("Syntax Error");
+                System.out.println("wrong");
             }              
         }
         
@@ -566,48 +554,71 @@ public class Lexer extends javax.swing.JFrame {
          *               ::== ε <-- (empty set)
          */
         private void StatementList() {
+            
             if(tokens.get(currentToken).getData().equals("print")) {
                 matchAndDevour("print");
-                System.out.println("matched print\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: print\n");
+                Statement();
+                
             } else if(tokens.get(currentToken).getData().equals("int")) {
                 matchAndDevour("int");
-                System.out.println("matched int\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: int\n");
+                Statement();
+                
             } else if(tokens.get(currentToken).getData().equals("string")) {
                 matchAndDevour("string");
-                System.out.println("matched string\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: string\n");
+                Statement();
+                
             } else if(tokens.get(currentToken).getData().equals("boolean")) {
                 matchAndDevour("boolean");
-                System.out.println("matched booleant\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: booleant\n");
+                Statement();
+                
             } else if(tokens.get(currentToken).getData().equals("if")) {
                 matchAndDevour("if");
-                System.out.println("matched if\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: if\n");
+                Statement();
+                
             } else if(tokens.get(currentToken).getData().equals("while")) {
                 matchAndDevour("while");
-                System.out.println("matched while\n");
-            } else if(tokens.get(currentToken).getData().equals("print")) {
-                matchAndDevour("print");
-                System.out.println("matched print\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: while\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getData().equals("}")) {
+                matchAndDevour("}");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: }\n");
+                Program();
             } else {
-                System.out.println("Syntax Error");
+                System.out.println("Syntax Error"); // if no other option found then what...???
             }
 
 
         }
-
+        
+        /**
+         * 
+         * Statement ::== Printokentatement        ::== print ( Expr )
+         *           ::== Assignmentokentatement   ::== Id = Expr
+         *           ::== VarDecl                  ::== type Id
+         *           ::== WhileStatement           ::== while BooleanExpr Block
+         *           ::== IfStatement              ::== if BooleanExpr Block
+         *           ::== Block                    ::== Program
+         */ 
         private void Statement() {
+//            PrintStatement();
+//            AssignmentStatement();
+//            VarDecl();
+//            WhileStatement();
+//            IfStatement();
 
-    //            PrintStatement();
-    //            AssignmentStatement();
-    //            VarDecl();
-    //            WhileStatement();
-    //            IfStatement();
-    //              if(Block()) {
-    //                  Block();
-    //                  return true;
-    //              } else {
-    //                  Program();
-    //              }
-    //              return false;
         }
 
         private void PrintStatement() {
@@ -642,25 +653,6 @@ public class Lexer extends javax.swing.JFrame {
          *      ::== BooleanExpr    ::== ( Expr boolop Expr ), boolval
          *      ::== ID             ::== char
          */
-
-
-
-        /**
-         * 
-         * Statement ::== Printokentatement        ::== print ( Expr )
-         *           ::== Assignmentokentatement   ::== Id = Expr
-         *           ::== VarDecl               ::== type Id
-         *           ::== WhileStatement        ::== while BooleanExpr Block
-         *           ::== IfStatement           ::== if BooleanExpr Block
-         *           ::== Block                 ::== Program
-         */ 
-
-
-
-
-
-
-
     }
 
 
