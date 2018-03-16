@@ -218,7 +218,7 @@ public class Lexer extends javax.swing.JFrame {
         boolvalTrue("true"),
         
         // Identifiers
-
+        
        
         // Numbers
         digit("[0-9]"), 
@@ -247,13 +247,16 @@ public class Lexer extends javax.swing.JFrame {
         newLine("[\n|\r]"),
         
         // Letters in between quotes are chars
-        CHAR("\"[a-z]\""), //get first letter in string makes it a char rest are ID
-        CHARS("[a-z]"), 
+        CHAR("(?<=\")(?:\\\\.|[^\"\\\\])*(?=\")"), //get first letter in string makes it a char rest are ID
+        ID("[a-z]"), 
         intCHAR("\"[int]\""),
-        unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.|/]"),
-        unrecognizedEOP("[\"$\"]+");
+        unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.]"),
+        unrecognizedEOP("[\"$\"]+"),
         
-        //public final String pattern;
+        
+        // Comments
+        comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
+        
         
         Pattern pattern;
         
@@ -342,6 +345,10 @@ public class Lexer extends javax.swing.JFrame {
                  if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                     tokenID = 0;
+                } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
+                     continue;
+                } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
+                     continue;     
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
                     tokenID = 1;
@@ -363,8 +370,8 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
                     tokenID = 7;
-                } else if(tokenMatcher.group(TokenType.CHARS.name()) != null) {
-                    tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHARS.name())));
+                } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
+                    tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name())));
                     tokenID = 8;
                 } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
@@ -399,13 +406,6 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
                     tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));
                     tokenID = 19;
-                } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
-                    tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-                    tokenID = 20;
-                } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
-                    tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-                    tokenID = 21;
-                    // Needs to print individual letters
                 } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
                     tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
                     tokenID = 22;
@@ -514,9 +514,9 @@ public class Lexer extends javax.swing.JFrame {
         }
 
         /**
-        * Program       ::== Block $
-        * 
-        */        
+         * Program       ::== Block $
+         * 
+         */        
         private void Program() {
             Block();
             if(tokens.get(currentToken).getData().equals("$")) {
@@ -537,11 +537,10 @@ public class Lexer extends javax.swing.JFrame {
 
 
         /**
-        * 
-        * Block         ::== { StatementList }
-        * StatementList ::== Statement StatementList
-        *               ::== ε <-- (empty set)
-        */        
+         * 
+         * Block         ::== { StatementList }
+         * 
+         */        
         private void Block() {  
             if(tokens.get(currentToken).getData().equals("{")) {
                 matchAndDevour("{");
@@ -561,7 +560,11 @@ public class Lexer extends javax.swing.JFrame {
                 System.out.println("Syntax Error");
             }              
         }
-
+        
+        /**
+         * StatementList ::== Statement StatementList
+         *               ::== ε <-- (empty set)
+         */
         private void StatementList() {
             if(tokens.get(currentToken).getData().equals("print")) {
                 matchAndDevour("print");

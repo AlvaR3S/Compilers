@@ -191,9 +191,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         
         if(checkBox3.isSelected()) {
             inputArea.append("{}$\n" +
-            "{{{{{{}}}}}}$\n" +
+            "{{{{{{} /* comments are ignored */ }}}}}$\n" +
             "{{{{{{}}}}}}}$\n" +
-            "{int @}$");
+            "{ /* comments are ignored */ int @}$");
         }
         
         if(checkBox4.isSelected()) {
