@@ -542,8 +542,14 @@ public class Lexer extends javax.swing.JFrame {
                 StatementList();
             } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
-                System.out.println("matched: \"}\"\n");
+                System.out.println("matched: }\n");
                 Program();  // in case it reaches here go get $ to finish
+                
+            } else if(tokens.get(currentToken).getData().equals("\n")) { // Accounting for a new line
+                matchAndDevour("\n");
+                System.out.println("matched: \n");
+                StatementList();
+             
             } else {
                 System.out.println("wrong");
             }              
@@ -593,9 +599,19 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
-                outputAreaParser.append("PARSER: parseStatementList()\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                 System.out.println("matched: }\n");
                 Program();
+            } else if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
+                matchAndDevour("{");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: {\n");
+                Program();    
+            } else if(tokens.get(currentToken).getData().equals("\n")) { // Accounting for a new line
+                matchAndDevour("\n");
+                System.out.println("matched: \n");
+                Program();
+             
             } else {
                 System.out.println("Syntax Error"); // if no other option found then what...???
             }
@@ -605,12 +621,12 @@ public class Lexer extends javax.swing.JFrame {
         
         /**
          * 
-         * Statement ::== Printokentatement        ::== print ( Expr )
-         *           ::== Assignmentokentatement   ::== Id = Expr
-         *           ::== VarDecl                  ::== type Id
-         *           ::== WhileStatement           ::== while BooleanExpr Block
-         *           ::== IfStatement              ::== if BooleanExpr Block
-         *           ::== Block                    ::== Program
+         * Statement ::== PrintStatement        ::== print ( Expr )
+         *           ::== AssignmentStatement   ::== Id = Expr
+         *           ::== VarDecl               ::== type Id
+         *           ::== WhileStatement        ::== while BooleanExpr Block
+         *           ::== IfStatement           ::== if BooleanExpr Block
+         *           ::== Block                 ::== Program
          */ 
         private void Statement() {
 //            PrintStatement();
