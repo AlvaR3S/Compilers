@@ -252,12 +252,14 @@ public class Lexer extends javax.swing.JFrame {
         // New line
         newLine("[\n|\r]"),
         
-        // Letters in between quotes are chars
-        CHAR("(?<=\")[a-z]*(?=\")"), //get first letter in string makes it a char rest are ID
-        ID("[a-z]"), 
-        intCHAR("[\"a-z\"]"),
+        // CHAR
+        CHAR("[a-z]"), 
+        
+        // Unrecognized Tokens
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.]"),
-       // unrecognizedEOP("[\"$\"]+"),
+        
+        // Quote
+        Quote("[\"$\"]+"),
         
         // Empty String
        
@@ -323,7 +325,7 @@ public class Lexer extends javax.swing.JFrame {
             int numberOfEop = 0;
             int lexSuccess = 0;
 
-            //int lexProg = 0;
+            
 
             String input = inputArea.getText();
             String output = outputArea.getText();
@@ -339,76 +341,53 @@ public class Lexer extends javax.swing.JFrame {
             while(tokenMatcher.find()) {
                  if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
-                    tokenID = 0;
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                      continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
                      continue;
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-                    tokenID = 1;
                 } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
                     tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
-                    tokenID = 2;
                 } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
                     tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
-                    tokenID = 3;
                 } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
                     tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
-                    tokenID = 4;
                 } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
                     tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
-                    tokenID = 5;
                 } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
                     tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-                    tokenID = 6;
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
-                    tokenID = 7;
-                } else if(tokenMatcher.group(TokenType.ID.name()) != null) {
-                    tokens.add(new Token(TokenType.ID, tokenMatcher.group(TokenType.ID.name())));
-                    tokenID = 8;
+                } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
+                    tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
                 } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
-                    tokenID = 9;
                 } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
-                    tokenID = 10;
                 } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
                     tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
-                    tokenID = 11;
                 } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
                     tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name())));
-                    tokenID = 12;
                 } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name())));
-                    tokenID = 13;
                 } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name())));
-                    tokenID = 14;
                 } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
                     tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name())));
-                    tokenID = 15;
                 } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
                     tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name())));
-                    tokenID = 16;
                 } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name())));
-                    tokenID = 17;
                 } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
-                    tokenID = 18;
                 } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
                     tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));
-                    tokenID = 19;
+                } else if(tokenMatcher.group(TokenType.Quote.name()) != null) {
+                    tokens.add(new Token(TokenType.Quote, tokenMatcher.group(TokenType.Quote.name())));
                 } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
                     tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
-                    tokenID = 22;
                     errorCount++;
-//                } else if(tokenMatcher.group(TokenType.unrecognizedEOP.name()) != null) {
-//                    tokens.add(new Token(TokenType.unrecognizedEOP, tokenMatcher.group(TokenType.unrecognizedEOP.name())));
-//                    tokenID = 23;
-//                    errorCount++;
                 } else {
                     System.out.println("Unrecognized token found."); // Catches other tokens that aren't allowed if not in (unrecognized)
                     errorToken = true;
@@ -435,8 +414,6 @@ public class Lexer extends javax.swing.JFrame {
                 // When an unrecognized token is found print error message else print the token
                 if(token.type == unrecognized) {
                     outputArea.append("LEXER: ERROR: Unrecognized token: " + token.data + " on line " + lineNumber + "\n");
-//                } else if(token.type == unrecognizedEOP) {
-//                    outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + " on line " + lineNumber + "\n"); 
                 } else if(token.type == newLine) { // Gets the current token line number and recognizes if new program is lexing
                     lineNumber++;
                 } else {
@@ -550,7 +527,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
-                outputAreaParser.append("PARSER: parseBlock()\n");
+                outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: }\n");
                 StatementList(); 
                 
@@ -578,48 +555,10 @@ public class Lexer extends javax.swing.JFrame {
          *               ::== ε <-- (empty set)
          */
         private void StatementList() {
-            if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
-                matchAndDevour(tokenType.closeBracket);
-                closeBraceCount++;
-                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                System.out.println("matched: }\n");
-                Statement();
-                
-            } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
-                matchAndDevour(tokenType.openBracket);
-                openBraceCount++;
-                outputAreaParser.append("PARSER: parseStatementList()\n");
-                outputAreaParser.append("PARSER: parseStatement()\n");
-                outputAreaParser.append("PARSER: parseBlock()\n");
-                System.out.println("matched: {\n");
-                Statement();
-                
-            } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
-                matchAndDevour(tokenType.newLine);
-                System.out.println("matched: \n");
-                Statement(); // loops to next section when end reached loop back to the top
-               
-            } else {
-                Statement(); // If not one of above options move onto Statements   
-            }   
-        }
-        
-        
-        /**
-         * 
-         * Statement ::== PrintStatement        ::== print ( Expr )
-         *           ::== AssignmentStatement   ::== Id = Expr
-         *           ::== VarDecl               ::== type Id
-         *           ::== WhileStatement        ::== while BooleanExpr Block
-         *           ::== IfStatement           ::== if BooleanExpr Block
-         *           ::== Block                 ::== Program
-         */ 
-        private void Statement() {
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
-                matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: print\n");
-                PrintStatement();
+                Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
                 matchAndDevour(tokenType.typeInt);
@@ -650,6 +589,83 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: while\n");
                 Statement();
+             
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                matchAndDevour(tokenType.closeBracket);
+                closeBraceCount++;
+                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                System.out.println("matched: }\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
+                matchAndDevour(tokenType.openBracket);
+                openBraceCount++;
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                outputAreaParser.append("PARSER: parseBlock()\n");
+                System.out.println("matched: {\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
+                matchAndDevour(tokenType.newLine);
+                System.out.println("matched: \n");
+                StatementList(); // loops to next section when end reached loop back to the top
+            
+            } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // Accounting for an early stop
+                Program(); // loops back to the top
+                  
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+            }   
+        }
+        
+        
+        /**
+         * 
+         * Statement ::== PrintStatement        ::== print ( Expr )
+         *           ::== AssignmentStatement   ::== Id = Expr
+         *           ::== VarDecl               ::== type Id
+         *           ::== WhileStatement        ::== while BooleanExpr Block
+         *           ::== IfStatement           ::== if BooleanExpr Block
+         *           ::== Block                 ::== Program
+         */ 
+        private void Statement() {
+            if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
+                matchAndDevour(tokenType.printStatement);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: print\n");
+                PrintStatement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
+                matchAndDevour(tokenType.typeInt);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: int\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
+                matchAndDevour(tokenType.typeString);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: string\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
+                matchAndDevour(tokenType.typeBoolean);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: booleant\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.ifStatement)) {
+                matchAndDevour(tokenType.ifStatement);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: if\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.whileStatement)) {
+                matchAndDevour(tokenType.whileStatement);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: while\n");
+                Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 matchAndDevour(tokenType.closeBracket);
@@ -662,14 +678,7 @@ public class Lexer extends javax.swing.JFrame {
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                         matchAndDevour(tokenType.EOP); 
                         System.out.println("matched $\n");
-                    }
-                    
-                    if(currentToken < tokens.size()) { // in case Program is not finished
-                        System.out.println("Program running more than once\n");
-                        i++;
-                        outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
-                        outputAreaParser.append("PARSER: parse()\n");
-                        outputAreaParser.append("PARSER: parseProgram()\n");
+                    } else {
                         Program(); // when end reached loop back to the top
                     }
                 } else {
@@ -706,7 +715,9 @@ public class Lexer extends javax.swing.JFrame {
                     Program(); // when end reached loop back to the top
                 }
             } else {
-                System.out.println("Syntax Error"); // if no other option found then what...???  
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning
             }
         }
         
@@ -718,7 +729,15 @@ public class Lexer extends javax.swing.JFrame {
         private void PrintStatement() {
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) {
                 matchAndDevour(tokenType.openParenthesis);
+                outputAreaParser.append("PARSER: parsePrintStatement()\n");
                 Expr();
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
+                matchAndDevour(tokenType.closeParenthesis);
+                Statement();
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning
             }    
         }
         
@@ -772,7 +791,21 @@ public class Lexer extends javax.swing.JFrame {
          *      ::== ID             ::== char
          */
         private void Expr() {
-            IntExpr();
+            if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
+                outputAreaParser.append("PARSER: parseExpr()\n");
+                IntExpr(); // If its a digit we will see if its valid IntExpr
+            } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS 
+                outputAreaParser.append("PARSER: parseExpr()\n"); 
+                ID();
+            } else if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
+                outputAreaParser.append("PARSER: parseExpr()\n"); 
+                BooleanExpr();
+            } else if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes 
+                outputAreaParser.append("PARSER: parseExpr()\n"); 
+                StringExpr();
+            } else {
+                Program(); // loop to the beginning
+            }
         }
         
         
@@ -781,13 +814,37 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== IntExpr   ::== digit intopExpr, digit
          */
         private void IntExpr() {
-//            if(tokens.get(currentToken).getType().equals()) {
-//                matchAndDevour("print");
-//                outputAreaParser.append("PARSER: parseStatementList()\n");
-//                System.out.println("matched: print\n");
-//                PrintStatement();
-//            }    
-//             
+            if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
+                matchAndDevour(tokenType.digit);
+                outputAreaParser.append("PARSER: parseDigit()\n");
+                System.out.println("matched: Digit\n");
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) { // Checking for intop   
+                    matchAndDevour(tokenType.intopAddition);
+                    outputAreaParser.append("PARSER: parseIntop()\n");
+                    System.out.println("matched: Intop\n");
+                
+                    if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
+                        matchAndDevour(tokenType.digit);
+                        outputAreaParser.append("PARSER: parseDigit()\n");
+                        outputAreaParser.append("PARSER: parseIntExpr()\n"); // printStatement is valid
+                        PrintStatement(); // Loop back to finish PrintStatement
+                    } else {
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        Program(); // loop to the beginning
+                    } 
+                    
+                } else { // If next sequence is not an Intop
+                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    Program(); // loop to the beginning
+                } 
+            } else { // If IntExpr doesn't start with a digit
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning
+            }
         }
         
         
@@ -815,7 +872,22 @@ public class Lexer extends javax.swing.JFrame {
          *  Expr ::== ID   ::== char
          */
         private void ID() {
-            
+            if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
+                matchAndDevour(tokenType.CHAR);
+                outputAreaParser.append("PARSER: parseCHAR()\n");
+                System.out.println("matched: CHAR\n");
+
+                if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for additional CHARS
+                    ID(); // In case there is more than CHAR re-loops into ID()
+                } else {
+                    outputAreaParser.append("PARSER: parseID()\n"); // IntExpr is valid
+                    Expr(); // Loop back to check if there is another expression
+                }
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning
+            }    
         }
     }
 

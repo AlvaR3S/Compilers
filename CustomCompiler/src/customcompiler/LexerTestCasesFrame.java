@@ -40,6 +40,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         checkBox1 = new javax.swing.JCheckBox();
         buttonConfirm = new javax.swing.JButton();
         checkBox5 = new javax.swing.JCheckBox();
+        checkBox6 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -118,7 +119,16 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox5ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+
+        checkBox6.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox6.setText("Print Statement");
+        checkBox6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox6ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
 
         menuLexer.setToolTipText("");
 
@@ -211,6 +221,13 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                     + "\n"
                     + "}$");
         }
+        if(checkBox6.isSelected()) {
+            inputArea.append("{ /* print (IntExpr) */\n"
+            + "\t print ( 2 + 2 )"
+            + "\n"
+            + "}$");
+        }
+        
         
         lex.setVisible(true);
         lex.setEnabled(true);
@@ -220,6 +237,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private void checkBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox5ActionPerformed
+
+    private void checkBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox6ActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -263,6 +284,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox3;
     private javax.swing.JCheckBox checkBox4;
     private javax.swing.JCheckBox checkBox5;
+    private javax.swing.JCheckBox checkBox6;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
     private javax.swing.JLabel labelTitle1;
