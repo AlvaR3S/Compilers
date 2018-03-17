@@ -52,17 +52,13 @@ public class Lexer extends javax.swing.JFrame {
     
     public int tokenID;
     
-    
-    
+    public int errorCount = 0;
     
     
     // ------------------------------------------------------------
     // -----------------[Getters and Setters]----------------------
     // ------------------------------------------------------------
     
-    //    public int getCurrentTokenPosition() {
-    //        return currentTokenPosition;
-    //    }
     
     public JTextArea getInputArea() {
         return inputArea;
@@ -81,8 +77,6 @@ public class Lexer extends javax.swing.JFrame {
     public JTextArea getOutputAreaParser() {
         return outputAreaParser;
     }
-    
-    
 
     public int getTokenID() {
         return tokenID;
@@ -91,6 +85,16 @@ public class Lexer extends javax.swing.JFrame {
     public ArrayList<Token> getTokens() {
         return tokens;
     }
+
+    public int getErrorCount() {
+        return errorCount;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+    
+    
     
     public Pattern getPatterns() {
          
@@ -247,12 +251,14 @@ public class Lexer extends javax.swing.JFrame {
         newLine("[\n|\r]"),
         
         // Letters in between quotes are chars
-        CHAR("(?<=\")(?:\\\\.|[^\"\\\\])*(?=\")"), //get first letter in string makes it a char rest are ID
+        CHAR("(?<=\")[a-z]*(?=\")"), //get first letter in string makes it a char rest are ID
         ID("[a-z]"), 
-        intCHAR("\"[int]\""),
+        intCHAR("[\"a-z\"]"),
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.]"),
-        unrecognizedEOP("[\"$\"]+"),
+       // unrecognizedEOP("[\"$\"]+"),
         
+        // Empty String
+       
         
         // Comments
         comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
@@ -306,15 +312,11 @@ public class Lexer extends javax.swing.JFrame {
          * Lex the input of characters 
          * and make them tokens 
          * if they are in our grammar
-         * else they are unrecognized
-         * @param tok
-         * @return 
+         * else they are unrecognized 
          */
-        
         public Token() {
 
             int i = 1;
-            int errorCount = 0;
             int warningCount = 0;
             int numberOfEop = 0;
             int lexSuccess = 0;
@@ -339,7 +341,7 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                      continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
-                     continue;     
+                     continue;
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
                     tokenID = 1;
@@ -401,10 +403,10 @@ public class Lexer extends javax.swing.JFrame {
                     tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
                     tokenID = 22;
                     errorCount++;
-                } else if(tokenMatcher.group(TokenType.unrecognizedEOP.name()) != null) {
-                    tokens.add(new Token(TokenType.unrecognizedEOP, tokenMatcher.group(TokenType.unrecognizedEOP.name())));
-                    tokenID = 23;
-                    errorCount++;
+//                } else if(tokenMatcher.group(TokenType.unrecognizedEOP.name()) != null) {
+//                    tokens.add(new Token(TokenType.unrecognizedEOP, tokenMatcher.group(TokenType.unrecognizedEOP.name())));
+//                    tokenID = 23;
+//                    errorCount++;
                 } else {
                     System.out.println("Unrecognized token found."); // Catches other tokens that aren't allowed if not in (unrecognized)
                     errorToken = true;
@@ -431,8 +433,8 @@ public class Lexer extends javax.swing.JFrame {
                 // When an unrecognized token is found print error message else print the token
                 if(token.type == unrecognized) {
                     outputArea.append("LEXER: ERROR: Unrecognized token: " + token.data + " on line " + lineNumber + "\n");
-                } else if(token.type == unrecognizedEOP) {
-                    outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + " on line " + lineNumber + "\n"); 
+//                } else if(token.type == unrecognizedEOP) {
+//                    outputArea.append("LEXER: ERROR: Incorrect use of: " + "\"$\"" + " on line " + lineNumber + "\n"); 
                 } else if(token.type == newLine) { // Gets the current token line number and recognizes if new program is lexing
                     lineNumber++;
                 } else {
@@ -463,23 +465,20 @@ public class Lexer extends javax.swing.JFrame {
                 warningCount++;
             } 
 
-            // Ignoring commentsw (NOT FINISHED YET)
-            if(input.contains("//")) {
-                System.out.print("ignore");
-            }
-
             // Prints out total number of errors and warnings at the end of program
             outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
                                 + "and [" + errorCount + "] Error(s).\n\n"); 
         }
-    }
-     
+    }     
     
     public class Parser {
         Lexer lex = new Lexer();
         int currentToken = 0;
         boolean stillMoreTokens = true;
-
+        int i = 1;
+        int error = lex.getErrorCount();
+        int openBraceCount = 0;
+        int closeBraceCount = 0;
 
         // Starts and finishes the parse - will be called through button run
         /**
@@ -487,13 +486,12 @@ public class Lexer extends javax.swing.JFrame {
          * @param token
          */
         public Parser(Token token){
-
-            outputAreaParser.append("PARSER: Parsing program 1...\n");
-            outputAreaParser.append("PARSER: parse()\n");
-
-            System.out.println("yo");
-            outputAreaParser.append("PARSER: parseProgram()\n");
-            Program();
+            
+                outputAreaParser.append("PARSER: Parsing program" + i + "...\n");
+                outputAreaParser.append("PARSER: parse()\n");
+                outputAreaParser.append("PARSER: parseProgram()\n");
+                Program();
+              
         }
 
         public void matchAndDevour(String tokenMatch) {
@@ -510,17 +508,35 @@ public class Lexer extends javax.swing.JFrame {
          */        
         private void Program() {
             
-            if(tokens.get(currentToken).getData().equals("$")) {
+            if(tokens.get(currentToken).getData().equals("$")) { // In case end comes sooner than expected
                 matchAndDevour("$"); 
-                outputAreaParser.append("PARSER: Parse completed successfully\n");
                 System.out.println("matched $\n");
-               
-
+                
+                if(openBraceCount != closeBraceCount) {
+                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
+                } else {
+                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                }    
+                
+                if(currentToken < tokens.size()) { // in case Program is not finished
+                    System.out.println("Program running more than once\n");
+                    i++;
+                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                    outputAreaParser.append("PARSER: parse()\n");
+                    outputAreaParser.append("PARSER: parseProgram()\n");
+                    Program(); // when end reached loop back to the top
+                    
+                }
+                
                 if(currentToken < tokens.size()) {
                     System.out.println("Program running more than once\n");
+                    i++;
+                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                    outputAreaParser.append("PARSER: parse()\n");
+                    outputAreaParser.append("PARSER: parseProgram()\n");
                     Program();
                 }
-
             } else {
                 Block();
             }
@@ -536,20 +552,30 @@ public class Lexer extends javax.swing.JFrame {
         private void Block() {  
             if(tokens.get(currentToken).getData().equals("{")) {
                 matchAndDevour("{");
+                openBraceCount++;
                 outputAreaParser.append("PARSER: parseBlock()\n");
-                System.out.println("matched {\n");
-                
+                System.out.println("matched {\n"); 
                 StatementList();
+                
             } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
+                closeBraceCount++;
+                outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched: }\n");
-                Program();  // in case it reaches here go get $ to finish
+                StatementList(); 
                 
             } else if(tokens.get(currentToken).getData().equals("\n")) { // Accounting for a new line
                 matchAndDevour("\n");
                 System.out.println("matched: \n");
-                StatementList();
-             
+                if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
+                    matchAndDevour("{");
+                    openBraceCount++;
+                    outputAreaParser.append("PARSER: parseBlock()\n");
+                    System.out.println("matched: {\n");
+                    StatementList();
+                } else {
+                    StatementList();
+                }    
             } else {
                 System.out.println("wrong");
             }              
@@ -561,6 +587,68 @@ public class Lexer extends javax.swing.JFrame {
          */
         private void StatementList() {
             
+            if(tokens.get(currentToken).getData().equals("}")) {
+                matchAndDevour("}");
+                closeBraceCount++;
+                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                System.out.println("matched: }\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
+                matchAndDevour("{");
+                openBraceCount++;
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                outputAreaParser.append("PARSER: parseBlock()\n");
+                System.out.println("matched: {\n");
+                Statement();
+                
+            } else if(tokens.get(currentToken).getData().equals("\n")) { // Accounting for a new line
+                matchAndDevour("\n");
+                System.out.println("matched: \n");
+                Statement(); // loops to next section when end reached loop back to the top
+                
+            } else if(tokens.get(currentToken).getData().equals("$")) { // In case end comes sooner than expected
+                matchAndDevour("$"); 
+                System.out.println("matched $\n");
+                
+                if(openBraceCount != closeBraceCount) {
+                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
+                } else {
+                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                }    
+                
+                if(currentToken < tokens.size()) { // in case Program is not finished
+                    System.out.println("Program running more than once\n");
+                    i++;
+                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                    outputAreaParser.append("PARSER: parse()\n");
+                    outputAreaParser.append("PARSER: parseProgram()\n");
+                    Program(); // when end reached loop back to the top
+                    
+                }   
+            } else {
+                System.out.println("Syntax Error"); // if no other option found then what...???   
+            }
+            
+        }
+        
+        /**
+         * 
+         * Statement ::== PrintStatement        ::== print ( Expr )
+         *           ::== AssignmentStatement   ::== Id = Expr
+         *           ::== VarDecl               ::== type Id
+         *           ::== WhileStatement        ::== while BooleanExpr Block
+         *           ::== IfStatement           ::== if BooleanExpr Block
+         *           ::== Block                 ::== Program
+         */ 
+        private void Statement() {
+//            PrintStatement();
+//            AssignmentStatement();
+//            VarDecl();
+//            WhileStatement();
+//            IfStatement();
             if(tokens.get(currentToken).getData().equals("print")) {
                 matchAndDevour("print");
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -599,41 +687,50 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
+                closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                 System.out.println("matched: }\n");
-                Program();
+                StatementList(); // Conisidered as Block() loops back to begining to find possible $
+                
             } else if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
                 matchAndDevour("{");
+                openBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched: {\n");
-                Program();    
+                StatementList(); // Conisidered as Block() loops back to begining to find possible $
+                
             } else if(tokens.get(currentToken).getData().equals("\n")) { // Accounting for a new line
                 matchAndDevour("\n");
                 System.out.println("matched: \n");
-                Program();
-             
+                Program(); // loops to next section when end reached loop back to the top
+            
+            } else if(tokens.get(currentToken).getData().equals("$")) { // In case end comes sooner than expected
+                matchAndDevour("$"); 
+                System.out.println("matched $\n");
+                
+                if(openBraceCount != closeBraceCount) {
+                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
+                } else {
+                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                }    
+                
+                if(currentToken < tokens.size()) { // in case Program is not finished
+                    System.out.println("Program running more than once\n");
+                    i++;
+                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                    outputAreaParser.append("PARSER: parse()\n");
+                    outputAreaParser.append("PARSER: parseProgram()\n");
+                    Program(); // when end reached loop back to the top
+                    
+                }
             } else {
                 System.out.println("Syntax Error"); // if no other option found then what...???
+               
             }
 
-
-        }
-        
-        /**
-         * 
-         * Statement ::== PrintStatement        ::== print ( Expr )
-         *           ::== AssignmentStatement   ::== Id = Expr
-         *           ::== VarDecl               ::== type Id
-         *           ::== WhileStatement        ::== while BooleanExpr Block
-         *           ::== IfStatement           ::== if BooleanExpr Block
-         *           ::== Block                 ::== Program
-         */ 
-        private void Statement() {
-//            PrintStatement();
-//            AssignmentStatement();
-//            VarDecl();
-//            WhileStatement();
-//            IfStatement();
 
         }
 
@@ -988,6 +1085,7 @@ public class Lexer extends javax.swing.JFrame {
        
         // Creates a variable for the Parser class
         Parser parse = new Parser(token);
+
     
        
         // System.out.println(lexer);
