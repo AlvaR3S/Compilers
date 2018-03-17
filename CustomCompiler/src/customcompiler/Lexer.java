@@ -661,12 +661,16 @@ public class Lexer extends javax.swing.JFrame {
                     if(closeBraceCount != openBraceCount) {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
-                        
                         matchAndDevour("$"); 
                         System.out.println("matched $\n");
                     }
                     
                     if(currentToken < tokens.size()) { // in case Program is not finished
+                        System.out.println("Program running more than once\n");
+                        i++;
+                        outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                        outputAreaParser.append("PARSER: parse()\n");
+                        outputAreaParser.append("PARSER: parseProgram()\n");
                         Program(); // when end reached loop back to the top
                     }
                 } else {
