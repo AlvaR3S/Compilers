@@ -512,12 +512,7 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour("$"); 
                 System.out.println("matched $\n");
                 
-                if(openBraceCount != closeBraceCount) {
-                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
-                } else {
-                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                }    
+                outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                 
                 if(currentToken < tokens.size()) { // in case Program is not finished
                     System.out.println("Program running more than once\n");
@@ -527,15 +522,6 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: parseProgram()\n");
                     Program(); // when end reached loop back to the top
                     
-                }
-                
-                if(currentToken < tokens.size()) {
-                    System.out.println("Program running more than once\n");
-                    i++;
-                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
-                    outputAreaParser.append("PARSER: parse()\n");
-                    outputAreaParser.append("PARSER: parseProgram()\n");
-                    Program();
                 }
             } else {
                 Block();
@@ -594,6 +580,7 @@ public class Lexer extends javax.swing.JFrame {
                 System.out.println("matched: }\n");
                 Statement();
                 
+                    
             } else if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
                 matchAndDevour("{");
                 openBraceCount++;
@@ -607,27 +594,7 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour("\n");
                 System.out.println("matched: \n");
                 Statement(); // loops to next section when end reached loop back to the top
-                
-            } else if(tokens.get(currentToken).getData().equals("$")) { // In case end comes sooner than expected
-                matchAndDevour("$"); 
-                System.out.println("matched $\n");
-                
-                if(openBraceCount != closeBraceCount) {
-                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
-                } else {
-                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                }    
-                
-                if(currentToken < tokens.size()) { // in case Program is not finished
-                    System.out.println("Program running more than once\n");
-                    i++;
-                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
-                    outputAreaParser.append("PARSER: parse()\n");
-                    outputAreaParser.append("PARSER: parseProgram()\n");
-                    Program(); // when end reached loop back to the top
-                    
-                }   
+               
             } else {
                 System.out.println("Syntax Error"); // if no other option found then what...???   
             }
@@ -688,10 +655,25 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getData().equals("}")) {
                 matchAndDevour("}");
                 closeBraceCount++;
-                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                System.out.println("matched: }\n");
-                StatementList(); // Conisidered as Block() loops back to begining to find possible $
                 
+                // Error case when parser finishes with uneven number of '{' and '}'
+                if(tokens.get(currentToken).getData().equals("$")) {
+                    if(closeBraceCount != openBraceCount) {
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        
+                        matchAndDevour("$"); 
+                        System.out.println("matched $\n");
+                    }
+                    
+                    if(currentToken < tokens.size()) { // in case Program is not finished
+                        Program(); // when end reached loop back to the top
+                    }
+                } else {
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
+                    StatementList();
+                }
             } else if(tokens.get(currentToken).getData().equals("{")) { // incase of dupilicates (Block())
                 matchAndDevour("{");
                 openBraceCount++;
@@ -709,14 +691,9 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getData().equals("$")) { // In case end comes sooner than expected
                 matchAndDevour("$"); 
                 System.out.println("matched $\n");
-                
-                if(openBraceCount != closeBraceCount) {
-                    outputAreaParser.append("PARSER: ERROR: Expected [EOP] got " + tokens.get(currentToken - 1).getData() + " on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
-                } else {
-                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                }    
-                
+
+                outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                   
                 if(currentToken < tokens.size()) { // in case Program is not finished
                     System.out.println("Program running more than once\n");
                     i++;
