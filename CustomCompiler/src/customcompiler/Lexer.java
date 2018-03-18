@@ -854,12 +854,15 @@ public class Lexer extends javax.swing.JFrame {
                             outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                             outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                             Program(); // loop to the beginning
-                        } 
+                        }  
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                         Program(); // loop to the beginning
-                    } 
+                    }
+                } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                    PrintStatement(); // Loop back to PrintStatement
+                    
                 } else { // If next sequence is not an Intop
                     outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                     outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())

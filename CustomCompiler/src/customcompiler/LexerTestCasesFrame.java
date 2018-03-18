@@ -278,8 +278,14 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 + "\n"
                 + "\t print( ( 5 + 2 != 6 + 4) )"
                 + "\n"
-                + "\t print( ( \" dlaslkdmasd \" != \" dasdasd \" ) )"
-                + "\n"    
+                + "\t print( ( \"dlaslkdmasd\" != \" dasdasd \" ) )"
+                + "\n"
+                + "\t print( ( a == 3 ) )"
+                + "\n"
+                + "\t print( ( \"sadklmasd\" == a ) )"
+                + "\n"
+                + "\t print( ( \"sd\" != 2 ) )"
+                + "\n"
                 + "}$"); 
         }
         
