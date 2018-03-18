@@ -561,31 +561,26 @@ public class Lexer extends javax.swing.JFrame {
                 Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
-                matchAndDevour(tokenType.typeInt);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: int\n");
                 Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
-                matchAndDevour(tokenType.typeString);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: string\n");
                 Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
-                matchAndDevour(tokenType.typeBoolean);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: booleant\n");
                 Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.ifStatement)) {
-                matchAndDevour(tokenType.ifStatement);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: if\n");
                 Statement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.whileStatement)) {
-                matchAndDevour(tokenType.whileStatement);
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: while\n");
                 Statement();
@@ -641,19 +636,19 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.typeInt);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: int\n");
-                Statement();
+                VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
                 matchAndDevour(tokenType.typeString);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: string\n");
-                Statement();
+                VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
                 matchAndDevour(tokenType.typeBoolean);
                 outputAreaParser.append("PARSER: parseStatement()\n");
-                System.out.println("matched: booleant\n");
-                Statement();
+                System.out.println("matched: boolean\n");
+                VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.ifStatement)) {
                 matchAndDevour(tokenType.ifStatement);
@@ -758,7 +753,7 @@ public class Lexer extends javax.swing.JFrame {
          * Statement ::== AssignmentStatement   ::== Id = Expr
          */ 
         private void AssignmentStatement() {
-    //          throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            
         }
 
         
@@ -767,7 +762,16 @@ public class Lexer extends javax.swing.JFrame {
          * Statement ::== VarDecl    ::== type Id
          */ 
         private void VarDecl() {
-    //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
+                matchAndDevour(tokenType.CHAR);
+                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
+                Program();
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+           }
         }
 
         

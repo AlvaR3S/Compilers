@@ -44,6 +44,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         checkBox7 = new javax.swing.JCheckBox();
         checkBox8 = new javax.swing.JCheckBox();
         checkBox9 = new javax.swing.JCheckBox();
+        checkBox10 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -122,7 +123,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox5ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, -1, -1));
+        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, -1, -1));
 
         checkBox6.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox6.setText("Print Statement (StringExpr)");
@@ -131,7 +132,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox6ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, -1, -1));
+        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
 
         checkBox7.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox7.setText("Print Statement (IntExpr)");
@@ -140,7 +141,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox7ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+        getContentPane().add(checkBox7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, -1, -1));
 
         checkBox8.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox8.setText("Print Statement (ID)");
@@ -149,7 +150,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox8ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        getContentPane().add(checkBox8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, -1, -1));
 
         checkBox9.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox9.setText("Print Statement (BooleanExpr)");
@@ -158,7 +159,16 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox9ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
+        getContentPane().add(checkBox9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, -1, -1));
+
+        checkBox10.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox10.setText("Variable Declaration");
+        checkBox10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox10ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkBox10, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, -1, -1));
 
         menuLexer.setToolTipText("");
 
@@ -289,6 +299,16 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 + "}$"); 
         }
         
+        if(checkBox10.isSelected()) {
+            inputArea.append("{ /* Variable Declaration */\n"
+                    + "\t int a"
+                    + "\n"
+                    + "\t string b"
+                    + "\n"
+                    + "\t boolean c"
+                    + "\n"
+                    + "}$");
+        }
         
         
         lex.setVisible(true);
@@ -315,6 +335,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private void checkBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox9ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox9ActionPerformed
+
+    private void checkBox10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox10ActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -354,6 +378,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JCheckBox checkBox1;
+    private javax.swing.JCheckBox checkBox10;
     private javax.swing.JCheckBox checkBox2;
     private javax.swing.JCheckBox checkBox3;
     private javax.swing.JCheckBox checkBox4;
