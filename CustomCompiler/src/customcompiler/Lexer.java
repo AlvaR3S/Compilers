@@ -559,6 +559,11 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: print\n");
                 Statement();
+            
+            } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                outputAreaParser.append("PARSER: parseStatementList()\n");
+                System.out.println("matched: ID\n");
+                Statement(); 
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -631,6 +636,12 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: print\n");
                 PrintStatement();
+            
+            } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                matchAndDevour(tokenType.CHAR);
+                outputAreaParser.append("PARSER: parseStatement()\n");
+                System.out.println("matched: ID\n");
+                AssignmentStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
                 matchAndDevour(tokenType.typeInt);
@@ -654,13 +665,13 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.ifStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: if\n");
-                Statement();
+                IfStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.whileStatement)) {
                 matchAndDevour(tokenType.whileStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: while\n");
-                Statement();
+                WhileStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 matchAndDevour(tokenType.closeBracket);
@@ -753,7 +764,15 @@ public class Lexer extends javax.swing.JFrame {
          * Statement ::== AssignmentStatement   ::== Id = Expr
          */ 
         private void AssignmentStatement() {
-            
+            if(tokens.get(currentToken).getType().equals(tokenType.assignmentStatement)) { // Checking for CHARS
+                matchAndDevour(tokenType.assignmentStatement);
+                outputAreaParser.append("PARSER: parseAssignment()\n"); // Assignment symbol is valid
+                Expr(); // Gets Expr
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+           }
         }
 
         
@@ -777,24 +796,33 @@ public class Lexer extends javax.swing.JFrame {
         
         /**
          * 
-         * Statement ::== WhileStatement        ::== while BooleanExpr Block
+         * Statement ::== WhileStatement   ::== while BooleanExpr Block
          */ 
         private void WhileStatement() {
-      //      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis
+                outputAreaParser.append("PARSER: WhileStatement()\n"); // While is valid
+                BooleanExpr();
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+            } 
         }
 
         
         /**
          * 
-         * Statement ::== PrintStatement        ::== print ( Expr )
-         *           ::== AssignmentStatement   ::== Id = Expr
-         *           ::== VarDecl               ::== type Id
-         *           ::== WhileStatement        ::== while BooleanExpr Block
-         *           ::== IfStatement           ::== if BooleanExpr Block
-         *           ::== Block                 ::== Program
+         * Statement ::== IfStatement     ::== if BooleanExpr Block
          */ 
         private void IfStatement() {
-        //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis
+                outputAreaParser.append("PARSER: IfStatement()\n"); // IF is valid
+                BooleanExpr();
+            } else {
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+            }
         }
 
         
@@ -810,15 +838,33 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 IntExpr(); // If its a digit we will see if its valid IntExpr
+                
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 ID();
+                
             } else if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 BooleanExpr();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalTrue)) { // Checking for boolval 
+                outputAreaParser.append("PARSER: parseExpr()\n");
+                matchAndDevour(tokenType.boolvalTrue);
+                outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
+                outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
+                Program();
+            
+            } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalFalse)) { // Checking for boolval 
+                outputAreaParser.append("PARSER: parseExpr()\n");
+                matchAndDevour(tokenType.boolvalFalse);
+                outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
+                outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
+                Program();
+            
             } else if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
-                StringExpr();
+                StringExpr();    
+                
             } else {
                 Program(); // loop to the beginning
             }
@@ -854,9 +900,8 @@ public class Lexer extends javax.swing.JFrame {
                         } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                             PrintStatement(); // Loop back to PrintStatement    
 
-                        } else { // Not a valid Expr
-                            outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                            outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        } else { // An AssignmentStatement
+                            outputAreaParser.append("PARSER: parseAssignmentStatement()\n"); // incase of dupilicates (Block())
                             Program(); // loop to the beginning
                         }  
                     } else {
@@ -867,11 +912,10 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                     PrintStatement(); // Loop back to PrintStatement
                     
-                } else { // If next sequence is not an Intop
-                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                } else { // An AssignmentStatement
+                    outputAreaParser.append("PARSER: parseAssignmentStatement()\n"); // incase of dupilicates (Block())
                     Program(); // loop to the beginning
-                } 
+                }    
             } else { // If IntExpr doesn't start with a digit
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -908,11 +952,10 @@ public class Lexer extends javax.swing.JFrame {
                     } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                         PrintStatement(); // Loop back to PrintStatement    
 
-                    } else { // Not a valid Expr
-                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    } else { // An AssignmentStatement
+                        outputAreaParser.append("PARSER: parseAssignmentStatement()\n"); // incase of dupilicates (Block())
                         Program(); // loop to the beginning
-                    }
+                    }    
                 }
             } else { // Not a BoolopExpr so go to finish the printStatement
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -930,8 +973,44 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
                 matchAndDevour(tokenType.openParenthesis);
                 outputAreaParser.append("PARSER: parseOpenParenthesis()\n");
-                Expr();
                 
+                // For while statement
+                if(tokens.get(currentToken).getType().equals(tokenType.boolvalTrue)) { // Checking for boolval 
+                    outputAreaParser.append("PARSER: parseExpr()\n");
+                    matchAndDevour(tokenType.boolvalTrue);
+                    outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
+                    
+                    if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
+                        matchAndDevour(tokenType.closeParenthesis);
+                        outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+                        outputAreaParser.append("PARSER: parseBooleanExpr()\n"); // BooleanExpr is valid
+                        Program(); // loops back to beginning
+                        
+                    } else {
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        Program(); // loop to the beginning 
+                    }
+                    
+                } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalFalse)) { // Checking for boolval 
+                    outputAreaParser.append("PARSER: parseExpr()\n");
+                    matchAndDevour(tokenType.boolvalFalse);
+                    outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
+                    
+                    if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
+                        matchAndDevour(tokenType.closeParenthesis);
+                        outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+                        outputAreaParser.append("PARSER: parseBooleanExpr()\n"); // BooleanExpr is valid
+                        Program(); // loops back to beginning
+                        
+                    } else {
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        Program(); // loop to the beginning 
+                    }
+                } else {
+                    Expr();
+                }    
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
                 matchAndDevour(tokenType.closeParenthesis);
                 outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
@@ -947,7 +1026,7 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.boolopEqualTo);
                 outputAreaParser.append("PARSER: parseBoolopEqualTo()\n");
                 Expr(); // continues the BooleanExpr
-                
+            
             } else { // Not a BoolopExpr so go to finish the printStatement
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -977,12 +1056,10 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                     PrintStatement(); // Loop back to PrintStatement    
                     
-                } else { // Not a valid Expr
-                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                } else { // An AssignmentStatement
+                    outputAreaParser.append("PARSER: parseAssignmentStatement()\n"); // incase of dupilicates (Block())
                     Program(); // loop to the beginning
-                }
-                
+                }    
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
