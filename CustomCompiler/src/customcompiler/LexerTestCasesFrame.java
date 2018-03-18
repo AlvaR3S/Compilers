@@ -41,6 +41,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         buttonConfirm = new javax.swing.JButton();
         checkBox5 = new javax.swing.JCheckBox();
         checkBox6 = new javax.swing.JCheckBox();
+        checkBox7 = new javax.swing.JCheckBox();
+        checkBox8 = new javax.swing.JCheckBox();
+        checkBox9 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -119,16 +122,43 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox5ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, -1, -1));
 
         checkBox6.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
-        checkBox6.setText("Print Statement");
+        checkBox6.setText("Print Statement (StringExpr)");
         checkBox6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkBox6ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, -1, -1));
+
+        checkBox7.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox7.setText("Print Statement (IntExpr)");
+        checkBox7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox7ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkBox7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
+
+        checkBox8.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox8.setText("Print Statement (ID)");
+        checkBox8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox8ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkBox8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+
+        checkBox9.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox9.setText("Print Statement (BooleanExpr)");
+        checkBox9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox9ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(checkBox9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
 
         menuLexer.setToolTipText("");
 
@@ -186,7 +216,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         Lexer lex = new Lexer();
         JTextArea inputArea = lex.getInputArea();
         
-       // inputArea
         
         if(checkBox1.isSelected()) {
             inputArea.append("{}$");
@@ -221,12 +250,39 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                     + "\n"
                     + "}$");
         }
+        
         if(checkBox6.isSelected()) {
-            inputArea.append("{ /* print (IntExpr) */\n"
-            + "\t print ( 2 + 2 )"
-            + "\n"
-            + "}$");
+            inputArea.append("{ /* PrintStatement(StringExpr) */\n"
+                + "\t print( \" asdasdas \" )"
+                + "\n"
+                + "}$");
         }
+        
+        if(checkBox7.isSelected()) {
+            inputArea.append("{ /* PrintStatement(IntExpr) */\n"
+                + "\t print( 2 + 2 )"
+                + "\n"
+                + "}$");
+        }
+    
+        if(checkBox8.isSelected()) {
+            inputArea.append("{ /* PrintStatement(ID) */\n"
+                + "\t print( z )"
+                + "\n"
+                + "}$");
+        }
+        
+        if(checkBox9.isSelected()) {
+            inputArea.append("{ /* PrintStatement(BooleanExpr) */\n"
+                + "\t print( ( w == w ) )"
+                + "\n"
+                + "\t print( ( 5 + 2 != 6 + 4) )"
+                + "\n"
+                + "\t print( ( \" dlaslkdmasd \" != \" dasdasd \" ) )"
+                + "\n"    
+                + "}$"); 
+        }
+        
         
         
         lex.setVisible(true);
@@ -241,6 +297,18 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private void checkBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox6ActionPerformed
+
+    private void checkBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox7ActionPerformed
+
+    private void checkBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox8ActionPerformed
+
+    private void checkBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox9ActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -285,6 +353,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox4;
     private javax.swing.JCheckBox checkBox5;
     private javax.swing.JCheckBox checkBox6;
+    private javax.swing.JCheckBox checkBox7;
+    private javax.swing.JCheckBox checkBox8;
+    private javax.swing.JCheckBox checkBox9;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
     private javax.swing.JLabel labelTitle1;

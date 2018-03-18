@@ -235,7 +235,7 @@ public class Lexer extends javax.swing.JFrame {
         
         // Unary Operator
         boolopNotEqualTo("!="),
-        boolopEqualTo("=="),
+        boolopEqualTo("([=]=)"),
         assignmentStatement("="),
         
         // Brackets
@@ -722,6 +722,7 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         
+        //---------------------STATEMENTS---------------------------------------
         /**
          * 
          * Statement ::== PrintStatement   ::== print ( Expr )
@@ -730,10 +731,20 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) {
                 matchAndDevour(tokenType.openParenthesis);
                 outputAreaParser.append("PARSER: parsePrintStatement()\n");
+                outputAreaParser.append("PARSER: parseOpenParethesis()\n");
                 Expr();
+                
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
                 matchAndDevour(tokenType.closeParenthesis);
-                Statement();
+                outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
+                    BooleanExpr();
+                    
+                } else {
+                   Statement(); 
+                   
+                }
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -783,6 +794,7 @@ public class Lexer extends javax.swing.JFrame {
         }
 
         
+        //------------------EXPRESSIONS------------------------------------------
         /**
          * 
          * Expr ::== IntExpr        ::== digit intopExpr, digit
@@ -827,14 +839,27 @@ public class Lexer extends javax.swing.JFrame {
                     if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                         matchAndDevour(tokenType.digit);
                         outputAreaParser.append("PARSER: parseDigit()\n");
-                        outputAreaParser.append("PARSER: parseIntExpr()\n"); // printStatement is valid
-                        PrintStatement(); // Loop back to finish PrintStatement
+                        outputAreaParser.append("PARSER: parseIntExpr()\n"); // IntExpr is valid
+                        
+                        if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                            BooleanExpr(); // continues the BooleanExpr
+
+                        } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                            BooleanExpr(); // continues the BooleanExpr
+                        
+                        } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                            PrintStatement(); // Loop back to PrintStatement    
+
+                        } else { // Not a valid Expr
+                            outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                            outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                            Program(); // loop to the beginning
+                        } 
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                         Program(); // loop to the beginning
                     } 
-                    
                 } else { // If next sequence is not an Intop
                     outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                     outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -853,7 +878,40 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== StringExpr    ::== " CharList "
          */
         private void StringExpr() {
-            
+            if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes
+                matchAndDevour(tokenType.Quote);
+                outputAreaParser.append("PARSER: parseQuote()\n");
+                
+                while(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                    matchAndDevour(tokenType.CHAR);
+                    outputAreaParser.append("PARSER: parseCHAR()\n");
+                }
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.Quote)) {
+                    matchAndDevour(tokenType.Quote);
+                    outputAreaParser.append("PARSER: parseQuote()\n");
+                    outputAreaParser.append("PARSER: parseStringExpr()\n");
+                    
+                    if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { // Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                        PrintStatement(); // Loop back to PrintStatement    
+
+                    } else { // Not a valid Expr
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        Program(); // loop to the beginning
+                    }
+                }
+            } else { // Not a BoolopExpr so go to finish the printStatement
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+            }     
         }
         
         
@@ -862,8 +920,33 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== BooleanExpr  ::== ( Expr boolop Expr ), boolval
          */
         private void BooleanExpr() {
-            
-        }
+            if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
+                matchAndDevour(tokenType.openParenthesis);
+                outputAreaParser.append("PARSER: parseOpenParenthesis()\n");
+                Expr();
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
+                matchAndDevour(tokenType.closeParenthesis);
+                outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+                outputAreaParser.append("PARSER: parseBooleanExpr()\n"); // BooleanExpr is valid
+                Program(); // loops back to beginning
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                matchAndDevour(tokenType.boolopNotEqualTo);
+                outputAreaParser.append("PARSER: parseBoolopNotEqualTo()\n");
+                Expr(); // continues the BooleanExpr
+                
+            } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) {
+                matchAndDevour(tokenType.boolopEqualTo);
+                outputAreaParser.append("PARSER: parseBoolopEqualTo()\n");
+                Expr(); // continues the BooleanExpr
+                
+            } else { // Not a BoolopExpr so go to finish the printStatement
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                Program(); // loop to the beginning 
+            }   
+        }   
         
         
         
@@ -876,13 +959,23 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseCHAR()\n");
                 System.out.println("matched: CHAR\n");
+                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                    BooleanExpr(); // continues the BooleanExpr
+                    
+                } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { // Checking for BOOLOP
+                    BooleanExpr(); // continues the BooleanExpr
 
-                if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for additional CHARS
-                    ID(); // In case there is more than CHAR re-loops into ID()
-                } else {
-                    outputAreaParser.append("PARSER: parseID()\n"); // IntExpr is valid
-                    Expr(); // Loop back to check if there is another expression
+                } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                    PrintStatement(); // Loop back to PrintStatement    
+                    
+                } else { // Not a valid Expr
+                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    Program(); // loop to the beginning
                 }
+                
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
