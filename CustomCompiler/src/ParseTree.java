@@ -16,35 +16,16 @@ import static jdk.nashorn.internal.objects.Global.undefined;
  */
 public class ParseTree {
     
-    Object root;
-    String kind;    
-    
-    String cur; 
-    Object parent;
-    LinkedList<String> children;
-
+    Node root;
+    LinkedList<String> cur;
 
     
     
-    class Node { 
-        Object node;
-        String parent;
-        LinkedList<String> children;
-        String name; 
-        String cur;
-        public Node() {
-            this.parent = (String) node;
-            this.children = (LinkedList<String>) node;
-            this.name = (String) node;
-            
-        }
-        
-    }
 
+    
 
-    public ParseTree(Object root, String cur) {
+    public ParseTree() {
        this.root = null;
-       this.cur = cur;
     } 
     
  
@@ -63,23 +44,19 @@ public class ParseTree {
      */
     public void addNode(String name, String kind) {
         // Construct the node object.
-        Node node = new Node();
-        this.kind = kind;
-        node.name = name;
-        
+        Node node = new Node(); 
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {
             // We are the root node.
-            
             this.root = node;
         } else {
             // We are the children.
             // Make our parent the CURrent node...
-                node.parent = this.cur;
+                node. = this.cur;
             // ... and add ourselves (via the unfrotunately-named
             // "push" function) to the children array of the current node.
-              node.children.push(node.cur);
+              this.cur.children.push(node);
         }
         // If we are an interior/branch node, then...
         if (kind.equals("branch")) {
@@ -139,31 +116,7 @@ public class ParseTree {
         // Return the result.
         return traversalResult;  
     }  
-    public static void main(String args[]) {
-        
-//        
-//            t.addNode("Root", "branch");
-//            t.addNode("Expr", "branch");
-//            t.addNode("Term", "branch");
-//            t.addNode("Factor", "branch");
-//            t.addNode("a", "leaf");
-//            t.endChildren();
-//            t.endChildren();
-//            t.endChildren();
-//            // t.endChildren();  // Un-comment this to test guards against moving "up" past the root of the tree.
-//
-//            t.addNode("Op", "branch");
-//            t.addNode("+", "leaf");
-//            t.endChildren();
-//
-//            t.addNode("Term", "branch");
-//            t.addNode("Factor", "branch");
-//            t.addNode("2", "leaf");
-//            t.endChildren();
-//            t.endChildren();
-//            
-//            System.out.println(t);
-    }
+
 
   
 }
