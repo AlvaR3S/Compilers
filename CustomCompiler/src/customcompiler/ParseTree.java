@@ -1,4 +1,7 @@
+package customcompiler;
 
+
+import customcompiler.Node;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import static jdk.nashorn.internal.objects.Global.undefined;
@@ -17,12 +20,8 @@ import static jdk.nashorn.internal.objects.Global.undefined;
 public class ParseTree {
     
     Node root;
-    LinkedList<String> cur;
-
-    
-    
-
-    
+    Node cur = new Node();
+    //LinkedList<String> cur;
 
     public ParseTree() {
        this.root = null;
@@ -39,12 +38,11 @@ public class ParseTree {
     /**
      *
      * @param name
-     * @param kind
-     * @return 
+     * @param kind 
      */
     public void addNode(String name, String kind) {
         // Construct the node object.
-        Node node = new Node(); 
+        Node node = new Node(name);
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {
@@ -53,15 +51,15 @@ public class ParseTree {
         } else {
             // We are the children.
             // Make our parent the CURrent node...
-                node. = this.cur;
+                node.parent = this.cur;
             // ... and add ourselves (via the unfrotunately-named
             // "push" function) to the children array of the current node.
-              this.cur.children.push(node);
+                this.cur.push(node);
         }
         // If we are an interior/branch node, then...
         if (kind.equals("branch")) {
             // ... update the CURrent node pointer to ourselves.
-            this.cur = node.cur;
+            this.cur = node;
         }       
     }
 
@@ -69,8 +67,8 @@ public class ParseTree {
     public void endChildren() {
         Node node = new Node();
         // ... by moving "up" to our parent node (if possible).
-        if ((node.parent != null) && (node.name != undefined)) {
-            this.cur = node.parent;
+        if ((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
             
         } else {
             // TODO: Some sort of error logging.
@@ -87,8 +85,13 @@ public class ParseTree {
      * @param depth
      * @return
      */
-    String expand(Node node, int depth) {
+    public String toString() {
+        // Make the initial call to expand from the root.
+        return expand((Node) this.root, 0);
+        // Return the result.
+    } 
         
+    public String expand(Node node, int depth) {
         String traversalResult = "";
 
         // Space out based on the current depth so
@@ -96,9 +99,9 @@ public class ParseTree {
         for (int i = 0; i < depth; i++) {
             traversalResult += "-";
         }
-
+        
         // If there are no children (i.e., leaf nodes)...
-        if (!node.children.isEmpty()) {
+        if (node.children.isEmpty()) {
             // ... note the leaf node.
             traversalResult += "[" + node.name + "]";
             traversalResult += "\n";
@@ -107,14 +110,11 @@ public class ParseTree {
             traversalResult += "<" + node.name + "> \n";
             // .. recursively expand them.
             for (int i = 0; i < node.children.size(); i++) {
-                expand(node, depth + 1);
+                traversalResult += expand(node.children.get(i), depth + 1);
             }
         }
         
-        // Make the initial call to expand from the root.
-        expand((Node) this.root, 0);
-        // Return the result.
-        return traversalResult;  
+        return traversalResult;
     }  
 
 

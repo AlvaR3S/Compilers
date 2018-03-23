@@ -9,10 +9,11 @@
  * @author reynaldoalvarez
  */
 public class Tree {
+   
     
     public static void main(String args[]) {
 
-        ParseTree t = new ParseTree();
+        
         t.addNode("Root", "branch");
         t.addNode("Expr", "branch");
         t.addNode("Term", "branch");

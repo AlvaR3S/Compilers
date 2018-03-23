@@ -6,6 +6,7 @@
 package customcompiler;
 
 
+import ParseTree;
 import static customcompiler.Lexer.TokenType.*;
 
 
@@ -21,6 +22,7 @@ import javax.swing.event.DocumentListener;
  *
  * @author Reynaldo Alvarez
  */
+
 public class Lexer extends javax.swing.JFrame {
 
     public Pattern tokenPatterns;
@@ -463,8 +465,8 @@ public class Lexer extends javax.swing.JFrame {
         int openBraceCount = 0;
         int closeBraceCount = 0;
         TokenType tokenType;
-
-         
+        ParseTree t = new ParseTree();
+        
         /**
          * Starts and finishes the parse - will be called through button run
          * @param token
@@ -491,6 +493,7 @@ public class Lexer extends javax.swing.JFrame {
          * Program       ::== Block $
          */        
         private void Program() {
+            //t.addNode(name, kind);
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
                 matchAndDevour(tokenType.EOP); 
                 System.out.println("matched $\n");
