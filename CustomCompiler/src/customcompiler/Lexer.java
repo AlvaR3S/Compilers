@@ -1125,11 +1125,8 @@ public class Lexer extends javax.swing.JFrame {
         setName("frameLexer"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1156, 835));
         setSize(new java.awt.Dimension(0, 0));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTabbedPane1.setFont(new java.awt.Font("Helvetica", 1, 16)); // NOI18N
-
-        panelLexer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         inputArea.setColumns(20);
         inputArea.setFont(new java.awt.Font("Helvetica Neue", 0, 20)); // NOI18N
@@ -1139,8 +1136,6 @@ public class Lexer extends javax.swing.JFrame {
         inputArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inputArea.setVerifyInputWhenFocusTarget(false);
         scrollPaneInput.setViewportView(inputArea);
-
-        panelLexer.add(scrollPaneInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 460, 380));
 
         outputArea.setEditable(false);
         outputArea.setColumns(20);
@@ -1152,8 +1147,6 @@ public class Lexer extends javax.swing.JFrame {
         outputArea.setVerifyInputWhenFocusTarget(false);
         scrollPaneOutput.setViewportView(outputArea);
 
-        panelLexer.add(scrollPaneOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 200, 460, 380));
-
         buttonLex.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonLex.setText("Run");
         buttonLex.setToolTipText("Execute program");
@@ -1162,7 +1155,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonLexActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonLex, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 90, 30));
 
         buttonQuit.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonQuit.setText("Quit");
@@ -1172,15 +1164,12 @@ public class Lexer extends javax.swing.JFrame {
                 buttonQuitActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonQuit, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 720, 90, 30));
 
         labelInput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput.setText("Input");
-        panelLexer.add(labelInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, -1, -1));
 
         labelOutput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelOutput.setText("Output");
-        panelLexer.add(labelOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, -1, -1));
 
         buttonClearAll.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearAll.setText("Clear All");
@@ -1190,7 +1179,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearAllActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonClearAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 720, 90, 30));
 
         buttonClearInput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearInput.setText("Clear Input");
@@ -1200,7 +1188,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearInputActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonClearInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 590, -1, 30));
 
         buttonClearOutput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearOutput.setText("Clear Output");
@@ -1210,7 +1197,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearOutputActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonClearOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 590, -1, 30));
 
         buttonTestCases.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonTestCases.setText("Test Cases");
@@ -1220,17 +1206,72 @@ public class Lexer extends javax.swing.JFrame {
                 buttonTestCasesActionPerformed(evt);
             }
         });
-        panelLexer.add(buttonTestCases, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 720, 110, 30));
 
         labelTitle.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
         labelTitle.setText("Custom Compiler: Lexer");
         labelTitle.setAlignmentX(45.0F);
         labelTitle.setAlignmentY(15.0F);
-        panelLexer.add(labelTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 55, -1, 70));
+
+        javax.swing.GroupLayout panelLexerLayout = new javax.swing.GroupLayout(panelLexer);
+        panelLexer.setLayout(panelLexerLayout);
+        panelLexerLayout.setHorizontalGroup(
+            panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(360, 360, 360)
+                .addComponent(labelTitle))
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(250, 250, 250)
+                .addComponent(labelInput)
+                .addGap(512, 512, 512)
+                .addComponent(labelOutput))
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(scrollPaneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(230, 230, 230)
+                .addComponent(buttonClearInput)
+                .addGap(484, 484, 484)
+                .addComponent(buttonClearOutput))
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(530, 530, 530)
+                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(buttonClearAll)
+                .addGap(400, 400, 400)
+                .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(390, 390, 390)
+                .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        panelLexerLayout.setVerticalGroup(
+            panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLexerLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(labelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput)
+                    .addComponent(labelOutput))
+                .addGap(20, 20, 20)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonClearInput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClearOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60)
+                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonClearAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         jTabbedPane1.addTab("Lexer", panelLexer);
-
-        panelParser.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         outputAreaParser.setEditable(false);
         outputAreaParser.setColumns(20);
@@ -1242,8 +1283,6 @@ public class Lexer extends javax.swing.JFrame {
         outputAreaParser.setVerifyInputWhenFocusTarget(false);
         scrollPaneInput1.setViewportView(outputAreaParser);
 
-        panelParser.add(scrollPaneInput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 460, 380));
-
         outputArea1.setEditable(false);
         outputArea1.setColumns(20);
         outputArea1.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
@@ -1254,21 +1293,16 @@ public class Lexer extends javax.swing.JFrame {
         outputArea1.setVerifyInputWhenFocusTarget(false);
         scrollPaneOutput1.setViewportView(outputArea1);
 
-        panelParser.add(scrollPaneOutput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 200, 460, 380));
-
         labelInput1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput1.setText("Parser Output");
-        panelParser.add(labelInput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 150, -1, -1));
 
         labelTitle1.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
         labelTitle1.setText("Custom Compiler: Parser");
         labelTitle1.setAlignmentX(45.0F);
         labelTitle1.setAlignmentY(15.0F);
-        panelParser.add(labelTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 55, -1, 70));
 
         labelOutput1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelOutput1.setText("CST Output");
-        panelParser.add(labelOutput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 150, -1, -1));
 
         buttonClearOutput1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearOutput1.setText("Clear Output");
@@ -1278,7 +1312,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearOutput1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonClearOutput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 590, -1, 30));
 
         buttonClearAll1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearAll1.setText("Clear All");
@@ -1288,7 +1321,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonClearAll1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonClearAll1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 720, 90, 30));
 
         buttonTestCases1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonTestCases1.setText("Test Cases");
@@ -1298,7 +1330,6 @@ public class Lexer extends javax.swing.JFrame {
                 buttonTestCases1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonTestCases1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 720, -1, 30));
 
         buttonQuit1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonQuit1.setText("Quit");
@@ -1308,11 +1339,58 @@ public class Lexer extends javax.swing.JFrame {
                 buttonQuit1ActionPerformed(evt);
             }
         });
-        panelParser.add(buttonQuit1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 720, 90, 30));
+
+        javax.swing.GroupLayout panelParserLayout = new javax.swing.GroupLayout(panelParser);
+        panelParser.setLayout(panelParserLayout);
+        panelParserLayout.setHorizontalGroup(
+            panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(360, 360, 360)
+                .addComponent(labelTitle1))
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(labelInput1)
+                .addGap(450, 450, 450)
+                .addComponent(labelOutput1))
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(820, 820, 820)
+                .addComponent(buttonClearOutput1))
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(buttonClearAll1)
+                .addGap(410, 410, 410)
+                .addComponent(buttonTestCases1)
+                .addGap(411, 411, 411)
+                .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        panelParserLayout.setVerticalGroup(
+            panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelParserLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput1)
+                    .addComponent(labelOutput1))
+                .addGap(20, 20, 20)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addComponent(buttonClearOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonClearAll1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonTestCases1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         jTabbedPane1.addTab("Parser", panelParser);
-
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1150, 800));
 
         menuLexer.setToolTipText("");
 
@@ -1356,6 +1434,17 @@ public class Lexer extends javax.swing.JFrame {
         menuLexer.add(menuHelp);
 
         setJMenuBar(menuLexer);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1150, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         getAccessibleContext().setAccessibleParent(this);
 

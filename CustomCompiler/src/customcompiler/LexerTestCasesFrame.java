@@ -58,13 +58,11 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         setLocation(new java.awt.Point(20, 20));
         setName("LexerTestCasesFrame"); // NOI18N
         setPreferredSize(new java.awt.Dimension(730, 550));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelTitle1.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
         labelTitle1.setText("Test Cases");
         labelTitle1.setAlignmentX(45.0F);
         labelTitle1.setAlignmentY(15.0F);
-        getContentPane().add(labelTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, 200, -1));
 
         checkBox2.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox2.setText("Chars and Quotes");
@@ -73,15 +71,12 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox2ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, -1, -1));
 
         labelInput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput.setText("Error Cases");
-        getContentPane().add(labelInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 130, -1, -1));
 
         labelInput1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput1.setText("Working Cases");
-        getContentPane().add(labelInput1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, -1, -1));
 
         checkBox4.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox4.setText("Illegal Input");
@@ -90,7 +85,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox4ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox4, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 230, -1, -1));
 
         checkBox3.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox3.setText("Alan's Case");
@@ -99,7 +93,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox3ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 200, -1, -1));
 
         checkBox1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox1.setText("Empty Brackets");
@@ -108,7 +101,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox1ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, -1, -1));
 
         buttonConfirm.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonConfirm.setText("Confirm");
@@ -117,7 +109,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 buttonConfirmActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonConfirm, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 460, 100, 30));
 
         checkBox5.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox5.setText("Random");
@@ -126,7 +117,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox5ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 260, -1, -1));
 
         checkBox6.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox6.setText("Print Statement (StringExpr)");
@@ -135,7 +125,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox6ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, -1, -1));
 
         checkBox7.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox7.setText("Print Statement (IntExpr)");
@@ -144,7 +133,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox7ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox7, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
 
         checkBox8.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox8.setText("Print Statement (ID)");
@@ -153,7 +141,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox8ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox8, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
 
         checkBox9.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox9.setText("Print Statement (BooleanExpr)");
@@ -162,7 +149,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox9ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
 
         checkBox10.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox10.setText("Variable Declaration");
@@ -171,7 +157,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox10ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox10, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, -1, -1));
 
         checkBox11.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox11.setText("Assignment Statement");
@@ -180,7 +165,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox11ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox11, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 350, -1, -1));
 
         checkBox12.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox12.setText("If Statement");
@@ -189,7 +173,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox12ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox12, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 380, -1, -1));
 
         checkBox13.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         checkBox13.setText("While Statement");
@@ -198,7 +181,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 checkBox13ActionPerformed(evt);
             }
         });
-        getContentPane().add(checkBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 410, -1, -1));
 
         menuLexer.setToolTipText("");
 
@@ -219,6 +201,96 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         menuLexer.add(menuHelp);
 
         setJMenuBar(menuLexer);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(260, 260, 260)
+                .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addComponent(labelInput1)
+                .addGap(215, 215, 215)
+                .addComponent(labelInput))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox1)
+                .addGap(247, 247, 247)
+                .addComponent(checkBox2))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox8)
+                .addGap(224, 224, 224)
+                .addComponent(checkBox3))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox7)
+                .addGap(193, 193, 193)
+                .addComponent(checkBox4))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox6)
+                .addGap(172, 172, 172)
+                .addComponent(checkBox5))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox9))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox10))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox11))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox12))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(checkBox13))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(310, 310, 310)
+                .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(labelTitle1)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput1)
+                    .addComponent(labelInput))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkBox1)
+                    .addComponent(checkBox2))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkBox8)
+                    .addComponent(checkBox3))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkBox7)
+                    .addComponent(checkBox4))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkBox6)
+                    .addComponent(checkBox5))
+                .addGap(12, 12, 12)
+                .addComponent(checkBox9)
+                .addGap(12, 12, 12)
+                .addComponent(checkBox10)
+                .addGap(12, 12, 12)
+                .addComponent(checkBox11)
+                .addGap(12, 12, 12)
+                .addComponent(checkBox12)
+                .addGap(12, 12, 12)
+                .addComponent(checkBox13)
+                .addGap(32, 32, 32)
+                .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         getAccessibleContext().setAccessibleDescription("");
 

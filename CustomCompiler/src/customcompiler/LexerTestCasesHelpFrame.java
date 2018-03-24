@@ -38,13 +38,11 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         setTitle("Custom Compiler: Lexer");
         setBounds(new java.awt.Rectangle(20, 20, 0, 0));
         setPreferredSize(new java.awt.Dimension(570, 502));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelTitle1.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         labelTitle1.setText("Test Case Help");
         labelTitle1.setAlignmentX(45.0F);
         labelTitle1.setAlignmentY(15.0F);
-        getContentPane().add(labelTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 50, -1, -1));
 
         buttonReturn.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonReturn.setText("Return");
@@ -54,7 +52,6 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
                 buttonReturnActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 130, 40));
 
         menuLexer.setToolTipText("");
 
@@ -72,6 +69,26 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         menuLexer.add(menuFile);
 
         setJMenuBar(menuLexer);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(130, 130, 130)
+                .addComponent(labelTitle1))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(200, 200, 200)
+                .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(labelTitle1)
+                .addGap(305, 305, 305)
+                .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
         setLocationRelativeTo(null);
