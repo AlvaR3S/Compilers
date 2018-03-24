@@ -1108,7 +1108,6 @@ public class Lexer extends javax.swing.JFrame {
         labelOutput1 = new javax.swing.JLabel();
         buttonClearOutput1 = new javax.swing.JButton();
         buttonClearAll1 = new javax.swing.JButton();
-        buttonParse = new javax.swing.JButton();
         buttonTestCases1 = new javax.swing.JButton();
         buttonQuit1 = new javax.swing.JButton();
         menuLexer = new javax.swing.JMenuBar();
@@ -1291,16 +1290,6 @@ public class Lexer extends javax.swing.JFrame {
         });
         panelParser.add(buttonClearAll1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 720, 90, 30));
 
-        buttonParse.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonParse.setText("Run");
-        buttonParse.setToolTipText("Execute program");
-        buttonParse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonParseActionPerformed(evt);
-            }
-        });
-        panelParser.add(buttonParse, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 90, 30));
-
         buttonTestCases1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonTestCases1.setText("Test Cases");
         buttonTestCases1.setToolTipText("Opens the test case menu");
@@ -1469,10 +1458,6 @@ public class Lexer extends javax.swing.JFrame {
         outputArea.setText(null);
     }//GEN-LAST:event_buttonClearAll1ActionPerformed
 
-    private void buttonParseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonParseActionPerformed
-        
-    }//GEN-LAST:event_buttonParseActionPerformed
-
     private void buttonTestCases1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCases1ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -1537,7 +1522,6 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonClearOutput;
     private javax.swing.JButton buttonClearOutput1;
     public javax.swing.JButton buttonLex;
-    private javax.swing.JButton buttonParse;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
     private javax.swing.JButton buttonTestCases;
