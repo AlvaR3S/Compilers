@@ -33,9 +33,6 @@ public class Lexer extends javax.swing.JFrame {
     public Lexer() {
         // Components for the Jframe
         initComponents();
-        
-        // Method that pays attention to an empty input and output area
-        buttonChange();
     }
     
     
@@ -130,99 +127,7 @@ public class Lexer extends javax.swing.JFrame {
     public void setButtonClearAll(JButton buttonClearAll) {
         this.buttonClearAll = buttonClearAll;
     }
-
-    public JButton getButtonClearInput() {
-        return buttonClearInput;
-    }
-
-    public void setButtonClearInput(JButton buttonClearInput) {
-        this.buttonClearInput = buttonClearInput;
-    }
-
-    public JButton getButtonClearOutput() {
-        return buttonClearOutput;
-    }
-
-    public void setButtonClearOutput(JButton buttonClearOutput) {
-        this.buttonClearOutput = buttonClearOutput;
-    }
-     
     
-     
-    
-    // ------------------------------------------------------------
-    // ---------------------[Methods]------------------------------
-    // ------------------------------------------------------------
-    
-    /**
-     * Checks to see if input or output is empty or not
-     * if input or output is not empty
-     * then the clear buttons are enabled
-     * else they are not click-able
-     */
-    private void buttonChange() {
-        // Starts with buttons turned off
-        buttonClearInput.setEnabled(false);
-        buttonClearOutput.setEnabled(false);
-        buttonClearAll.setEnabled(false);
-        
-        // Checks to see if outputArea is empty or not, then changes button
-        outputArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                outputChanged();
-            }
-            
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                outputChanged();
-            }
-            
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                outputChanged();
-            }
-            
-            public void outputChanged() {
-                if(outputArea.getText().isEmpty()) {
-                    buttonClearOutput.setEnabled(false);   
-                    buttonClearAll.setEnabled(false);
-                } else {
-                    buttonClearOutput.setEnabled(true);
-                    buttonClearAll.setEnabled(true);
-                }
-            }
-        });
-        
-        // Checks to see if inputArea is empty or not, then changes button
-        inputArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                inputChanged();
-            }
-            
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                inputChanged();
-            }
-            
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                inputChanged();
-            }
-            
-            public void inputChanged() {
-                if(inputArea.getText().isEmpty()) {
-                    buttonClearInput.setEnabled(false);
-                    buttonClearAll.setEnabled(false);
-                } else {
-                    buttonClearInput.setEnabled(true);
-                    buttonClearAll.setEnabled(true);
-                }
-            }
-        });
-    }
-
     
     // ------------------------------------------------------------
     // ---------------------[Definitions]--------------------------
@@ -1149,6 +1054,7 @@ public class Lexer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDesktopPane1 = new javax.swing.JDesktopPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelLexer = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -1160,10 +1066,9 @@ public class Lexer extends javax.swing.JFrame {
         labelInput = new javax.swing.JLabel();
         labelOutput = new javax.swing.JLabel();
         buttonClearAll = new javax.swing.JButton();
-        buttonClearInput = new javax.swing.JButton();
-        buttonClearOutput = new javax.swing.JButton();
         buttonTestCases = new javax.swing.JButton();
         labelTitle = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         panelParser = new javax.swing.JPanel();
         scrollPaneInput1 = new javax.swing.JScrollPane();
         outputAreaParser = new javax.swing.JTextArea();
@@ -1172,10 +1077,10 @@ public class Lexer extends javax.swing.JFrame {
         labelInput1 = new javax.swing.JLabel();
         labelTitle1 = new javax.swing.JLabel();
         labelOutput1 = new javax.swing.JLabel();
-        buttonClearOutput1 = new javax.swing.JButton();
-        buttonClearAll1 = new javax.swing.JButton();
         buttonTestCases1 = new javax.swing.JButton();
         buttonQuit1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        buttonClearAll2 = new javax.swing.JButton();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemQuit = new javax.swing.JMenuItem();
@@ -1183,6 +1088,17 @@ public class Lexer extends javax.swing.JFrame {
         menuItemTestCases = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menutItemHelp = new javax.swing.JMenuItem();
+
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Custom Compiler: Lexer");
@@ -1214,7 +1130,7 @@ public class Lexer extends javax.swing.JFrame {
         scrollPaneOutput.setViewportView(outputArea);
 
         buttonLex.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonLex.setText("Run");
+        buttonLex.setText("Compile");
         buttonLex.setToolTipText("Execute program");
         buttonLex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1238,29 +1154,11 @@ public class Lexer extends javax.swing.JFrame {
         labelOutput.setText("Output");
 
         buttonClearAll.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonClearAll.setText("Clear All");
+        buttonClearAll.setText("Reset Program");
         buttonClearAll.setToolTipText("Removes text from input and output fields");
         buttonClearAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonClearAllActionPerformed(evt);
-            }
-        });
-
-        buttonClearInput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonClearInput.setText("Clear Input");
-        buttonClearInput.setToolTipText("Removes text from input field");
-        buttonClearInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonClearInputActionPerformed(evt);
-            }
-        });
-
-        buttonClearOutput.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonClearOutput.setText("Clear Output");
-        buttonClearOutput.setToolTipText("Removes text from Output field");
-        buttonClearOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonClearOutputActionPerformed(evt);
             }
         });
 
@@ -1278,38 +1176,44 @@ public class Lexer extends javax.swing.JFrame {
         labelTitle.setAlignmentX(45.0F);
         labelTitle.setAlignmentY(15.0F);
 
+        jLabel2.setFont(new java.awt.Font("Helvetica", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel2.setText("* Reset program to erase previous information");
+
         javax.swing.GroupLayout panelLexerLayout = new javax.swing.GroupLayout(panelLexer);
         panelLexer.setLayout(panelLexerLayout);
         panelLexerLayout.setHorizontalGroup(
             panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(346, 346, 346)
-                .addComponent(labelTitle))
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLexerLayout.createSequentialGroup()
+                        .addGap(346, 346, 346)
+                        .addComponent(labelTitle))
+                    .addGroup(panelLexerLayout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(labelInput)
+                        .addGap(484, 484, 484)
+                        .addComponent(labelOutput))
+                    .addGroup(panelLexerLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelLexerLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(103, 103, 103)
+                                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelLexerLayout.createSequentialGroup()
+                                .addComponent(buttonClearAll)
+                                .addGap(358, 358, 358)
+                                .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(390, 390, 390)
+                                .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(256, 256, 256)
-                .addComponent(labelInput)
-                .addGap(490, 490, 490)
-                .addComponent(labelOutput))
-            .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(118, 118, 118)
-                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(230, 230, 230)
-                .addComponent(buttonClearInput)
-                .addGap(501, 501, 501)
-                .addComponent(buttonClearOutput))
-            .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(530, 530, 530)
-                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(buttonClearAll)
-                .addGap(400, 400, 400)
-                .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(390, 390, 390)
-                .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(83, 83, 83)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(75, 75, 75))
         );
         panelLexerLayout.setVerticalGroup(
             panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1321,16 +1225,14 @@ public class Lexer extends javax.swing.JFrame {
                     .addComponent(labelInput)
                     .addComponent(labelOutput))
                 .addGap(18, 18, 18)
-                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonClearInput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonClearOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(60, 60, 60)
-                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(88, 88, 88)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonClearAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1370,24 +1272,6 @@ public class Lexer extends javax.swing.JFrame {
         labelOutput1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelOutput1.setText("CST Output");
 
-        buttonClearOutput1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonClearOutput1.setText("Clear Output");
-        buttonClearOutput1.setToolTipText("Removes text from Output field");
-        buttonClearOutput1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonClearOutput1ActionPerformed(evt);
-            }
-        });
-
-        buttonClearAll1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
-        buttonClearAll1.setText("Clear All");
-        buttonClearAll1.setToolTipText("Removes text from input and output fields");
-        buttonClearAll1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonClearAll1ActionPerformed(evt);
-            }
-        });
-
         buttonTestCases1.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonTestCases1.setText("Test Cases");
         buttonTestCases1.setToolTipText("Opens the test case menu");
@@ -1406,54 +1290,72 @@ public class Lexer extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Helvetica", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel3.setText("* Reset program to erase previous information");
+
+        buttonClearAll2.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearAll2.setText("Reset Program");
+        buttonClearAll2.setToolTipText("Removes text from input and output fields");
+        buttonClearAll2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearAll2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelParserLayout = new javax.swing.GroupLayout(panelParser);
         panelParser.setLayout(panelParserLayout);
         panelParserLayout.setHorizontalGroup(
             panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelParserLayout.createSequentialGroup()
-                .addGap(360, 360, 360)
-                .addComponent(labelTitle1))
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelParserLayout.createSequentialGroup()
+                        .addGap(360, 360, 360)
+                        .addComponent(labelTitle1))
+                    .addGroup(panelParserLayout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(labelInput1)
+                        .addGap(429, 429, 429)
+                        .addComponent(labelOutput1))
+                    .addGroup(panelParserLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addGroup(panelParserLayout.createSequentialGroup()
+                                .addComponent(buttonClearAll2)
+                                .addGap(356, 356, 356)
+                                .addComponent(buttonTestCases1)
+                                .addGap(399, 399, 399)
+                                .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelParserLayout.createSequentialGroup()
-                .addGap(210, 210, 210)
-                .addComponent(labelInput1)
-                .addGap(429, 429, 429)
-                .addComponent(labelOutput1))
-            .addGroup(panelParserLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(67, 67, 67)
                 .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(111, 111, 111)
-                .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelParserLayout.createSequentialGroup()
-                .addGap(810, 810, 810)
-                .addComponent(buttonClearOutput1))
-            .addGroup(panelParserLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(buttonClearAll1)
-                .addGap(410, 410, 410)
-                .addComponent(buttonTestCases1)
-                .addGap(411, 411, 411)
-                .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59))
         );
         panelParserLayout.setVerticalGroup(
             panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelParserLayout.createSequentialGroup()
                 .addGap(55, 55, 55)
-                .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelInput1)
-                    .addComponent(labelOutput1))
-                .addGap(20, 20, 20)
-                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelParserLayout.createSequentialGroup()
+                        .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelInput1)
+                            .addComponent(labelOutput1))
+                        .addGap(20, 20, 20)
+                        .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addComponent(buttonClearOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100)
+                .addGap(93, 93, 93)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonClearAll1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonTestCases1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClearAll2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jTabbedPane1.addTab("Parser", panelParser);
@@ -1505,7 +1407,7 @@ public class Lexer extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1150, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1598,22 +1500,16 @@ public class Lexer extends javax.swing.JFrame {
 
     // Button that deletes both the input and output data
     private void buttonClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAllActionPerformed
-        inputArea.setText("");
-        outputArea.setText(""); 
-        lineNumber = 1;
-        
+        /* Create and display the new form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Lexer().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
     }//GEN-LAST:event_buttonClearAllActionPerformed
-
-    // Button that deletes input data
-    private void buttonClearInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearInputActionPerformed
-        inputArea.setText("");    
-    }//GEN-LAST:event_buttonClearInputActionPerformed
-
-    // Button that deletes output data
-    private void buttonClearOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutputActionPerformed
-        outputArea.setText("");
-        lineNumber = 1;
-    }//GEN-LAST:event_buttonClearOutputActionPerformed
 
     // Opens the Test Cases frame which you can add onto the lexer input box
     private void menuItemTestCasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemTestCasesActionPerformed
@@ -1649,15 +1545,6 @@ public class Lexer extends javax.swing.JFrame {
         this.setEnabled(false);
     }//GEN-LAST:event_menutItemHelpActionPerformed
 
-    private void buttonClearOutput1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutput1ActionPerformed
-        outputArea.setText(null);
-    }//GEN-LAST:event_buttonClearOutput1ActionPerformed
-
-    private void buttonClearAll1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAll1ActionPerformed
-        outputAreaParser.setText(null);
-        outputArea.setText(null);
-    }//GEN-LAST:event_buttonClearAll1ActionPerformed
-
     private void buttonTestCases1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCases1ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -1671,6 +1558,18 @@ public class Lexer extends javax.swing.JFrame {
     private void buttonQuit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuit1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_buttonQuit1ActionPerformed
+
+    private void buttonClearAll2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAll2ActionPerformed
+        /* Create and display the new form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Lexer().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_buttonClearAll2ActionPerformed
 
     
     // ------------------------------------------------------------
@@ -1717,10 +1616,7 @@ public class Lexer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonClearAll;
-    private javax.swing.JButton buttonClearAll1;
-    private javax.swing.JButton buttonClearInput;
-    private javax.swing.JButton buttonClearOutput;
-    private javax.swing.JButton buttonClearOutput1;
+    private javax.swing.JButton buttonClearAll2;
     public javax.swing.JButton buttonLex;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
@@ -1728,6 +1624,9 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonTestCases1;
     private javax.swing.JTextArea cstOutputArea;
     private javax.swing.JTextArea inputArea;
+    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelInput;
