@@ -8,15 +8,12 @@ package customcompiler;
 
 import static customcompiler.Lexer.TokenType.*;
 
-
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+
 
 /**
  *
@@ -460,11 +457,12 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
                 //Creates the leaf node of Block {
                 t.addNode("[{]", "leaf");
+                t.endChildren();
                 
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
                 outputAreaParser.append("PARSER: parseBlock()\n");
-                System.out.println("matched {\n"); 
+                System.out.println("matched {\n");
                 StatementList();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
@@ -510,7 +508,7 @@ public class Lexer extends javax.swing.JFrame {
          */
         private void StatementList() {
             // Creates the branch node of StatementList
-            t.addNode("StatementList", "Branch");
+            t.addNode("StatementList", "branch");
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -549,14 +547,38 @@ public class Lexer extends javax.swing.JFrame {
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 //Creates the leaf node of Block }
+                
                 t.addNode("[}]", "leaf");
                 
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                 System.out.println("matched: }\n");
-                Statement();
                 
+                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
+                    // Adding EOP leaf Node
+                    t.endChildren();
+                    t.addNode("[$]", "leaf");
+
+                    matchAndDevour(tokenType.EOP); 
+                    System.out.println("matched $\n");
+
+                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                    
+                    System.out.println(t);
+                    
+                    if(currentToken < tokens.size()) { // in case Program is not finished
+                        System.out.println("Program running more than once\n");
+                        i++;
+                        outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
+                        outputAreaParser.append("PARSER: parse()\n");
+                        outputAreaParser.append("PARSER: parseProgram()\n");
+                        Program(); // when end reached loop back to the top
+                    
+                    }
+                } else {
+                    Statement();
+                }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
@@ -595,7 +617,7 @@ public class Lexer extends javax.swing.JFrame {
          */ 
         private void Statement() {
             // Adds Statement node to tree
-            t.addNode("Statement", "Branch");
+            t.addNode("Statement", "branch");
             
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
@@ -1437,7 +1459,7 @@ public class Lexer extends javax.swing.JFrame {
         Parser parse = new Parser(token);
         
         ParseTree t = new ParseTree();
-        System.out.println(t);
+        //System.out.println(t);
 
 
         //--------------------FOR later use------------

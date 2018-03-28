@@ -68,7 +68,7 @@ public class ParseTree {
 
     // Note that we're done with this branch of the tree...
     public void endChildren() {
-        Node node = new Node();
+        //Node node = new Node();
         // ... by moving "up" to our parent node (if possible).
         if ((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
