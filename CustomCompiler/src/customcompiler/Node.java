@@ -14,7 +14,6 @@ import java.util.LinkedList;
  * @author reynaldoalvarez
  */
 public class Node {
-    //Object node;
     LinkedList<Node> children = new LinkedList<Node>();
     Node parent = null;
     String name = null;
@@ -34,8 +33,6 @@ public class Node {
     }
     
     public void push(Node child) {
-        //System.out.println(child);
-        //System.out.println(children);
         child.parent = this;
         children.add(child);
     }

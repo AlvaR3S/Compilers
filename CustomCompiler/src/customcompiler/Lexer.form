@@ -138,25 +138,25 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="360" pref="360" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="346" max="-2" attributes="0"/>
                       <Component id="labelTitle" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="250" pref="250" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="256" max="-2" attributes="0"/>
                       <Component id="labelInput" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="512" pref="512" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="490" max="-2" attributes="0"/>
                       <Component id="labelOutput" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="60" pref="60" max="-2" attributes="0"/>
-                      <Component id="scrollPaneInput" min="-2" pref="460" max="-2" attributes="0"/>
-                      <EmptySpace min="110" pref="110" max="-2" attributes="0"/>
-                      <Component id="scrollPaneOutput" min="-2" pref="460" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="438" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+                      <Component id="scrollPaneOutput" min="-2" pref="444" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="230" pref="230" max="-2" attributes="0"/>
                       <Component id="buttonClearInput" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="484" pref="484" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="501" max="-2" attributes="0"/>
                       <Component id="buttonClearOutput" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -183,12 +183,12 @@
                           <Component id="labelInput" min="-2" max="-2" attributes="0"/>
                           <Component id="labelOutput" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="20" pref="20" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scrollPaneInput" min="-2" pref="380" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="scrollPaneOutput" min="-2" pref="380" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="382" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="buttonClearInput" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="buttonClearOutput" min="-2" pref="30" max="-2" attributes="0"/>
@@ -206,10 +206,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="scrollPaneInput">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
@@ -469,7 +466,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="outputArea1">
+                <Component class="javax.swing.JTextArea" name="cstOutputArea">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>

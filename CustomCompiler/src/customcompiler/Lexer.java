@@ -6,7 +6,6 @@
 package customcompiler;
 
 
-//import ParseTree;
 import static customcompiler.Lexer.TokenType.*;
 
 
@@ -14,6 +13,7 @@ import static customcompiler.Lexer.TokenType.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -56,7 +56,7 @@ public class Lexer extends javax.swing.JFrame {
     
     public int errorCount = 0;
     
-    
+    private int reset = 0;
     
     
     // ------------------------------------------------------------
@@ -122,13 +122,37 @@ public class Lexer extends javax.swing.JFrame {
         
         return matcher;
     }
+
+    public JButton getButtonClearAll() {
+        return buttonClearAll;
+    }
+
+    public void setButtonClearAll(JButton buttonClearAll) {
+        this.buttonClearAll = buttonClearAll;
+    }
+
+    public JButton getButtonClearInput() {
+        return buttonClearInput;
+    }
+
+    public void setButtonClearInput(JButton buttonClearInput) {
+        this.buttonClearInput = buttonClearInput;
+    }
+
+    public JButton getButtonClearOutput() {
+        return buttonClearOutput;
+    }
+
+    public void setButtonClearOutput(JButton buttonClearOutput) {
+        this.buttonClearOutput = buttonClearOutput;
+    }
+     
+    
+     
     
     // ------------------------------------------------------------
     // ---------------------[Methods]------------------------------
     // ------------------------------------------------------------
-    
-    
-    
     
     /**
      * Checks to see if input or output is empty or not
@@ -402,6 +426,7 @@ public class Lexer extends javax.swing.JFrame {
                 outputArea.append("~ERROR: No input found~\n");
                 errorCount++;
             }
+            
 
 
             // Prints befeore anything else at the top once
@@ -458,12 +483,11 @@ public class Lexer extends javax.swing.JFrame {
      */
     public class Parser {
         Lexer lex = new Lexer();
-        int currentToken = 0;
-        boolean stillMoreTokens = true;
-        int i = 1;
-        int error = lex.getErrorCount();
-        int openBraceCount = 0;
-        int closeBraceCount = 0;
+        private int currentToken = 0;
+        private int i = 1;
+        private int error = lex.getErrorCount();
+        private int openBraceCount = 0;
+        private int closeBraceCount = 0;
         TokenType tokenType;
         ParseTree t = new ParseTree();
         
@@ -472,11 +496,13 @@ public class Lexer extends javax.swing.JFrame {
          * @param token
          */
         public Parser(Token token){
-                outputAreaParser.append("PARSER: Parsing program" + i + "...\n");
-                outputAreaParser.append("PARSER: parse()\n");
-                outputAreaParser.append("PARSER: parseProgram()\n");
-                Program();
-              
+            outputAreaParser.append("PARSER: Parsing program" + i + "...\n");
+            outputAreaParser.append("PARSER: parse()\n");
+            outputAreaParser.append("PARSER: parseProgram()\n");
+
+            // Adding the root node
+            t.addNode("Program", "branch");
+            Program();
         }
 
         public void matchAndDevour(TokenType tokenMatch) {
@@ -493,8 +519,11 @@ public class Lexer extends javax.swing.JFrame {
          * Program       ::== Block $
          */        
         private void Program() {
-            //t.addNode(name, kind);
+            
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
+                // Adding EOP leaf Node
+                t.addNode("[$]", "leaf");
+                
                 matchAndDevour(tokenType.EOP); 
                 System.out.println("matched $\n");
                 
@@ -519,8 +548,14 @@ public class Lexer extends javax.swing.JFrame {
          * 
          * Block     ::== { StatementList }
          */        
-        private void Block() {  
+        private void Block() {
+            // Adds the block Node to the tree
+            t.addNode("Block", "branch");
+            
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
+                //Creates the leaf node of Block {
+                t.addNode("[{]", "leaf");
+                
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
                 outputAreaParser.append("PARSER: parseBlock()\n");
@@ -528,16 +563,23 @@ public class Lexer extends javax.swing.JFrame {
                 StatementList();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                //Creates the leaf node of Block }
+                t.addNode("[}]", "leaf");
+                
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: }\n");
-                StatementList(); 
+                StatementList();
+                
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 matchAndDevour(tokenType.newLine);
                 System.out.println("matched: \n");
                 if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
+                    //Creates the leaf node of Block { (Incase of this case)
+                    t.addNode("[{]", "leaf");
+                    
                     matchAndDevour(tokenType.openBracket);
                     openBraceCount++;
                     outputAreaParser.append("PARSER: parseBlock()\n");
@@ -547,7 +589,11 @@ public class Lexer extends javax.swing.JFrame {
                     StatementList();
                 }    
             } else {
-                System.out.println("wrong");
+                // test for location
+                t.endChildren();
+                
+                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
             }              
         }
         
@@ -558,6 +604,9 @@ public class Lexer extends javax.swing.JFrame {
          *               ::== ε <-- (empty set)
          */
         private void StatementList() {
+            // Creates the branch node of StatementList
+            t.addNode("StatementList", "Branch");
+            
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: print\n");
@@ -594,6 +643,9 @@ public class Lexer extends javax.swing.JFrame {
                 Statement();
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                //Creates the leaf node of Block }
+                t.addNode("[}]", "leaf");
+                
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
@@ -618,6 +670,9 @@ public class Lexer extends javax.swing.JFrame {
                 Program(); // loops back to the top
                   
             } else {
+                // test for location
+                t.endChildren();
+                
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
             }   
@@ -634,6 +689,10 @@ public class Lexer extends javax.swing.JFrame {
          *           ::== Block                 ::== Program
          */ 
         private void Statement() {
+            // Adds Statement node to tree
+            t.addNode("Statement", "Branch");
+            
+            
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -679,6 +738,8 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
+                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                System.out.println("matched: }\n");
                 
                 // Error case when parser finishes with uneven number of '{' and '}'
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
@@ -696,6 +757,8 @@ public class Lexer extends javax.swing.JFrame {
                     StatementList();
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
+                // 
+                
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -710,6 +773,9 @@ public class Lexer extends javax.swing.JFrame {
                 Program(); // loops to next section when end reached loop back to the top
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
+                // Adding EOP leaf Node
+                t.addNode("[$]", "leaf");
+                
                 matchAndDevour(tokenType.EOP); 
                 System.out.println("matched $\n");
 
@@ -1085,7 +1151,7 @@ public class Lexer extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelLexer = new javax.swing.JPanel();
-        scrollPaneInput = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         inputArea = new javax.swing.JTextArea();
         scrollPaneOutput = new javax.swing.JScrollPane();
         outputArea = new javax.swing.JTextArea();
@@ -1102,7 +1168,7 @@ public class Lexer extends javax.swing.JFrame {
         scrollPaneInput1 = new javax.swing.JScrollPane();
         outputAreaParser = new javax.swing.JTextArea();
         scrollPaneOutput1 = new javax.swing.JScrollPane();
-        outputArea1 = new javax.swing.JTextArea();
+        cstOutputArea = new javax.swing.JTextArea();
         labelInput1 = new javax.swing.JLabel();
         labelTitle1 = new javax.swing.JLabel();
         labelOutput1 = new javax.swing.JLabel();
@@ -1135,7 +1201,7 @@ public class Lexer extends javax.swing.JFrame {
         inputArea.setToolTipText("");
         inputArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inputArea.setVerifyInputWhenFocusTarget(false);
-        scrollPaneInput.setViewportView(inputArea);
+        jScrollPane1.setViewportView(inputArea);
 
         outputArea.setEditable(false);
         outputArea.setColumns(20);
@@ -1217,22 +1283,22 @@ public class Lexer extends javax.swing.JFrame {
         panelLexerLayout.setHorizontalGroup(
             panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(360, 360, 360)
+                .addGap(346, 346, 346)
                 .addComponent(labelTitle))
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(250, 250, 250)
+                .addGap(256, 256, 256)
                 .addComponent(labelInput)
-                .addGap(512, 512, 512)
+                .addGap(490, 490, 490)
                 .addComponent(labelOutput))
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(scrollPaneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110)
-                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(69, 69, 69)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(118, 118, 118)
+                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(panelLexerLayout.createSequentialGroup()
                 .addGap(230, 230, 230)
                 .addComponent(buttonClearInput)
-                .addGap(484, 484, 484)
+                .addGap(501, 501, 501)
                 .addComponent(buttonClearOutput))
             .addGroup(panelLexerLayout.createSequentialGroup()
                 .addGap(530, 530, 530)
@@ -1254,10 +1320,10 @@ public class Lexer extends javax.swing.JFrame {
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelInput)
                     .addComponent(labelOutput))
-                .addGap(20, 20, 20)
-                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneInput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonClearInput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1283,15 +1349,15 @@ public class Lexer extends javax.swing.JFrame {
         outputAreaParser.setVerifyInputWhenFocusTarget(false);
         scrollPaneInput1.setViewportView(outputAreaParser);
 
-        outputArea1.setEditable(false);
-        outputArea1.setColumns(20);
-        outputArea1.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        outputArea1.setRows(5);
-        outputArea1.setTabSize(2);
-        outputArea1.setToolTipText("");
-        outputArea1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        outputArea1.setVerifyInputWhenFocusTarget(false);
-        scrollPaneOutput1.setViewportView(outputArea1);
+        cstOutputArea.setEditable(false);
+        cstOutputArea.setColumns(20);
+        cstOutputArea.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        cstOutputArea.setRows(5);
+        cstOutputArea.setTabSize(2);
+        cstOutputArea.setToolTipText("");
+        cstOutputArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cstOutputArea.setVerifyInputWhenFocusTarget(false);
+        scrollPaneOutput1.setViewportView(cstOutputArea);
 
         labelInput1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         labelInput1.setText("Parser Output");
@@ -1462,10 +1528,15 @@ public class Lexer extends javax.swing.JFrame {
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
        
         
+        
         Token token = new Token();
        
         // Creates a variable for the Parser class
         Parser parse = new Parser(token);
+        
+        ParseTree t = new ParseTree();
+        System.out.println(t);
+
 
         //--------------------FOR later use------------
         ///*
@@ -1527,19 +1598,20 @@ public class Lexer extends javax.swing.JFrame {
 
     // Button that deletes both the input and output data
     private void buttonClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAllActionPerformed
-        inputArea.setText(null);
-        outputArea.setText(null); 
+        inputArea.setText("");
+        outputArea.setText(""); 
         lineNumber = 1;
+        
     }//GEN-LAST:event_buttonClearAllActionPerformed
 
     // Button that deletes input data
     private void buttonClearInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearInputActionPerformed
-        inputArea.setText(null);    
+        inputArea.setText("");    
     }//GEN-LAST:event_buttonClearInputActionPerformed
 
     // Button that deletes output data
     private void buttonClearOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearOutputActionPerformed
-        outputArea.setText(null);
+        outputArea.setText("");
         lineNumber = 1;
     }//GEN-LAST:event_buttonClearOutputActionPerformed
 
@@ -1654,7 +1726,9 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JButton buttonQuit1;
     private javax.swing.JButton buttonTestCases;
     private javax.swing.JButton buttonTestCases1;
+    private javax.swing.JTextArea cstOutputArea;
     private javax.swing.JTextArea inputArea;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
@@ -1670,11 +1744,9 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JMenu menuTools;
     private javax.swing.JMenuItem menutItemHelp;
     private javax.swing.JTextArea outputArea;
-    private javax.swing.JTextArea outputArea1;
     private javax.swing.JTextArea outputAreaParser;
     private javax.swing.JPanel panelLexer;
     private javax.swing.JPanel panelParser;
-    private javax.swing.JScrollPane scrollPaneInput;
     private javax.swing.JScrollPane scrollPaneInput1;
     private javax.swing.JScrollPane scrollPaneOutput;
     private javax.swing.JScrollPane scrollPaneOutput1;

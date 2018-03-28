@@ -1,9 +1,12 @@
+//-----------------------------------------
+// treeDemo.js
+//
+// By Alan G. Labouseur, based on the 2009
+// work by Michael Ardizzone and Tim Smith.
+//-----------------------------------------
 package customcompiler;
 
 
-import customcompiler.Node;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import static jdk.nashorn.internal.objects.Global.undefined;
 
 
@@ -14,16 +17,16 @@ import static jdk.nashorn.internal.objects.Global.undefined;
  */
 
 /**
- *
+ * @author Alan G. Labouseur
  * @author reynaldoalvarez
  */
 public class ParseTree {
     
     Node root;
     Node cur = new Node();
-    //LinkedList<String> cur;
 
     public ParseTree() {
+       // Root node is Program
        this.root = null;
     } 
     
@@ -81,10 +84,9 @@ public class ParseTree {
 
     /**
      *
-     * @param node
-     * @param depth
      * @return
      */
+    @Override
     public String toString() {
         // Make the initial call to expand from the root.
         return expand((Node) this.root, 0);
