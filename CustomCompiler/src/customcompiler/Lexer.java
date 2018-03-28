@@ -565,7 +565,7 @@ public class Lexer extends javax.swing.JFrame {
 
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                     
-                    System.out.println(t);
+                    cstOutputArea.append(t.toString());
                     
                     if(currentToken < tokens.size()) { // in case Program is not finished
                         System.out.println("Program running more than once\n");
