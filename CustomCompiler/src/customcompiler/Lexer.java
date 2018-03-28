@@ -285,7 +285,7 @@ public class Lexer extends javax.swing.JFrame {
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.]"),
         
         // Quote
-        Quote("[\"$\"]+"),
+        Quote("[\"\"]"),
         
         // Empty String
        
