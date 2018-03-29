@@ -190,7 +190,7 @@ public class Lexer extends javax.swing.JFrame {
         Quote("[\"\"]"),
         
         // Empty String
-       
+        //empty("({)(.*?)(})"),
         
         // Comments
         comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
@@ -401,9 +401,7 @@ public class Lexer extends javax.swing.JFrame {
             outputAreaParser.append("PARSER: Parsing program" + i + "...\n");
             outputAreaParser.append("PARSER: parse()\n");
             outputAreaParser.append("PARSER: parseProgram()\n");
-
-            // Adding the root node
-            t.addNode("Program", "branch");
+            
             Program();
         }
 
@@ -421,10 +419,11 @@ public class Lexer extends javax.swing.JFrame {
          * Program       ::== Block $
          */        
         private void Program() {
+           
             
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
                 // Adding EOP leaf Node
-                t.addNode("[$]", "leaf");
+                t.addNode("$", "leaf");
                 
                 matchAndDevour(tokenType.EOP); 
                 System.out.println("matched $\n");
@@ -441,6 +440,9 @@ public class Lexer extends javax.swing.JFrame {
                     
                 }
             } else {
+                cstOutputArea.append("CST for program " + i + "...\n");
+                // Adding the root node
+                t.addNode("Program", "branch");
                 Block();
             }
         }
@@ -451,13 +453,13 @@ public class Lexer extends javax.swing.JFrame {
          * Block     ::== { StatementList }
          */        
         private void Block() {
-            // Adds the block Node to the tree
-            t.addNode("Block", "branch");
             
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
+                // Adds the block Node to the tree
+                t.addNode("Block", "branch");
+                
                 //Creates the leaf node of Block {
-                t.addNode("[{]", "leaf");
-                t.endChildren();
+                t.addNode("{", "leaf");
                 
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
@@ -467,7 +469,7 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 //Creates the leaf node of Block }
-                t.addNode("[}]", "leaf");
+                t.addNode("}", "leaf");
                 
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
@@ -481,7 +483,7 @@ public class Lexer extends javax.swing.JFrame {
                 System.out.println("matched: \n");
                 if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                     //Creates the leaf node of Block { (Incase of this case)
-                    t.addNode("[{]", "leaf");
+                    t.addNode("{", "leaf");
                     
                     matchAndDevour(tokenType.openBracket);
                     openBraceCount++;
@@ -509,6 +511,7 @@ public class Lexer extends javax.swing.JFrame {
         private void StatementList() {
             // Creates the branch node of StatementList
             t.addNode("StatementList", "branch");
+           // t.addNode("\u03BB", "leaf");
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -547,8 +550,8 @@ public class Lexer extends javax.swing.JFrame {
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 //Creates the leaf node of Block }
-                
-                t.addNode("[}]", "leaf");
+                t.endChildren();
+                t.addNode("}", "leaf");
                 
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
@@ -558,7 +561,8 @@ public class Lexer extends javax.swing.JFrame {
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
                     // Adding EOP leaf Node
                     t.endChildren();
-                    t.addNode("[$]", "leaf");
+                    t.endChildren();
+                    t.addNode("$", "leaf");
 
                     matchAndDevour(tokenType.EOP); 
                     System.out.println("matched $\n");
@@ -701,7 +705,7 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
                 // Adding EOP leaf Node
-                t.addNode("[$]", "leaf");
+                t.addNode("$", "leaf");
                 
                 matchAndDevour(tokenType.EOP); 
                 System.out.println("matched $\n");

@@ -24,6 +24,7 @@ public class ParseTree {
     
     Node root;
     Node cur = new Node();
+    
 
     public ParseTree() {
        // Root node is Program
@@ -57,7 +58,9 @@ public class ParseTree {
                 node.parent = this.cur;
             // ... and add ourselves (via the unfrotunately-named
             // "push" function) to the children array of the current node.
-                this.cur.push(node);
+            this.cur.push(node);
+            
+                
         }
         // If we are an interior/branch node, then...
         if (kind.equals("branch")) {
@@ -72,7 +75,6 @@ public class ParseTree {
         // ... by moving "up" to our parent node (if possible).
         if ((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            
         } else {
             // TODO: Some sort of error logging.
             // This really should not happen, but it will, of course.
@@ -104,9 +106,14 @@ public class ParseTree {
         
         // If there are no children (i.e., leaf nodes)...
         if (node.children.isEmpty()) {
-            // ... note the leaf node.
-            traversalResult += "[" + node.name + "]";
-            traversalResult += "\n";
+            if(node.name.equals("StatementList")) {
+                traversalResult += "<" + node.name + ">";
+                traversalResult += "\n";
+            } else {
+                // ... note the leaf node.
+                traversalResult += "[" + node.name + "]";
+                traversalResult += "\n";
+            }
         } else {
             // There are children, so note these interior/branch nodes and ...
             traversalResult += "<" + node.name + "> \n";
