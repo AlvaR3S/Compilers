@@ -81,11 +81,15 @@ public class ParseTree {
         }
     }
 
-
-    // Recursive function to handle the expansion of the nodes.
+    // Removes all family members from List
+    public void restartFamily() {
+        this.root = null;
+    }
+    
+    
 
     /**
-     *
+     
      * @return
      */
     @Override
@@ -94,7 +98,8 @@ public class ParseTree {
         return expand((Node) this.root, 0);
         // Return the result.
     } 
-        
+    
+    // Recursive function to handle the expansion of the nodes.
     public String expand(Node node, int depth) {
         String traversalResult = "";
 
@@ -106,7 +111,7 @@ public class ParseTree {
         
         // If there are no children (i.e., leaf nodes)...
         if (node.children.isEmpty()) {
-            if(node.name.equals("StatementList")) {
+            if(node.name.equals("Statement List")) { // If we t.endChildren after StatementList
                 traversalResult += "<" + node.name + ">";
                 traversalResult += "\n";
             } else {

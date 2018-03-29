@@ -420,15 +420,30 @@ public class Lexer extends javax.swing.JFrame {
          */        
         private void Program() {
            
-            
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
-                // Adding EOP leaf Node
-                t.addNode("$", "leaf");
                 
-                matchAndDevour(tokenType.EOP); 
-                System.out.println("matched $\n");
-                
-                outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                // Error case when parser finishes with uneven number of '{' and '}'
+                if(closeBraceCount != openBraceCount) {
+                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    matchAndDevour(tokenType.EOP); 
+                    System.out.println("matched $\n");
+                    
+                    cstOutputArea.append("CST for program " + i + ": Skipped due to PARSER error(s).\n\n");
+                    
+                } else { // Program found no bracket errors or parse errors - finish parse and cst 
+                    t.endChildren();
+                   
+                    // Adding EOP leaf Node
+                    t.addNode("$", "leaf");
+
+                    cstOutputArea.append(t.toString());
+
+                    matchAndDevour(tokenType.EOP); 
+                    System.out.println("matched $\n");
+
+                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                }
                 
                 if(currentToken < tokens.size()) { // in case Program is not finished
                     System.out.println("Program running more than once\n");
@@ -436,11 +451,13 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
                     outputAreaParser.append("PARSER: parse()\n");
                     outputAreaParser.append("PARSER: parseProgram()\n");
-                    Program(); // when end reached loop back to the top
                     
-                }
+                    t.restartFamily(); // Clear family tree for next program
+                    
+                    Program(); // when end reached loop back to the top
+                }             
             } else {
-                cstOutputArea.append("CST for program " + i + "...\n");
+                cstOutputArea.append("\nCST for program " + i + "...\n");
                 // Adding the root node
                 t.addNode("Program", "branch");
                 Block();
@@ -465,9 +482,14 @@ public class Lexer extends javax.swing.JFrame {
                 openBraceCount++;
                 outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched {\n");
+                
                 StatementList();
                 
-            } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {                
+                t.endChildren();
+                t.endChildren();
+                t.endChildren();
+                
                 //Creates the leaf node of Block }
                 t.addNode("}", "leaf");
                 
@@ -475,8 +497,13 @@ public class Lexer extends javax.swing.JFrame {
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: }\n");
-                StatementList();
                 
+                // When looping of } finishes there should be a $
+                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                    Program(); // Goes to program to finish program and continue if there are more programs
+                } else {
+                    Block();
+                }
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 matchAndDevour(tokenType.newLine);
@@ -509,9 +536,6 @@ public class Lexer extends javax.swing.JFrame {
          *               ::== ε <-- (empty set)
          */
         private void StatementList() {
-            // Creates the branch node of StatementList
-            t.addNode("StatementList", "branch");
-           // t.addNode("\u03BB", "leaf");
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -549,41 +573,37 @@ public class Lexer extends javax.swing.JFrame {
                 Statement();
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
-                //Creates the leaf node of Block }
+                // Adds Statement List branch to tree
+                t.addNode("Statement List", "branch");
                 t.endChildren();
-                t.addNode("}", "leaf");
                 
+                //Creates the leaf node of Block }
+                t.addNode("}", "leaf");
+
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                 System.out.println("matched: }\n");
                 
-                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
-                    // Adding EOP leaf Node
-                    t.endChildren();
-                    t.endChildren();
-                    t.addNode("$", "leaf");
-
-                    matchAndDevour(tokenType.EOP); 
-                    System.out.println("matched $\n");
-
-                    outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                    
-                    cstOutputArea.append(t.toString());
-                    
-                    if(currentToken < tokens.size()) { // in case Program is not finished
-                        System.out.println("Program running more than once\n");
-                        i++;
-                        outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
-                        outputAreaParser.append("PARSER: parse()\n");
-                        outputAreaParser.append("PARSER: parseProgram()\n");
-                        Program(); // when end reached loop back to the top
-                    
-                    }
+                // If EOP is found
+                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                    Program(); // Goes to program to finish program and continue if there are more programs
                 } else {
-                    Statement();
+                    Statement(); // If this not the only }
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
+                // Adds Statement List branch to tree
+                t.addNode("Statement List", "branch");
+                
+                // Adds Statement branch to tree
+                t.addNode("Statement", "branch");
+
+                // Adds the block Node to the tree
+                t.addNode("Block", "branch");
+                
+                //Creates the leaf node of Block {
+                t.addNode("{", "leaf"); 
+                
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
@@ -620,9 +640,6 @@ public class Lexer extends javax.swing.JFrame {
          *           ::== Block                 ::== Program
          */ 
         private void Statement() {
-            // Adds Statement node to tree
-            t.addNode("Statement", "branch");
-            
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 matchAndDevour(tokenType.printStatement);
@@ -667,28 +684,38 @@ public class Lexer extends javax.swing.JFrame {
                 WhileStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement List", "branch");
+                t.endChildren();
+                
+                //Creates the leaf node of Block }
+                t.addNode("}", "leaf");
+                
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                 System.out.println("matched: }\n");
                 
-                // Error case when parser finishes with uneven number of '{' and '}'
+                // If EOP is found
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                    if(closeBraceCount != openBraceCount) {
-                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
-                        matchAndDevour(tokenType.EOP); 
-                        System.out.println("matched $\n");
-                    } else {
-                        Program(); // when end reached loop back to the top
-                    }
+                    Program(); // Goes to program to finish program and continue if there are more programs
+                } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                    Block(); // If there are a repeating number of } Block will loop them
                 } else {
-                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                    System.out.println("matched: }\n");
                     StatementList();
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
-                // 
+                // Adds Statement List branch to tree
+                t.addNode("Statement List", "branch");
+                
+                // Adds Statement branch to tree
+                t.addNode("Statement", "branch");
+
+                // Adds the block Node to the tree
+                t.addNode("Block", "branch");
+                
+                //Creates the leaf node of Block {
+                t.addNode("{", "leaf"); 
                 
                 matchAndDevour(tokenType.openBracket);
                 openBraceCount++;
@@ -696,7 +723,7 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched: {\n");
-                StatementList(); // Conisidered as Block() loops back to begining to find possible $
+                StatementList(); // Considered as Block() loops back to begining to find possible $
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 matchAndDevour(tokenType.newLine);
@@ -704,22 +731,7 @@ public class Lexer extends javax.swing.JFrame {
                 Program(); // loops to next section when end reached loop back to the top
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
-                // Adding EOP leaf Node
-                t.addNode("$", "leaf");
-                
-                matchAndDevour(tokenType.EOP); 
-                System.out.println("matched $\n");
-
-                outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                   
-                if(currentToken < tokens.size()) { // in case Program is not finished
-                    System.out.println("Program running more than once\n");
-                    i++;
-                    outputAreaParser.append("PARSER: Parsing program " + i + "...\n");
-                    outputAreaParser.append("PARSER: parse()\n");
-                    outputAreaParser.append("PARSER: parseProgram()\n");
-                    Program(); // when end reached loop back to the top
-                }
+                Program(); // Goes to program to finish program and continue if there are more programs
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
