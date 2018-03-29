@@ -419,9 +419,7 @@ public class Lexer extends javax.swing.JFrame {
          * Program       ::== Block $
          */        
         private void Program() {
-           
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
-                
                 // Error case when parser finishes with uneven number of '{' and '}'
                 if(closeBraceCount != openBraceCount) {
                     outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -460,6 +458,10 @@ public class Lexer extends javax.swing.JFrame {
                 cstOutputArea.append("\nCST for program " + i + "...\n");
                 // Adding the root node
                 t.addNode("Program", "branch");
+                
+                // Adds the block Node to the tree
+                t.addNode("Block", "branch");
+                
                 Block();
             }
         }
@@ -470,11 +472,7 @@ public class Lexer extends javax.swing.JFrame {
          * Block     ::== { StatementList }
          */        
         private void Block() {
-            
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
-                // Adds the block Node to the tree
-                t.addNode("Block", "branch");
-                
                 //Creates the leaf node of Block {
                 t.addNode("{", "leaf");
                 
@@ -535,8 +533,7 @@ public class Lexer extends javax.swing.JFrame {
          * StatementList ::== Statement StatementList
          *               ::== ε <-- (empty set)
          */
-        private void StatementList() {
-            
+        private void StatementList() {  
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: print\n");
