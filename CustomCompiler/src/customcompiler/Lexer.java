@@ -952,48 +952,66 @@ public class Lexer extends javax.swing.JFrame {
          */
         private void Expr() {
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 IntExpr(); // If its a digit we will see if its valid IntExpr
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS 
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 ID();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 BooleanExpr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalTrue)) { // Checking for boolval 
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
+                
+                // Allows me to get the current boolval and add to node as leaf
+                t.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 matchAndDevour(tokenType.boolvalTrue);
                 outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
-                outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
-                Program();
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { 
+                    PrintStatement(); // Checking for closeParenthesis in order to finish print statement
+                } else {
+                    outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
+                    Program();
+                }
+                
             
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalFalse)) { // Checking for boolval 
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
+                
+                // Allows me to get the current boolval and add to node as leaf
+                t.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 matchAndDevour(tokenType.boolvalFalse);
-                outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
-                outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
-                Program();
+                outputAreaParser.append("PARSER: parseBoolvalFalse()\n");
+                
+                if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { 
+                    PrintStatement(); // Checking for closeParenthesis in order to finish print statement
+                } else {
+                    outputAreaParser.append("PARSER: parseAssignmentStatement()\n");
+                    Program();
+                }
+                
             
             } else if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes 
-                // Adds Statement List branch to tree
+                // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
