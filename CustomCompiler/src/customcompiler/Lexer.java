@@ -987,16 +987,25 @@ public class Lexer extends javax.swing.JFrame {
             t.addNode("IntegerExpression", "branch");
             
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
+                // Allows me to get the current digit and add to node as leaf
+                t.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.digit);
                 outputAreaParser.append("PARSER: parseDigit()\n");
                 System.out.println("matched: Digit\n");
                 
                 if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) { // Checking for intop   
+                    // Allows me to get the current intop and add to node as leaf
+                    t.addNode(tokens.get(currentToken).getData(), "leaf");
+                    
                     matchAndDevour(tokenType.intopAddition);
                     outputAreaParser.append("PARSER: parseIntop()\n");
                     System.out.println("matched: Intop\n");
                 
                     if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
+                        // Allows me to get the current digit and add to node as leaf
+                        t.addNode(tokens.get(currentToken).getData(), "leaf");
+                        
                         matchAndDevour(tokenType.digit);
                         outputAreaParser.append("PARSER: parseDigit()\n");
                         outputAreaParser.append("PARSER: parseIntExpr()\n"); // IntExpr is valid
@@ -1161,8 +1170,8 @@ public class Lexer extends javax.swing.JFrame {
             t.addNode("ID", "branch");
             
             if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
-                //Creates the leaf node char
-                t.addNode(tokens.get(currentToken).getData(), "leaf"); // Allows me to get the String of current CHAR
+                // Allows me to get the String of current CHAR and add to node as leaf
+                t.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseCHAR()\n");
