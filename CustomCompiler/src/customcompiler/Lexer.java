@@ -683,46 +683,64 @@ public class Lexer extends javax.swing.JFrame {
          *           ::== Block                 ::== Program
          */ 
         private void Statement() {
-            // Adds Statement List branch to tree
-            t.addNode("Statement", "branch");
-            
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: print\n");
                 PrintStatement();
             
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: ID\n");
                 AssignmentStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.typeInt);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: int\n");
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.typeString);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: string\n");
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.typeBoolean);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: boolean\n");
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.ifStatement)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.ifStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: if\n");
                 IfStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.whileStatement)) {
+                // Adds Statement List branch to tree
+                t.addNode("Statement", "branch");
+                
                 matchAndDevour(tokenType.whileStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: while\n");
