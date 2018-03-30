@@ -955,12 +955,18 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
+                // Adds Integer Expression branch to tree
+                t.addNode("IntegerExpression", "branch");
+                
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 IntExpr(); // If its a digit we will see if its valid IntExpr
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS 
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
+                
+                // Adds ID branch to tree
+                t.addNode("ID", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 ID();
@@ -969,12 +975,18 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
+                // Adds BooleanExpr branch to tree
+                t.addNode("BooleanExpression", "branch");
+                
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 BooleanExpr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalTrue)) { // Checking for boolval 
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
+                
+                // Adds Boolean Expression branch to tree
+                t.addNode("BooleanExpression", "branch");
                 
                 // Allows me to get the current boolval and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -995,6 +1007,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
+                // Adds Integer Expression branch to tree
+                t.addNode("BooleanExpression", "branch");
+                
                 // Allows me to get the current boolval and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
                 
@@ -1014,6 +1029,8 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Expression branch to tree
                 t.addNode("Expression", "branch");
                 
+                // Adds String Expression branch to tree
+                t.addNode("StringExpression", "branch");
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 StringExpr();    
                 
@@ -1028,9 +1045,6 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== IntExpr   ::== digit intopExpr, digit
          */
         private void IntExpr() {
-            // Adds Statement List branch to tree
-            t.addNode("IntegerExpression", "branch");
-            
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                 // Allows me to get the current digit and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1093,9 +1107,6 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== StringExpr    ::== " CharList "
          */
         private void StringExpr() {
-            // Adds Statement List branch to tree
-            t.addNode("StringExpression", "branch");
-            
             if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes
                 // Allows me to get the current quote and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1146,9 +1157,6 @@ public class Lexer extends javax.swing.JFrame {
          * Expr ::== BooleanExpr  ::== ( Expr boolop Expr ), boolval
          */
         private void BooleanExpr() {
-            // Adds Statement List branch to tree
-            t.addNode("BooleanExpression", "branch");
-            
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis 
                 // Allows me to get the current openParen and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1244,9 +1252,6 @@ public class Lexer extends javax.swing.JFrame {
          *  Expr ::== ID   ::== char
          */
         private void ID() {
-            // Adds Statement List branch to tree
-            t.addNode("ID", "branch");
-            
             if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
                 // Allows me to get the String of current CHAR and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf"); 

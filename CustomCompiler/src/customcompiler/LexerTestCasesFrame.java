@@ -398,6 +398,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 + "\n"
                 + "\t print( (\"sd\" != 2) )"
                 + "\n"
+                + "\t print(false)"
+                + "\n"
+                + "\t print(true)"
+                + "\n"
                 + "}$"); 
         }
         
