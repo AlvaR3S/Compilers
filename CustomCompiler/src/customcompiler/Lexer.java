@@ -447,7 +447,8 @@ public class Lexer extends javax.swing.JFrame {
                     cstOutputArea.append("CST for program " + i + ": Skipped due to PARSER error(s).\n\n");
                     
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
-                    t.endChildren();
+                    // loops the $ node to match the Block branch
+                    t.scaleToRoot();
                    
                     // Adding EOP leaf Node
                     t.addNode("$", "leaf");
@@ -472,7 +473,7 @@ public class Lexer extends javax.swing.JFrame {
                     Program(); // when end reached loop back to the top
                 }             
             } else {
-                if(i > 1) { // Separates tress accordingly
+                if(i > 1) { // Separates trees accordingly
                     cstOutputArea.append("\n\nCST for program " + i + "...\n");
                 } else {
                     cstOutputArea.append("\nCST for program " + i + "...\n");
@@ -505,11 +506,10 @@ public class Lexer extends javax.swing.JFrame {
                 
                 StatementList();
                 
-            } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {                
-                t.endChildren();
-                t.endChildren();
-                t.endChildren();
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                t.scaleToBlock();
                 
+                System.out.println("I do");
                 //Creates the leaf node of Block }
                 t.addNode("}", "leaf");
                 
@@ -537,12 +537,14 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: parseBlock()\n");
                     System.out.println("matched: {\n");
                     StatementList();
+                } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) { // incase of dupilicates (Block())
+                    Block(); // Goes back into block to find finishing touches
                 } else {
-                    StatementList();
+                    StatementList(); // More to be done...
                 }    
             } else {
                 // test for location
-                t.endChildren();
+//                t.endChildren();
                 
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
@@ -619,6 +621,7 @@ public class Lexer extends javax.swing.JFrame {
                 }
                 
                 t.endChildren();
+
                 
                 //Creates the leaf node of Block }
                 t.addNode("}", "leaf");
@@ -665,7 +668,7 @@ public class Lexer extends javax.swing.JFrame {
                   
             } else {
                 // test for location
-                t.endChildren();
+//                t.endChildren();
                 
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -714,6 +717,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Variable Declaration branch to tree
                 t.addNode("VariableDeclaration", "branch");
                 
+                // Adding the specific type to the VarDecl branch
+                t.addNode("int", "leaf");
+                
                 matchAndDevour(tokenType.typeInt);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: int\n");
@@ -726,6 +732,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Variable Declaration branch to tree
                 t.addNode("VariableDeclaration", "branch");
                 
+                // Adding the specific type to the VarDecl branch
+                t.addNode("string", "leaf");
+                
                 matchAndDevour(tokenType.typeString);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: string\n");
@@ -737,6 +746,9 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adds Variable Declaration branch to tree
                 t.addNode("VariableDeclaration", "branch");
+                
+                // Adding the specific type to the VarDecl branch
+                t.addNode("boolean", "leaf");
                 
                 matchAndDevour(tokenType.typeBoolean);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -843,8 +855,8 @@ public class Lexer extends javax.swing.JFrame {
                 Expr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
-                t.endChildren();
-                t.endChildren();
+//                t.endChildren();
+//                t.endChildren();
                 //Creates the leaf node closeParen
                 t.addNode(")", "leaf");
                 
@@ -856,8 +868,8 @@ public class Lexer extends javax.swing.JFrame {
                     BooleanExpr();
                   
                 } else {
-                   t.endChildren(); // testing for print
-                   t.endChildren(); // testing for print
+//                   t.endChildren(); // testing for print
+//                   t.endChildren(); // testing for print
                    StatementList(); // If there are more statements left
                    
                 }
@@ -899,9 +911,9 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
                
                 matchAndDevour(tokenType.CHAR);
-                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
-                Program();
+                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                Block();
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -1668,63 +1680,10 @@ public class Lexer extends javax.swing.JFrame {
         
     // Executes the run (Lexer) prints results onto the Output box
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
-       
-        
         
         Token token = new Token();
        
-        // Creates a variable for the Parser class
         Parser parse = new Parser(token);
-        
-        ParseTree t = new ParseTree();
-        //System.out.println(t);
-
-
-        //--------------------FOR later use------------
-        ///*
-        // * To change this license header, choose License Headers in Project Properties.
-        // * To change this template file, choose Tools | Templates
-        // * and open the template in the editor.
-        // */
-        //
-        ///**
-        // *
-        // * @author reynaldoalvarez
-        // */
-        //public class Tree {
-        //   
-        //    
-        //    public static void main(String args[]) {
-        //
-        //        
-        //        t.addNode("Root", "branch");
-        //        t.addNode("Expr", "branch");
-        //        t.addNode("Term", "branch");
-        //        t.addNode("Factor", "branch");
-        //        t.addNode("a", "leaf");
-        //        t.endChildren();
-        //        t.endChildren();
-        //        t.endChildren();
-        //        // t.endChildren();  // Un-comment this to test guards against moving "up" past the root of the tree.
-        //
-        //        t.addNode("Op", "branch");
-        //        t.addNode("+", "leaf");
-        //        t.endChildren();
-        //
-        //        t.addNode("Term", "branch");
-        //        t.addNode("Factor", "branch");
-        //        t.addNode("2", "leaf");
-        //        t.endChildren();
-        //        t.endChildren();
-        //
-        //        System.out.println(t);
-        //    }
-        //}
-
-        // System.out.println(lexer);
-        // Prints lexer output to parser input
-        //outputAreaParser.append(outputArea.getText());
-        
       
     }//GEN-LAST:event_buttonLexActionPerformed
     

@@ -68,7 +68,24 @@ public class ParseTree {
             this.cur = node;
         }       
     }
-
+    
+    public void scaleToRoot() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+        }
+    }
+    
+    public void scaleToBlock() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("Block".equals(this.cur.parent.name)) {
+                // For some reason the loop stops one before block so this is a little push to the finish 
+                endChildren();
+                break;
+            }
+        }
+    }
+    
     // Note that we're done with this branch of the tree...
     public void endChildren() {
         //Node node = new Node();
