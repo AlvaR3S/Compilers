@@ -7,6 +7,8 @@
 package customcompiler;
 
 
+import customcompiler.Lexer.Token;
+import customcompiler.Lexer.TokenType;
 import static jdk.nashorn.internal.objects.Global.undefined;
 
 
@@ -24,23 +26,21 @@ public class ParseTree {
     
     Node root;
     Node cur = new Node();
+    Token token;
     
-
     public ParseTree() {
        // Root node is Program
        this.root = null;
     } 
     
- 
-  
-        // -- ------- --
-        // -- Methods --
-        // -- ------- --
     
-        // Add a node: kind in {branch, leaf}.
-
+    // -- ------- --
+    // -- Methods --
+    // -- ------- --
+    
     /**
      *
+     * Add a node: kind in {branch, leaf}
      * @param name
      * @param kind 
      */
@@ -86,7 +86,6 @@ public class ParseTree {
      * 
      * When a closed parenthesis is added 
      * it must be aligned to its previous open parenthesis
-     * 
      */
     public void scaleToPrintStatement() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
@@ -103,6 +102,26 @@ public class ParseTree {
         }
     }
     
+
+    /**
+     * 
+     * When a a finishing quote is added 
+     * it must be aligned to its previous open quote
+     */
+    public void scaleToQuote() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("String Expression".equals(this.cur.parent.name)) {
+                /**
+                 * stops an extra - before String Expression, 
+                 * so this is a little push in order for quote
+                 * to land as a child in String Expression accordingly  
+                 */
+                endChildren();
+                break;
+            }
+        }
+    }
     
     /**
      * 
@@ -114,6 +133,7 @@ public class ParseTree {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
             if("Statement List".equals(this.cur.parent.name)) {
+                endChildren(); // Needs a little push to be aligned correctly
                 break;
             }
         }
@@ -128,13 +148,13 @@ public class ParseTree {
     public void scaleToBlock() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            if("Block".equals(this.cur.parent.name)) {
+            if("Program".equals(this.cur.parent.name)) {
                 /**
-                 * stops one before block, 
+                 * stops one before Program, 
                  * so this is a little push in order for close bracket
                  * to land as a child in the block branch accordingly  
-                 */  
-                endChildren();
+                 */
+                //endChildren();
                 break;
             }
         }
@@ -189,6 +209,12 @@ public class ParseTree {
         // If there are no children (i.e., leaf nodes)...
         if (node.children.isEmpty()) {
             if(node.name.equals("Statement List")) { // If we t.endChildren after StatementList
+                traversalResult += "<" + node.name + ">";
+                traversalResult += "\n";
+            } else if(node.name.equals("Char List")) {
+                traversalResult += "<" + node.name + ">";
+                traversalResult += "\n";
+            } else if(node.name.equals("Block")) {
                 traversalResult += "<" + node.name + ">";
                 traversalResult += "\n";
             } else {

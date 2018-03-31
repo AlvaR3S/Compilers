@@ -186,7 +186,7 @@ public class Lexer extends javax.swing.JFrame {
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.]"),
         
         // Quote
-        Quote("[\"\"]"),
+        Quote("\""),
         
         // Empty String
         //empty("({)(.*?)(})"),
@@ -449,7 +449,7 @@ public class Lexer extends javax.swing.JFrame {
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     // loops the $ node to match the Block branch
                     t.scaleToRoot();
-                   
+                    
                     // Adding EOP leaf Node
                     t.addNode("$", "leaf");
 
@@ -507,6 +507,9 @@ public class Lexer extends javax.swing.JFrame {
                 StatementList();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                // Adds Statement List branch to tree to the last } occurance
+                t.addNode("Statement List", "branch");
+                
                 // Meets last Block parent
                 t.scaleToBlock();
                 
@@ -543,9 +546,6 @@ public class Lexer extends javax.swing.JFrame {
                     StatementList(); // More to be done...
                 }    
             } else {
-                // test for location
-//                t.endChildren();
-                
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
             }              
@@ -615,7 +615,6 @@ public class Lexer extends javax.swing.JFrame {
                 Statement();
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
-                
                 // IF THE INPUT IS AN EMPTY SET ---> ε
                 if(tokens.get(currentToken - 1).getType().equals(tokenType.openBracket)) {
                     // Adds Statement List branch to tree
@@ -624,7 +623,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                     //Creates the leaf node of Block }
                     t.addNode("}", "leaf");
-
+                    
                     matchAndDevour(tokenType.closeBracket);
                     closeBraceCount++;
                     outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
@@ -637,12 +636,15 @@ public class Lexer extends javax.swing.JFrame {
                         Statement(); // If this not the only }
                     }
                 } else { // Not an empty set of brackets ---> {ε}
+                    // Adds Statement List branch to tree
+                    t.addNode("Statement List", "branch");
+                    
                     // Meets last Block parent
                     t.scaleToBlock();
                     
                     //Creates the leaf node of Block }
                     t.addNode("}", "leaf");
-
+                    
                     matchAndDevour(tokenType.closeBracket);
                     closeBraceCount++;
                     outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
@@ -650,8 +652,10 @@ public class Lexer extends javax.swing.JFrame {
 
                     // If EOP is found
                     if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        System.out.println("door");
                         Program(); // Goes to program to finish program and continue if there are more programs
                     } else {
+                        System.out.println("reach");
                         Statement(); // If this not the only }
                     }
                 }
@@ -684,10 +688,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // Accounting for an early stop
                 Program(); // loops back to the top
                   
-            } else {
-                // test for location
-//                t.endChildren();
-                
+            } else {                
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
             }   
@@ -837,6 +838,7 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 outputAreaParser.append("PARSER: parseBlock()\n");
                 System.out.println("matched: {\n");
+                //t.statementListIncrement();
                 StatementList(); // Considered as Block() loops back to begining to find possible $
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
@@ -885,8 +887,12 @@ public class Lexer extends javax.swing.JFrame {
                 // If next token continues a boolean expressions
                 if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
                     BooleanExpr();
-                  
+                    
+//                } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {    
+//                    Block(); // If new Block is created within a Block
+//                    
                 } else {
+                   t.statementListIncrement(); // Aligns Statement List with last statement
                    StatementList(); // If there are more statements left
                 }
             } else {
@@ -1158,6 +1164,9 @@ public class Lexer extends javax.swing.JFrame {
                 }
                 
                 if(tokens.get(currentToken).getType().equals(tokenType.Quote)) {
+                    // Matches position to last spotted quote
+                    t.scaleToQuote();
+                    
                     // Allows me to get the current quote and add to node as leaf
                     t.addNode(tokens.get(currentToken).getData(), "leaf");
                     
@@ -1292,9 +1301,10 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
                 matchAndDevour(tokenType.CHAR);
+                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
                 outputAreaParser.append("PARSER: parseCHAR()\n");
                 System.out.println("matched: CHAR\n");
-                outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                
                 
                 if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
                     BooleanExpr(); // continues the BooleanExpr
@@ -1474,13 +1484,13 @@ public class Lexer extends javax.swing.JFrame {
                         .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelLexerLayout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addGap(103, 103, 103)
+                                .addGap(113, 113, 113)
                                 .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelLexerLayout.createSequentialGroup()
                                 .addComponent(buttonClearAll)
-                                .addGap(358, 358, 358)
-                                .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(390, 390, 390)
+                                .addGap(367, 367, 367)
+                                .addComponent(buttonTestCases)
+                                .addGap(382, 382, 382)
                                 .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelLexerLayout.createSequentialGroup()

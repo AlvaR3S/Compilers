@@ -30,6 +30,7 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
 
         labelTitle1 = new javax.swing.JLabel();
         buttonReturn = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -52,6 +53,8 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
                 buttonReturnActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("REMINDER: CREATE INFOR FOR PRINT, CUT, PASTE.");
 
         menuLexer.setToolTipText("");
 
@@ -80,13 +83,18 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(200, 200, 200)
                 .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jLabel1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(labelTitle1)
-                .addGap(305, 305, 305)
+                .addGap(41, 41, 41)
+                .addComponent(jLabel1)
+                .addGap(249, 249, 249)
                 .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -146,6 +154,7 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonReturn;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelTitle1;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem menuItemExit;

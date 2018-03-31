@@ -169,14 +169,14 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
                                       <Component id="buttonLex" min="-2" pref="90" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="buttonClearAll" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="358" max="-2" attributes="0"/>
-                                      <Component id="buttonTestCases" min="-2" pref="110" max="-2" attributes="0"/>
-                                      <EmptySpace min="390" pref="390" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="367" max="-2" attributes="0"/>
+                                      <Component id="buttonTestCases" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="382" max="-2" attributes="0"/>
                                       <Component id="buttonQuit" min="-2" pref="90" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
