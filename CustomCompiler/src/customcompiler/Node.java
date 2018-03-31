@@ -18,9 +18,7 @@ public class Node {
     Node parent = null;
     String name = null;
         
-    public Node() {
-       
-    }
+    public Node() { }
     
     public Node(String name) {
         this.name = name;
@@ -36,10 +34,4 @@ public class Node {
         child.parent = this;
         children.add(child);
     }
-    
-
-
-    
-    
-    
 }

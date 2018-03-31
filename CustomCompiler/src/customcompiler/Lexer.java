@@ -705,11 +705,11 @@ public class Lexer extends javax.swing.JFrame {
          */ 
         private void Statement() {
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
-                // Adds PrintStatement branch to tree
-                t.addNode("PrintStatement", "branch");
+                // Adds Print Statement branch to tree
+                t.addNode("Print Statement", "branch");
                 
                 matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -717,11 +717,11 @@ public class Lexer extends javax.swing.JFrame {
                 PrintStatement();
             
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
-                // Adds AssignmentStatement branch to tree
-                t.addNode("AssignmentStatement", "branch");
+                // Adds Assignment Statement branch to tree
+                t.addNode("Assignment Statement", "branch");
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -729,11 +729,11 @@ public class Lexer extends javax.swing.JFrame {
                 AssignmentStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
                 // Adds Variable Declaration branch to tree
-                t.addNode("VariableDeclaration", "branch");
+                t.addNode("Variable Declaration", "branch");
                 
                 // Adding the specific type to the VarDecl branch
                 t.addNode("int", "leaf");
@@ -744,11 +744,11 @@ public class Lexer extends javax.swing.JFrame {
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
                 // Adds Variable Declaration branch to tree
-                t.addNode("VariableDeclaration", "branch");
+                t.addNode("Variable Declaration", "branch");
                 
                 // Adding the specific type to the VarDecl branch
                 t.addNode("string", "leaf");
@@ -759,11 +759,11 @@ public class Lexer extends javax.swing.JFrame {
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
                 // Adds Variable Declaration branch to tree
-                t.addNode("VariableDeclaration", "branch");
+                t.addNode("Variable Declaration", "branch");
                 
                 // Adding the specific type to the VarDecl branch
                 t.addNode("boolean", "leaf");
@@ -774,11 +774,11 @@ public class Lexer extends javax.swing.JFrame {
                 VarDecl();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.ifStatement)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
-                // Adds IfStatement branch to tree
-                t.addNode("IfStatement", "branch");
+                // Adds If Statement branch to tree
+                t.addNode("If Statement", "branch");
                 
                 matchAndDevour(tokenType.ifStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -786,11 +786,11 @@ public class Lexer extends javax.swing.JFrame {
                 IfStatement();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.whileStatement)) {
-                // Adds Statement List branch to tree
+                // Adds Statement branch to tree
                 t.addNode("Statement", "branch");
                 
-                // Adds WhileStatement branch to tree
-                t.addNode("WhileStatement", "branch");
+                // Adds While Statement branch to tree
+                t.addNode("While Statement", "branch");
                 
                 matchAndDevour(tokenType.whileStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -873,7 +873,7 @@ public class Lexer extends javax.swing.JFrame {
                 Expr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
-                // Lines close parenthesis to open parenthesis within printstatement
+                // Lines close parenthesis to open parenthesis within print statement
                 t.scaleToPrintStatement();
                  
                 // Creates the leaf node closeParen
@@ -984,7 +984,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode("Expression", "branch");
                 
                 // Adds Integer Expression branch to tree
-                t.addNode("IntegerExpression", "branch");
+                t.addNode("Integer Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 IntExpr(); // If its a digit we will see if its valid IntExpr
@@ -1004,7 +1004,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode("Expression", "branch");
                 
                 // Adds BooleanExpr branch to tree
-                t.addNode("BooleanExpression", "branch");
+                t.addNode("Boolean Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 BooleanExpr();
@@ -1014,7 +1014,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode("Expression", "branch");
                 
                 // Adds Boolean Expression branch to tree
-                t.addNode("BooleanExpression", "branch");
+                t.addNode("Boolean Expression", "branch");
                 
                 // Allows me to get the current boolval and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1036,7 +1036,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode("Expression", "branch");
                 
                 // Adds Integer Expression branch to tree
-                t.addNode("BooleanExpression", "branch");
+                t.addNode("Boolean Expression", "branch");
                 
                 // Allows me to get the current boolval and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1058,7 +1058,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode("Expression", "branch");
                 
                 // Adds String Expression branch to tree
-                t.addNode("StringExpression", "branch");
+                t.addNode("String Expression", "branch");
                 
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 StringExpr();    

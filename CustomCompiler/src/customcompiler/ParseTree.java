@@ -70,33 +70,87 @@ public class ParseTree {
     }
     
     
+    /**
+     * 
+     * Aligns the end of program marker to the block branch
+     * This allows the tree follows the grammar format
+     */
     public void scaleToRoot() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
         }
     }
     
+    
+    /**
+     * 
+     * When a closed parenthesis is added 
+     * it must be aligned to its previous open parenthesis
+     * 
+     */
     public void scaleToPrintStatement() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            if("PrintStatement".equals(this.cur.parent.name)) {
-                // stops one before printstatement so this is a little push to land as a child in printstatement accordingly  
+            if("Print Statement".equals(this.cur.parent.name)) {
+                /**
+                 * stops one before print statement, 
+                 * so this is a little push in order for close parenthesis
+                 * to land as a child in print statement accordingly  
+                 */
                 endChildren();
                 break;
             }
         }
     }
     
+    
+    /**
+     * 
+     * Increments specifically the Statement List branch
+     * This brings the tree together and avoids a wider display
+     * Gets called before the Statement List branch is created
+     */
+    public void statementListIncrement() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("Statement List".equals(this.cur.parent.name)) {
+                break;
+            }
+        }
+    }
+    
+    
+    /**
+     * 
+     * Aligns close brackets 
+     * to its appropriate open bracket
+     */
     public void scaleToBlock() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
             if("Block".equals(this.cur.parent.name)) {
-                // stops one before block so this is a little push to land as a child in block accordingly  
+                /**
+                 * stops one before block, 
+                 * so this is a little push in order for close bracket
+                 * to land as a child in the block branch accordingly  
+                 */  
                 endChildren();
                 break;
             }
         }
     }
+    
+    
+    /**
+     * 
+     * When Program runs more than once we must
+     * remove all family members from List
+     * so that a new family can be created without duplicate families
+     */
+    public void restartFamily() {
+        this.root = null;
+    }
+    
     
     // Note that we're done with this branch of the tree...
     public void endChildren() {
@@ -110,15 +164,9 @@ public class ParseTree {
         }
     }
 
-    // Removes all family members from List
-    public void restartFamily() {
-        this.root = null;
-    }
     
-    
-
     /**
-     
+     * 
      * @return
      */
     @Override
@@ -156,10 +204,6 @@ public class ParseTree {
                 traversalResult += expand(node.children.get(i), depth + 1);
             }
         }
-        
         return traversalResult;
-    }  
-
-
-  
+    }   
 }
