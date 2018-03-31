@@ -48,6 +48,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         checkBox11 = new javax.swing.JCheckBox();
         checkBox12 = new javax.swing.JCheckBox();
         checkBox13 = new javax.swing.JCheckBox();
+        checkBox15 = new javax.swing.JCheckBox();
+        labelInput2 = new javax.swing.JLabel();
+        checkBox14 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -182,6 +185,25 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
             }
         });
 
+        checkBox15.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox15.setText("Project 1 & 2 (Same Input file)");
+        checkBox15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox15ActionPerformed(evt);
+            }
+        });
+
+        labelInput2.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelInput2.setText("Project Input Files");
+
+        checkBox14.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox14.setText("Project 3");
+        checkBox14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox14ActionPerformed(evt);
+            }
+        });
+
         menuLexer.setToolTipText("");
 
         menuFile.setText("File");
@@ -207,51 +229,56 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(260, 260, 260)
-                .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(labelInput1)
-                .addGap(215, 215, 215)
-                .addComponent(labelInput))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(90, 90, 90)
-                .addComponent(checkBox1)
-                .addGap(247, 247, 247)
-                .addComponent(checkBox2))
+                .addComponent(checkBox12)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox8)
-                .addGap(224, 224, 224)
-                .addComponent(checkBox3))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox7)
-                .addGap(193, 193, 193)
-                .addComponent(checkBox4))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox6)
-                .addGap(172, 172, 172)
-                .addComponent(checkBox5))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox9))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox10))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox11))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox12))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox13))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(310, 310, 310)
-                .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addComponent(labelInput1)
+                        .addGap(215, 215, 215)
+                        .addComponent(labelInput))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(checkBox1)
+                        .addGap(247, 247, 247)
+                        .addComponent(checkBox2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(checkBox8)
+                        .addGap(224, 224, 224)
+                        .addComponent(checkBox3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(checkBox7)
+                        .addGap(193, 193, 193)
+                        .addComponent(checkBox4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(checkBox9))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(310, 310, 310)
+                        .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(checkBox13))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkBox6)
+                            .addComponent(checkBox10)
+                            .addComponent(checkBox11))
+                        .addGap(172, 172, 172)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkBox15)
+                            .addComponent(labelInput2)
+                            .addComponent(checkBox5)
+                            .addComponent(checkBox14))))
+                .addGap(0, 59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,12 +307,18 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                     .addComponent(checkBox5))
                 .addGap(12, 12, 12)
                 .addComponent(checkBox9)
-                .addGap(12, 12, 12)
-                .addComponent(checkBox10)
-                .addGap(12, 12, 12)
-                .addComponent(checkBox11)
-                .addGap(12, 12, 12)
-                .addComponent(checkBox12)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBox10)
+                    .addComponent(labelInput2))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBox11)
+                    .addComponent(checkBox15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBox12)
+                    .addComponent(checkBox14))
                 .addGap(12, 12, 12)
                 .addComponent(checkBox13)
                 .addGap(32, 32, 32)
@@ -445,7 +478,57 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                     + "\t while(true) { /* What now */ }"
                     + "\n"
                     + "}$");
-        }        
+        }
+
+        if(checkBox14.isSelected()) {
+            inputArea.append("{ /* Project 3 Input file */\n"
+                    + "\tint a"
+                    + "\n"
+                    + "\tboolean b"
+                    + "\n"
+                    + "\t{"
+                    + "\n"
+                    + "\t\tstring c"
+                    + "\n"
+                    + "\t\ta = 5"
+                    + "\n"
+                    + "\t\tb = true /* no comment */"
+                    + "\n"
+                    + "\t\tc = \"inta\""
+                    + "\n"
+                    + "\t\tprint(c)"
+                    + "\n"
+                    + "\t}"
+                    + "\n"
+                    + "\tprint(b)"
+                    + "\n"
+                    + "\tprint(a)"
+                    + "\n"
+                    + "}$"
+                    + "\n\n"
+                    + "{"
+                    + "\n"
+                    + "\tint a"
+                    + "\n"
+                    + "\t{"
+                    + "\n"
+                    + "\t\tboolean b"
+                    + "\n"
+                    + "\t\ta = 1"
+                    + "\n"
+                    + "\t}"
+                    + "\n"
+                    + "\tprint(b)"
+                    + "\n"
+                    + "}$");
+        }
+        
+        if(checkBox15.isSelected()) {
+            inputArea.append("{}$ /* Project 1 & 2 Input file */\n" +
+            "{{{{{{}}}}}}$\n" +
+            "{{{{{{}}} /* comments are ignored */ }}}}$\n" +
+            "{ /* comments are still ignored */ int @}$");
+        }
         
         lex.setVisible(true);
         lex.setEnabled(true);
@@ -487,6 +570,14 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private void checkBox13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox13ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox13ActionPerformed
+
+    private void checkBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox15ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox15ActionPerformed
+
+    private void checkBox14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox14ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox14ActionPerformed
 
 //    /**
 //     * @param args the command line arguments
@@ -530,6 +621,8 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox11;
     private javax.swing.JCheckBox checkBox12;
     private javax.swing.JCheckBox checkBox13;
+    private javax.swing.JCheckBox checkBox14;
+    private javax.swing.JCheckBox checkBox15;
     private javax.swing.JCheckBox checkBox2;
     private javax.swing.JCheckBox checkBox3;
     private javax.swing.JCheckBox checkBox4;
@@ -540,6 +633,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox9;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
+    private javax.swing.JLabel labelInput2;
     private javax.swing.JLabel labelTitle1;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;

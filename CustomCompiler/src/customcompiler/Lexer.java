@@ -507,9 +507,9 @@ public class Lexer extends javax.swing.JFrame {
                 StatementList();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                // Meets last Block parent
                 t.scaleToBlock();
                 
-                System.out.println("I do");
                 //Creates the leaf node of Block }
                 t.addNode("}", "leaf");
                 
@@ -615,27 +615,45 @@ public class Lexer extends javax.swing.JFrame {
                 Statement();
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
+                
+                // IF THE INPUT IS AN EMPTY SET ---> ε
                 if(tokens.get(currentToken - 1).getType().equals(tokenType.openBracket)) {
                     // Adds Statement List branch to tree
                     t.addNode("Statement List", "branch");
-                }
-                
-                t.endChildren();
+                    t.endChildren();
+                    
+                    //Creates the leaf node of Block }
+                    t.addNode("}", "leaf");
 
-                
-                //Creates the leaf node of Block }
-                t.addNode("}", "leaf");
+                    matchAndDevour(tokenType.closeBracket);
+                    closeBraceCount++;
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
 
-                matchAndDevour(tokenType.closeBracket);
-                closeBraceCount++;
-                outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                System.out.println("matched: }\n");
-                
-                // If EOP is found
-                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                    Program(); // Goes to program to finish program and continue if there are more programs
-                } else {
-                    Statement(); // If this not the only }
+                    // If EOP is found
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program(); // Goes to program to finish program and continue if there are more programs
+                    } else {
+                        Statement(); // If this not the only }
+                    }
+                } else { // Not an empty set of brackets ---> {ε}
+                    // Meets last Block parent
+                    t.scaleToBlock();
+                    
+                    //Creates the leaf node of Block }
+                    t.addNode("}", "leaf");
+
+                    matchAndDevour(tokenType.closeBracket);
+                    closeBraceCount++;
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
+
+                    // If EOP is found
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program(); // Goes to program to finish program and continue if there are more programs
+                    } else {
+                        Statement(); // If this not the only }
+                    }
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                 // Adds Statement List branch to tree
@@ -785,7 +803,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.endChildren();
                 
                 //Creates the leaf node of Block }
-                t.addNode("}", "leaf");
+                t.addNode("}", "leaf"); 
                 
                 matchAndDevour(tokenType.closeBracket);
                 closeBraceCount++;
@@ -855,9 +873,10 @@ public class Lexer extends javax.swing.JFrame {
                 Expr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
-//                t.endChildren();
-//                t.endChildren();
-                //Creates the leaf node closeParen
+                // Lines close parenthesis to open parenthesis within printstatement
+                t.scaleToPrintStatement();
+                 
+                // Creates the leaf node closeParen
                 t.addNode(")", "leaf");
                 
                 matchAndDevour(tokenType.closeParenthesis);
@@ -868,10 +887,7 @@ public class Lexer extends javax.swing.JFrame {
                     BooleanExpr();
                   
                 } else {
-//                   t.endChildren(); // testing for print
-//                   t.endChildren(); // testing for print
                    StatementList(); // If there are more statements left
-                   
                 }
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -1043,6 +1059,7 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adds String Expression branch to tree
                 t.addNode("StringExpression", "branch");
+                
                 outputAreaParser.append("PARSER: parseExpr()\n"); 
                 StringExpr();    
                 
@@ -1123,12 +1140,18 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current quote and add to node as leaf
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
                 
+                // Adds Char List branch to tree
+                t.addNode("Char List", "branch");
+                
                 matchAndDevour(tokenType.Quote);
                 outputAreaParser.append("PARSER: parseQuote()\n");
                 
                 while(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
                     // Allows me to get the current CHAR and add to node as leaf
                     t.addNode(tokens.get(currentToken).getData(), "leaf");
+                    
+                    // Adds  branch to tree
+                    t.addNode("Char List", "branch");
                     
                     matchAndDevour(tokenType.CHAR);
                     outputAreaParser.append("PARSER: parseCHAR()\n");

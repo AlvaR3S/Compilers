@@ -69,9 +69,21 @@ public class ParseTree {
         }       
     }
     
+    
     public void scaleToRoot() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
+        }
+    }
+    
+    public void scaleToPrintStatement() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("PrintStatement".equals(this.cur.parent.name)) {
+                // stops one before printstatement so this is a little push to land as a child in printstatement accordingly  
+                endChildren();
+                break;
+            }
         }
     }
     
@@ -79,7 +91,7 @@ public class ParseTree {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
             if("Block".equals(this.cur.parent.name)) {
-                // For some reason the loop stops one before block so this is a little push to the finish 
+                // stops one before block so this is a little push to land as a child in block accordingly  
                 endChildren();
                 break;
             }
