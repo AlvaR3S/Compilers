@@ -148,13 +148,13 @@ public class ParseTree {
     public void scaleToBlock() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            if("Program".equals(this.cur.parent.name)) {
+            if("Block".equals(this.cur.parent.name)) {
                 /**
                  * stops one before Program, 
                  * so this is a little push in order for close bracket
                  * to land as a child in the block branch accordingly  
                  */
-                //endChildren();
+                endChildren();
                 break;
             }
         }
