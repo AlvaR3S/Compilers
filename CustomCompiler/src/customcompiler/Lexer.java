@@ -878,21 +878,28 @@ public class Lexer extends javax.swing.JFrame {
                 Expr();
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
-                // Lines close parenthesis to open parenthesis within print statement
-                t.scaleToPrintStatement();
-                 
-                // Creates the leaf node closeParen
-                t.addNode(")", "leaf");
-                
+                // Match first then see whats next
                 matchAndDevour(tokenType.closeParenthesis);
                 outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
                 
-                // If next token continues a boolean expressions
+                // If next token continues a boolean expressions -- Finish the Boolean Expression
                 if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {
-                    BooleanExpr();    
+                    // Aligns first close paren in boolean expression
+                    t.scaleToBooleanExpression();
+
+                    // Creates the leaf node closeParen
+                    t.addNode(")", "leaf");
+                    
+                    PrintStatement(); // Finish Print Statement
                 } else {
-                   t.statementListIncrement();
-                   StatementList(); // If there are more statements left
+                    // Lines close parenthesis to open parenthesis within print statement
+                    t.scaleToPrintStatement();
+
+                    // Creates the leaf node closeParen
+                    t.addNode(")", "leaf");
+                    
+                    t.statementListIncrement();
+                    StatementList(); // If there are more statements left
                 }
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -1050,7 +1057,6 @@ public class Lexer extends javax.swing.JFrame {
                     t.statementListIncrement(); // Attaches to previous Statement List
                     StatementList();
                 } 
-                
             
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalFalse)) { // Checking for boolval 
                 // Adds Expression branch to tree
@@ -1240,7 +1246,6 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseBooleanExpr()\n"); // BooleanExpr is valid
                 outputAreaParser.append("PARSER: parseOpenParenthesis()\n");
                 
-                // For while statement
                 if(tokens.get(currentToken).getType().equals(tokenType.boolvalTrue)) { // Checking for boolval 
                     // Allows me to get the current boolval and add to node as leaf
                     t.addNode(tokens.get(currentToken).getData(), "leaf");
@@ -1272,7 +1277,7 @@ public class Lexer extends javax.swing.JFrame {
                         // Allows me to get the current closeParen and add to node as leaf
                         t.addNode(tokens.get(currentToken).getData(), "leaf");
                         
-                       PrintStatement();
+                        PrintStatement();
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -1281,11 +1286,8 @@ public class Lexer extends javax.swing.JFrame {
                 } else {
                     Expr();
                 }    
-            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
-                // Allows me to get the current quote and add to node as leaf
-                t.addNode(tokens.get(currentToken).getData(), "leaf");
-                
-                PrintStatement();
+            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis                                
+                PrintStatement(); // Finish the booleanExpr
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
                 // Allows me to get the current quote and add to node as leaf

@@ -102,6 +102,21 @@ public class ParseTree {
         }
     }
     
+    public void scaleToBooleanExpression() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("Boolean Expression".equals(this.cur.parent.name)) {
+                /**
+                 * stops one before print statement, 
+                 * so this is a little push in order for close parenthesis
+                 * to land as a child in print statement accordingly  
+                 */
+                endChildren();
+                break;
+            }
+        }
+    }
+    
 
     /**
      * 
