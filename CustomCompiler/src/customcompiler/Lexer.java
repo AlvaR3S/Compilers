@@ -967,6 +967,9 @@ public class Lexer extends javax.swing.JFrame {
          */ 
         private void WhileStatement() {
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis
+                // Adds while to node as leaf
+                t.addNode("while", "leaf");
+                
                 outputAreaParser.append("PARSER: WhileStatement()\n"); // While is valid
                 BooleanExpr();
             } else {
@@ -983,6 +986,9 @@ public class Lexer extends javax.swing.JFrame {
          */ 
         private void IfStatement() {
             if(tokens.get(currentToken).getType().equals(tokenType.openParenthesis)) { // Checking for openParenthesis
+                // Adds if to node as leaf
+                t.addNode("if", "leaf");
+                
                 outputAreaParser.append("PARSER: IfStatement()\n"); // IF is valid
                 BooleanExpr();
             } else {
@@ -1109,6 +1115,7 @@ public class Lexer extends javax.swing.JFrame {
                 t.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 matchAndDevour(tokenType.digit);
+                outputAreaParser.append("PARSER: parseIntExpr()\n"); // IntExpr is valid
                 outputAreaParser.append("PARSER: parseDigit()\n");
                 System.out.println("matched: Digit\n");
                 
@@ -1117,7 +1124,6 @@ public class Lexer extends javax.swing.JFrame {
                     t.addNode(tokens.get(currentToken).getData(), "leaf");
                     
                     matchAndDevour(tokenType.intopAddition);
-                    outputAreaParser.append("PARSER: parseIntExpr()\n"); // IntExpr is valid
                     outputAreaParser.append("PARSER: parseIntop()\n");
                     System.out.println("matched: Intop\n");
                 
@@ -1388,6 +1394,18 @@ public class Lexer extends javax.swing.JFrame {
         buttonQuit1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         buttonClearAll2 = new javax.swing.JButton();
+        panelSemantics = new javax.swing.JPanel();
+        scrollPaneInput2 = new javax.swing.JScrollPane();
+        outputAreaParser1 = new javax.swing.JTextArea();
+        scrollPaneOutput2 = new javax.swing.JScrollPane();
+        cstOutputArea1 = new javax.swing.JTextArea();
+        labelInput2 = new javax.swing.JLabel();
+        labelTitle2 = new javax.swing.JLabel();
+        labelOutput2 = new javax.swing.JLabel();
+        buttonTestCases2 = new javax.swing.JButton();
+        buttonQuit2 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        buttonClearAll3 = new javax.swing.JButton();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemQuit = new javax.swing.JMenuItem();
@@ -1395,6 +1413,7 @@ public class Lexer extends javax.swing.JFrame {
         menuItemTestCases = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         menutItemHelp = new javax.swing.JMenuItem();
+        menutItemGrammar = new javax.swing.JMenuItem();
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -1458,7 +1477,7 @@ public class Lexer extends javax.swing.JFrame {
         labelInput.setText("Input");
 
         labelOutput.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        labelOutput.setText("Output");
+        labelOutput.setText("Lexical Analysis Output");
 
         buttonClearAll.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
         buttonClearAll.setText("Reset Program");
@@ -1479,7 +1498,7 @@ public class Lexer extends javax.swing.JFrame {
         });
 
         labelTitle.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
-        labelTitle.setText("Custom Compiler: Lexer");
+        labelTitle.setText("Custom Compiler: Lexical Analyzer");
         labelTitle.setAlignmentX(45.0F);
         labelTitle.setAlignmentY(15.0F);
 
@@ -1494,33 +1513,32 @@ public class Lexer extends javax.swing.JFrame {
             .addGroup(panelLexerLayout.createSequentialGroup()
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLexerLayout.createSequentialGroup()
-                        .addGap(346, 346, 346)
+                        .addGap(268, 268, 268)
                         .addComponent(labelTitle))
                     .addGroup(panelLexerLayout.createSequentialGroup()
-                        .addGap(270, 270, 270)
+                        .addGap(260, 260, 260)
                         .addComponent(labelInput)
-                        .addGap(484, 484, 484)
+                        .addGap(415, 415, 415)
                         .addComponent(labelOutput))
                     .addGroup(panelLexerLayout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelLexerLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(113, 113, 113)
-                                .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelLexerLayout.createSequentialGroup()
-                                .addComponent(buttonClearAll)
-                                .addGap(367, 367, 367)
-                                .addComponent(buttonTestCases)
-                                .addGap(382, 382, 382)
-                                .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jLabel2)
+                        .addGap(113, 113, 113)
+                        .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelLexerLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(buttonClearAll)
+                        .addGap(367, 367, 367)
+                        .addComponent(buttonTestCases)
+                        .addGap(382, 382, 382)
+                        .addComponent(buttonQuit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelLexerLayout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addGap(75, 75, 75)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(75, 75, 75))
+                .addGap(70, 70, 70))
         );
         panelLexerLayout.setVerticalGroup(
             panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1536,10 +1554,12 @@ public class Lexer extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(88, 88, 88)
-                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLexerLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2))
+                    .addComponent(buttonLex, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(panelLexerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonClearAll, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonTestCases, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1620,9 +1640,9 @@ public class Lexer extends javax.swing.JFrame {
                         .addGap(360, 360, 360)
                         .addComponent(labelTitle1))
                     .addGroup(panelParserLayout.createSequentialGroup()
-                        .addGap(210, 210, 210)
+                        .addGap(213, 213, 213)
                         .addComponent(labelInput1)
-                        .addGap(429, 429, 429)
+                        .addGap(427, 427, 427)
                         .addComponent(labelOutput1))
                     .addGroup(panelParserLayout.createSequentialGroup()
                         .addGap(32, 32, 32)
@@ -1634,27 +1654,26 @@ public class Lexer extends javax.swing.JFrame {
                                 .addComponent(buttonTestCases1)
                                 .addGap(399, 399, 399)
                                 .addComponent(buttonQuit1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
             .addGroup(panelParserLayout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-                .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
         );
         panelParserLayout.setVerticalGroup(
             panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelParserLayout.createSequentialGroup()
                 .addGap(55, 55, 55)
-                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelParserLayout.createSequentialGroup()
-                        .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
-                        .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelInput1)
-                            .addComponent(labelOutput1))
-                        .addGap(20, 20, 20)
-                        .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(labelTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput1)
+                    .addComponent(labelOutput1))
+                .addGap(20, 20, 20)
+                .addGroup(panelParserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneInput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scrollPaneOutput1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(93, 93, 93)
                 .addComponent(jLabel3)
@@ -1666,6 +1685,124 @@ public class Lexer extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Parser", panelParser);
+
+        outputAreaParser1.setEditable(false);
+        outputAreaParser1.setColumns(20);
+        outputAreaParser1.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        outputAreaParser1.setRows(5);
+        outputAreaParser1.setTabSize(2);
+        outputAreaParser1.setToolTipText("");
+        outputAreaParser1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        outputAreaParser1.setVerifyInputWhenFocusTarget(false);
+        scrollPaneInput2.setViewportView(outputAreaParser1);
+
+        cstOutputArea1.setEditable(false);
+        cstOutputArea1.setColumns(20);
+        cstOutputArea1.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        cstOutputArea1.setRows(5);
+        cstOutputArea1.setTabSize(2);
+        cstOutputArea1.setToolTipText("");
+        cstOutputArea1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cstOutputArea1.setVerifyInputWhenFocusTarget(false);
+        scrollPaneOutput2.setViewportView(cstOutputArea1);
+
+        labelInput2.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelInput2.setText("Semantic Analysis Output");
+
+        labelTitle2.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
+        labelTitle2.setText("Custom Compiler: Semantic Analyzer");
+        labelTitle2.setAlignmentX(45.0F);
+        labelTitle2.setAlignmentY(15.0F);
+
+        labelOutput2.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelOutput2.setText("AST Output");
+
+        buttonTestCases2.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonTestCases2.setText("Test Cases");
+        buttonTestCases2.setToolTipText("Opens the test case menu");
+        buttonTestCases2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTestCases2ActionPerformed(evt);
+            }
+        });
+
+        buttonQuit2.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonQuit2.setText("Quit");
+        buttonQuit2.setToolTipText("Exits Program");
+        buttonQuit2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonQuit2ActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Helvetica", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel4.setText("* Reset program to erase previous information");
+
+        buttonClearAll3.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearAll3.setText("Reset Program");
+        buttonClearAll3.setToolTipText("Removes text from input and output fields");
+        buttonClearAll3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearAll3ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelSemanticsLayout = new javax.swing.GroupLayout(panelSemantics);
+        panelSemantics.setLayout(panelSemanticsLayout);
+        panelSemanticsLayout.setHorizontalGroup(
+            panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSemanticsLayout.createSequentialGroup()
+                .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelSemanticsLayout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addComponent(labelTitle2))
+                    .addGroup(panelSemanticsLayout.createSequentialGroup()
+                        .addGap(149, 149, 149)
+                        .addComponent(labelInput2)
+                        .addGap(351, 351, 351)
+                        .addComponent(labelOutput2))
+                    .addGroup(panelSemanticsLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(panelSemanticsLayout.createSequentialGroup()
+                                .addComponent(buttonClearAll3)
+                                .addGap(356, 356, 356)
+                                .addComponent(buttonTestCases2)
+                                .addGap(399, 399, 399)
+                                .addComponent(buttonQuit2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(33, Short.MAX_VALUE))
+            .addGroup(panelSemanticsLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(scrollPaneInput2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollPaneOutput2, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
+        );
+        panelSemanticsLayout.setVerticalGroup(
+            panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSemanticsLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(labelTitle2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput2)
+                    .addComponent(labelOutput2))
+                .addGap(20, 20, 20)
+                .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneInput2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneOutput2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(93, 93, 93)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonTestCases2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonQuit2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClearAll3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jTabbedPane1.addTab("Semantics", panelSemantics);
 
         menuLexer.setToolTipText("");
 
@@ -1706,6 +1843,15 @@ public class Lexer extends javax.swing.JFrame {
         });
         menuHelp.add(menutItemHelp);
 
+        menutItemGrammar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
+        menutItemGrammar.setText("Grammar");
+        menutItemGrammar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menutItemGrammarActionPerformed(evt);
+            }
+        });
+        menuHelp.add(menutItemGrammar);
+
         menuLexer.add(menuHelp);
 
         setJMenuBar(menuLexer);
@@ -1718,7 +1864,7 @@ public class Lexer extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         getAccessibleContext().setAccessibleParent(this);
@@ -1825,6 +1971,28 @@ public class Lexer extends javax.swing.JFrame {
         this.setEnabled(false);
     }//GEN-LAST:event_buttonClearAll2ActionPerformed
 
+    private void buttonTestCases2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCases2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonTestCases2ActionPerformed
+
+    private void buttonQuit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuit2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonQuit2ActionPerformed
+
+    private void buttonClearAll3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAll3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonClearAll3ActionPerformed
+
+    private void menutItemGrammarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menutItemGrammarActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Grammar().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_menutItemGrammarActionPerformed
+
     
     // ------------------------------------------------------------
     // --------------------[MAIN]----------------------------------
@@ -1871,37 +2039,50 @@ public class Lexer extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonClearAll;
     private javax.swing.JButton buttonClearAll2;
+    private javax.swing.JButton buttonClearAll3;
     public javax.swing.JButton buttonLex;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
+    private javax.swing.JButton buttonQuit2;
     private javax.swing.JButton buttonTestCases;
     private javax.swing.JButton buttonTestCases1;
+    private javax.swing.JButton buttonTestCases2;
     private javax.swing.JTextArea cstOutputArea;
+    private javax.swing.JTextArea cstOutputArea1;
     private javax.swing.JTextArea inputArea;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
+    private javax.swing.JLabel labelInput2;
     private javax.swing.JLabel labelOutput;
     private javax.swing.JLabel labelOutput1;
+    private javax.swing.JLabel labelOutput2;
     private javax.swing.JLabel labelTitle;
     private javax.swing.JLabel labelTitle1;
+    private javax.swing.JLabel labelTitle2;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenuItem menuItemQuit;
     private javax.swing.JMenuItem menuItemTestCases;
     private javax.swing.JMenuBar menuLexer;
     private javax.swing.JMenu menuTools;
+    private javax.swing.JMenuItem menutItemGrammar;
     private javax.swing.JMenuItem menutItemHelp;
     private javax.swing.JTextArea outputArea;
     private javax.swing.JTextArea outputAreaParser;
+    private javax.swing.JTextArea outputAreaParser1;
     private javax.swing.JPanel panelLexer;
     private javax.swing.JPanel panelParser;
+    private javax.swing.JPanel panelSemantics;
     private javax.swing.JScrollPane scrollPaneInput1;
+    private javax.swing.JScrollPane scrollPaneInput2;
     private javax.swing.JScrollPane scrollPaneOutput;
     private javax.swing.JScrollPane scrollPaneOutput1;
+    private javax.swing.JScrollPane scrollPaneOutput2;
     // End of variables declaration//GEN-END:variables
 }

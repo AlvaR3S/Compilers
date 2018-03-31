@@ -34,6 +34,9 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        menutItemHelp = new javax.swing.JMenuItem();
+        menutItemGrammar = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Custom Compiler: Lexer");
@@ -71,6 +74,28 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
 
         menuLexer.add(menuFile);
 
+        menuHelp.setText("Help");
+
+        menutItemHelp.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        menutItemHelp.setText("User help");
+        menutItemHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menutItemHelpActionPerformed(evt);
+            }
+        });
+        menuHelp.add(menutItemHelp);
+
+        menutItemGrammar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
+        menutItemGrammar.setText("Grammar");
+        menutItemGrammar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menutItemGrammarActionPerformed(evt);
+            }
+        });
+        menuHelp.add(menutItemGrammar);
+
+        menuLexer.add(menuHelp);
+
         setJMenuBar(menuLexer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -78,24 +103,28 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(labelTitle1))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(200, 200, 200)
-                .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
+                        .addComponent(labelTitle1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(197, 197, 197)
+                        .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(labelTitle1)
-                .addGap(41, 41, 41)
+                .addGap(43, 43, 43)
                 .addComponent(jLabel1)
-                .addGap(249, 249, 249)
-                .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
+                .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
         );
 
         pack();
@@ -116,6 +145,26 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         this.dispose();
         
     }//GEN-LAST:event_buttonReturnActionPerformed
+
+    private void menutItemHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menutItemHelpActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LexerTestCasesHelpFrame().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_menutItemHelpActionPerformed
+
+    private void menutItemGrammarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menutItemGrammarActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Grammar().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_menutItemGrammarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,7 +206,10 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelTitle1;
     private javax.swing.JMenu menuFile;
+    private javax.swing.JMenu menuHelp;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuBar menuLexer;
+    private javax.swing.JMenuItem menutItemGrammar;
+    private javax.swing.JMenuItem menutItemHelp;
     // End of variables declaration//GEN-END:variables
 }
