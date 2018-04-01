@@ -13,24 +13,24 @@ import java.util.LinkedList;
  *
  * @author reynaldoalvarez
  */
-public class Node {
-    LinkedList<Node> children = new LinkedList<Node>();
-    Node parent = null;
+public class cstNodes {
+    LinkedList<cstNodes> children = new LinkedList<cstNodes>();
+    cstNodes parent = null;
     String name = null;
         
-    public Node() { }
+    public cstNodes() { }
     
-    public Node(String name) {
+    public cstNodes(String name) {
         this.name = name;
     }
     
-    public Node(String name, Node parent, LinkedList<Node> children) {
+    public cstNodes(String name, cstNodes parent, LinkedList<cstNodes> children) {
         this.name = name;
         this.parent = parent;
         this.children = children;
     }
     
-    public void push(Node child) {
+    public void push(cstNodes child) {
         child.parent = this;
         children.add(child);
     }

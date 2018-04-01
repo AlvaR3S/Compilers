@@ -54,7 +54,7 @@ public class Grammar extends javax.swing.JFrame {
         });
 
         labelTitle2.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
-        labelTitle2.setText("Grammar: Lex");
+        labelTitle2.setText("Lex Grammar");
         labelTitle2.setAlignmentX(45.0F);
         labelTitle2.setAlignmentY(15.0F);
 
@@ -245,7 +245,6 @@ public class Grammar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonReturn;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelTitle2;

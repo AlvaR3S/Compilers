@@ -22,13 +22,13 @@ import static jdk.nashorn.internal.objects.Global.undefined;
  * @author Alan G. Labouseur
  * @author reynaldoalvarez
  */
-public class ParseTree {
+public class customCST {
     
-    Node root;
-    Node cur = new Node();
+    cstNodes root;
+    cstNodes cur = new cstNodes();
     Token token;
     
-    public ParseTree() {
+    public customCST() {
        // Root node is Program
        this.root = null;
     } 
@@ -46,7 +46,7 @@ public class ParseTree {
      */
     public void addNode(String name, String kind) {
         // Construct the node object.
-        Node node = new Node(name);
+        cstNodes node = new cstNodes(name);
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {
@@ -189,7 +189,7 @@ public class ParseTree {
     
     // Note that we're done with this branch of the tree...
     public void endChildren() {
-        //Node node = new Node();
+        //Node node = new cstNodes();
         // ... by moving "up" to our parent node (if possible).
         if ((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
@@ -207,12 +207,12 @@ public class ParseTree {
     @Override
     public String toString() {
         // Make the initial call to expand from the root.
-        return expand((Node) this.root, 0);
+        return expand((cstNodes) this.root, 0);
         // Return the result.
     } 
     
     // Recursive function to handle the expansion of the nodes.
-    public String expand(Node node, int depth) {
+    public String expand(cstNodes node, int depth) {
         String traversalResult = "";
 
         // Space out based on the current depth so

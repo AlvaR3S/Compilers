@@ -154,7 +154,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Helvetica Neue" size="36" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Grammar: Lex"/>
+        <Property name="text" type="java.lang.String" value="Lex Grammar"/>
         <Property name="alignmentX" type="float" value="45.0"/>
         <Property name="alignmentY" type="float" value="15.0"/>
       </Properties>

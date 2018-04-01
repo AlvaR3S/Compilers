@@ -137,7 +137,10 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" min="-2" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Component id="jTabbedPane1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -394,9 +397,9 @@
                               <Component id="labelTitle1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="213" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="208" max="-2" attributes="0"/>
                               <Component id="labelInput1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="427" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="426" max="-2" attributes="0"/>
                               <Component id="labelOutput1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -600,9 +603,9 @@
                               <Component id="labelTitle2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
                               <Component id="labelInput2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="351" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="352" max="-2" attributes="0"/>
                               <Component id="labelOutput2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -665,7 +668,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="outputAreaParser1">
+                <Component class="javax.swing.JTextArea" name="outputAreaSemantics">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
@@ -692,7 +695,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="cstOutputArea1">
+                <Component class="javax.swing.JTextArea" name="astOutputArea">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
