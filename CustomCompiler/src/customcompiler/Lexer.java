@@ -1374,8 +1374,19 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
                     
                     if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
-                        PrintStatement();
+                        // Match first then see whats next
+                        matchAndDevour(tokenType.closeParenthesis);
+                        outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+
+                        // Creates the leaf node closeParen
+                        cst.addNode(")", "leaf");
                         
+                        if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
+                            // Aligns branch to its block
+                            ast.endChildren();
+
+                            Block(); // Restart new block
+                        }
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -1391,10 +1402,19 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
                     
                     if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
-                        // Allows me to get the current closeParen and add to node as leaf
-                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                        // Match first then see whats next
+                        matchAndDevour(tokenType.closeParenthesis);
+                        outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
+
+                        // Creates the leaf node closeParen
+                        cst.addNode(")", "leaf");
                         
-                        PrintStatement();
+                        if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
+                            // Aligns branch to its block
+                            ast.endChildren();
+
+                            Block(); // Restart new block
+                        }
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
