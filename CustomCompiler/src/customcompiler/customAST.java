@@ -104,44 +104,7 @@ public class customAST {
             }
         }
     }
-    
 
-    /**
-     * 
-     * When a a finishing quote is added 
-     * it must be aligned to its previous open quote
-     */
-    public void scaleToIfStatement() {
-        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
-            this.cur = this.cur.parent;
-            if("If Statement".equals(this.cur.parent.name)) {
-                /**
-                 * stops an extra - before String Expression, 
-                 * so this is a little push in order for quote
-                 * to land as a child in String Expression accordingly  
-                 */
-                endChildren();
-                break;
-            }
-        }
-    }
-    
-        public void scaleToWhileStatement() {
-        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
-            this.cur = this.cur.parent;
-            if("While Statement".equals(this.cur.parent.name)) {
-                /**
-                 * stops an extra - before String Expression, 
-                 * so this is a little push in order for quote
-                 * to land as a child in String Expression accordingly  
-                 */
-                endChildren();
-                break;
-            }
-        }
-    }
-    
-    
     
     /**
      * 

@@ -938,6 +938,18 @@ public class Lexer extends javax.swing.JFrame {
                     cst.addNode(")", "leaf");
                     
                     PrintStatement(); // Finish Print Statement
+                } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
+                    // Lines close parenthesis to open parenthesis within print statement
+                    cst.scaleToCondition();
+
+                    // Creates the leaf node closeParen
+                    cst.addNode(")", "leaf");
+                    
+                    // Aligns branch to its block
+                    ast.endChildren();
+                    
+                    Block(); // Restart new block
+                    
                 } else {
                     // Lines close parenthesis to open parenthesis within print statement
                     cst.scaleToPrintStatement();
@@ -1251,6 +1263,12 @@ public class Lexer extends javax.swing.JFrame {
                     ast.endChildren(); // So it next branch can stay aligned
                     AssignmentStatement();
                     
+                } else if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                    BooleanExpr(); // continues the BooleanExpr
+                
+                } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                    BooleanExpr(); // continues the BooleanExpr
+                    
                 } else {
                     cst.statementListIncrement(); // Attaches to previous Statement List
                     ast.endChildren(); // So it next branch can stay aligned
@@ -1348,15 +1366,16 @@ public class Lexer extends javax.swing.JFrame {
                     // Allows me to get the current boolval and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf");
                     
+                    // Allows me to get the current boolval to the ast
+                    ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                    
                     outputAreaParser.append("PARSER: parseExpr()\n");
                     matchAndDevour(tokenType.boolvalTrue);
                     outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
                     
                     if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
-                        // Allows me to get the current closeParen and add to node as leaf
-                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
-
                         PrintStatement();
+                        
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())

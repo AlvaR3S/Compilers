@@ -96,8 +96,17 @@ public class customCST {
                  * so this is a little push in order for close parenthesis
                  * to land as a child in print statement accordingly  
                  */
-                endChildren();
-                break;
+//                if("{".equals(this.cur.parent.name)) {
+//                    this.cur = this.cur.parent;
+//                    if("Print Statement".equals(this.cur.parent.name)) {
+//                        endChildren();
+//                        System.out.println("jenga");
+//                        break; 
+//                    }
+//                } else {
+                    endChildren();
+                    break;
+                //}
             }
         }
     }
@@ -169,6 +178,25 @@ public class customCST {
                  * so this is a little push in order for close bracket
                  * to land as a child in the block branch accordingly  
                  */
+                endChildren();
+                break;
+            }
+        }
+    }
+    
+    
+    public void scaleToCondition() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("If Statement".equals(this.cur.parent.name)) {
+                /**
+                 * stops an extra - before String Expression, 
+                 * so this is a little push in order for quote
+                 * to land as a child in String Expression accordingly  
+                 */
+                endChildren();
+                break;
+            } else if("While Statement".equals(this.cur.parent.name)) {
                 endChildren();
                 break;
             }
