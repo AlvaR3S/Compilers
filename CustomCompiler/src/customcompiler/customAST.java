@@ -48,8 +48,6 @@ public class customAST {
             // ... and add ourselves (via the unfrotunately-named
             // "push" function) to the children array of the current node.
             this.cur.push(node);
-            
-                
         }
         // If we are an interior/branch node, then...
         if (kind.equals("branch")) {
@@ -92,16 +90,16 @@ public class customAST {
     }
     
     
-    public void scaleToBooleanExpression() {
+    public void scaleToVarDecl() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            if("Boolean Expression".equals(this.cur.parent.name)) {
+            if("Variable Declaration".equals(this.cur.parent.name)) {
                 /**
                  * stops one before print statement, 
                  * so this is a little push in order for close parenthesis
                  * to land as a child in print statement accordingly  
                  */
-                endChildren();
+                //endChildren();
                 break;
             }
         }
@@ -113,10 +111,10 @@ public class customAST {
      * When a a finishing quote is added 
      * it must be aligned to its previous open quote
      */
-    public void scaleToQuote() {
+    public void scaleToIfStatement() {
         while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
             this.cur = this.cur.parent;
-            if("String Expression".equals(this.cur.parent.name)) {
+            if("If Statement".equals(this.cur.parent.name)) {
                 /**
                  * stops an extra - before String Expression, 
                  * so this is a little push in order for quote
@@ -127,6 +125,22 @@ public class customAST {
             }
         }
     }
+    
+        public void scaleToWhileStatement() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("While Statement".equals(this.cur.parent.name)) {
+                /**
+                 * stops an extra - before String Expression, 
+                 * so this is a little push in order for quote
+                 * to land as a child in String Expression accordingly  
+                 */
+                endChildren();
+                break;
+            }
+        }
+    }
+    
     
     
     /**

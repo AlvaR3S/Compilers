@@ -447,7 +447,9 @@ public class Lexer extends javax.swing.JFrame {
                     cst.addNode("$", "leaf");
 
                     cstOutputArea.append(cst.toString());
-
+                    
+                    astOutputArea.append(ast.toString());
+                    
                     matchAndDevour(tokenType.EOP); 
                     System.out.println("matched $\n");
 
@@ -464,15 +466,25 @@ public class Lexer extends javax.swing.JFrame {
                     
                     cst.restartFamily(); // Clear family tree for next program
                     
+                    ast.restartFamily(); // Clear family tree for next program
+                    
                     Program(); // when end reached loop back to the top
                 }             
             } else {
                 if(i > 1) { // Separates trees accordingly
-                    cstOutputArea.append("\n\nCST for program " + i + "...\n");
+                    cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
                     cstOutputArea.append("-----------------------------\n");
                 } else {
-                    cstOutputArea.append("\nCST for program " + i + "...\n");
+                    cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
                     cstOutputArea.append("-----------------------------\n");
+                }
+                
+                if(i > 1) { // Separates trees accordingly
+                    astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
+                    astOutputArea.append("-----------------------------\n");
+                } else {
+                    astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
+                    astOutputArea.append("-----------------------------\n");
                 }
                 
                 // Adding the root node
@@ -492,6 +504,9 @@ public class Lexer extends javax.swing.JFrame {
          */        
         private void Block() {
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
+                // Adds the block Node to the ast tree
+                ast.addNode("Block", "branch");
+                
                 //Creates the leaf node of Block {
                 cst.addNode("{", "leaf");
                 
@@ -711,6 +726,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds Print Statement branch to tree
                 cst.addNode("Print Statement", "branch");
                 
+                // Adds print statement as a branch to AST
+                ast.addNode("Print Statement", "branch");
+                
                 matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: print\n");
@@ -725,6 +743,12 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Displays what the ID is in this assignment statement
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                // Adds Variable Declaration as a branch to AST
+                ast.addNode("Assignment Statement", "branch");
+                
+                // Displays what the ID is in this assignment statement
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -741,6 +765,12 @@ public class Lexer extends javax.swing.JFrame {
                 // Adding the specific type to the VarDecl branch
                 cst.addNode("int", "leaf");
                 
+                // Adds Variable Declaration as a branch to AST
+                ast.addNode("Variable Declaration", "branch");
+                
+                // Adding the specific type to the VarDecl branch
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.typeInt);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: int\n");
@@ -755,6 +785,12 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adding the specific type to the VarDecl branch
                 cst.addNode("string", "leaf");
+                
+                // Adds Variable Declaration as a branch to AST
+                ast.addNode("Variable Declaration", "branch");
+                
+                // Adding the specific type to the VarDecl branch
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 matchAndDevour(tokenType.typeString);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -771,6 +807,12 @@ public class Lexer extends javax.swing.JFrame {
                 // Adding the specific type to the VarDecl branch
                 cst.addNode("boolean", "leaf");
                 
+                // Adds Variable Declaration as a branch to AST
+                ast.addNode("Variable Declaration", "branch");
+                
+                // Adding the specific type to the VarDecl branch
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.typeBoolean);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: boolean\n");
@@ -783,6 +825,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds If Statement branch to tree
                 cst.addNode("If Statement", "branch");
                 
+                // Adds If Statement branch to the ast tree
+                ast.addNode("If Statement", "branch");
+                
                 matchAndDevour(tokenType.ifStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: if\n");
@@ -794,6 +839,9 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adds While Statement branch to tree
                 cst.addNode("While Statement", "branch");
+                
+                // Adds While Statement branch to the ast tree
+                ast.addNode("While Statement", "branch");
                 
                 matchAndDevour(tokenType.whileStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -897,7 +945,12 @@ public class Lexer extends javax.swing.JFrame {
                     // Creates the leaf node closeParen
                     cst.addNode(")", "leaf");
                     
+                    // Increments branch correctly
                     cst.statementListIncrement();
+                    
+                    // Aligns branch to its block
+                    ast.endChildren();
+                    
                     StatementList(); // If there are more statements left
                 }
             } else {
@@ -924,6 +977,9 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Checking for a new line
                 cst.statementListIncrement(); // Attaches to previous Statement List
+                
+                //ast.endChildren(); // Aligns branch to its block
+                
                 StatementList(); // Check to see if there are more statement lists
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -942,6 +998,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current CHAR and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                
+                // Allows me to get the current ID (char) and add to the ast
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
                 outputAreaParser.append("PARSER: parseType()\n"); // ID is valid
@@ -949,8 +1008,11 @@ public class Lexer extends javax.swing.JFrame {
                
                 // Attaches to previous Statement List
                 cst.statementListIncrement();
-                StatementList();
                 
+                // Aligns branch to its block
+                ast.endChildren();
+                
+                StatementList();
                 
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -1047,6 +1109,11 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current boolval and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
+                // Allows me to get the current boolval and add to the ast
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                ast.endChildren(); // Keeps level of branch aligned
+                
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 matchAndDevour(tokenType.boolvalTrue);
                 outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
@@ -1072,6 +1139,11 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current boolval and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                // Allows me to get the current boolval and add to the ast
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                ast.endChildren(); // Keeps level of branch aligned
                 
                 outputAreaParser.append("PARSER: parseExpr()\n");
                 matchAndDevour(tokenType.boolvalFalse);
@@ -1113,6 +1185,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current digit and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
+                // Allows me to get the current digit and add to the ast
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.digit);
                 outputAreaParser.append("PARSER: parseIntExpr()\n"); // IntExpr is valid
                 outputAreaParser.append("PARSER: parseDigit()\n");
@@ -1122,6 +1197,9 @@ public class Lexer extends javax.swing.JFrame {
                     // Allows me to get the current intop and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf");
                     
+                    // If there is an addition symbol in the statement
+                    ast.addNode("Plus", "branch");
+                    
                     matchAndDevour(tokenType.intopAddition);
                     outputAreaParser.append("PARSER: parseIntop()\n");
                     System.out.println("matched: Intop\n");
@@ -1129,6 +1207,11 @@ public class Lexer extends javax.swing.JFrame {
                     if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                         // Allows me to get the current digit and add to node as leaf
                         cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                        
+                        // Allows me to get the current digit and add to the ast
+                        ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                        
+                        ast.endChildren();
                         
                         matchAndDevour(tokenType.digit);
                         outputAreaParser.append("PARSER: parseDigit()\n");
@@ -1196,6 +1279,8 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Adds  branch to tree
                     cst.addNode("Char List", "branch");
+                    
+                    ast.addNode(tokens.get(currentToken).getData(), "leaf");
                     
                     matchAndDevour(tokenType.CHAR);
                     outputAreaParser.append("PARSER: parseCHAR()\n");
@@ -1328,11 +1413,13 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the String of current CHAR and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
+                // Allows me to get the current ID (char) and add to the ast
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
                 outputAreaParser.append("PARSER: parseCHAR()\n");
                 System.out.println("matched: CHAR\n");
-                
                 
                 if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
                     BooleanExpr(); // continues the BooleanExpr
