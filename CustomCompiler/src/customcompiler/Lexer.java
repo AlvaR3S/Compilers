@@ -978,7 +978,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Checking for a new line
                 cst.statementListIncrement(); // Attaches to previous Statement List
                 
-                //ast.endChildren(); // Aligns branch to its block
+                ast.endChildren(); // Aligns branch to its block
                 
                 StatementList(); // Check to see if there are more statement lists
             } else {
@@ -1123,6 +1123,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                 } else if(tokens.get(currentToken).getType().equals(tokenType.assignmentStatement)) { // An AssignmentStatement
                     outputAreaParser.append("PARSER: parseAssignment()\n"); // incase of dupilicates (Block())
+                    ast.endChildren(); // So it next branch can stay aligned
                     AssignmentStatement();
                     
                 } else {
@@ -1223,14 +1224,17 @@ public class Lexer extends javax.swing.JFrame {
                             BooleanExpr(); // continues the BooleanExpr
                         
                         } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                            ast.endChildren(); // So it next branch can stay aligned
                             PrintStatement(); // Loop back to PrintStatement    
                             
                         } else if(tokens.get(currentToken).getType().equals(tokenType.assignmentStatement)) { // An AssignmentStatement
                             outputAreaParser.append("PARSER: parseAssignment()\n"); // incase of dupilicates (Block())
+                            ast.endChildren(); // So it next branch can stay aligned
                             AssignmentStatement();
                                 
                         } else {
                             cst.statementListIncrement(); // Attaches to previous Statement List
+                            ast.endChildren(); // So it next branch can stay aligned
                             StatementList();
                         }  
                     } else {
@@ -1239,14 +1243,17 @@ public class Lexer extends javax.swing.JFrame {
                         Program(); // loop to the beginning
                     }
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                    ast.endChildren(); // So it next branch can stay aligned
                     PrintStatement(); // Loop back to PrintStatement
                     
                 } else if(tokens.get(currentToken).getType().equals(tokenType.assignmentStatement)) { // An AssignmentStatement
                     outputAreaParser.append("PARSER: parseAssignment()\n"); // incase of dupilicates (Block())
+                    ast.endChildren(); // So it next branch can stay aligned
                     AssignmentStatement();
                     
                 } else {
                     cst.statementListIncrement(); // Attaches to previous Statement List
+                    ast.endChildren(); // So it next branch can stay aligned
                     StatementList();
                 }    
             } else { // If IntExpr doesn'cst start with a digit
@@ -1296,6 +1303,7 @@ public class Lexer extends javax.swing.JFrame {
                     matchAndDevour(tokenType.Quote);
                     outputAreaParser.append("PARSER: parseQuote()\n");
                     
+                    ast.endChildren(); // Keeps level of branch aligned
                     
                     if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
                         BooleanExpr(); // continues the BooleanExpr
@@ -1383,6 +1391,10 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
+                ast.addNode("NotEquivalentTo", "branch"); // Adds the boolop to the ast
+                
+                //ast.endChildren(); // So it next branch can stay aligned
+                
                 matchAndDevour(tokenType.boolopNotEqualTo);
                 outputAreaParser.append("PARSER: parseBoolopNotEqualTo()\n");
                 Expr(); // continues the BooleanExpr
@@ -1390,6 +1402,10 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) {
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                //ast.addNode("EquivalentTo", "branch"); // Adds the boolop to the ast
+                
+                ast.endChildren(); // So it next branch can stay aligned
                 
                 matchAndDevour(tokenType.boolopEqualTo);
                 outputAreaParser.append("PARSER: parseBoolopEqualTo()\n");
@@ -1403,7 +1419,6 @@ public class Lexer extends javax.swing.JFrame {
         }   
         
         
-        
         /**
          * 
          *  Expr ::== ID   ::== char
@@ -1415,6 +1430,8 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                ast.endChildren(); // So it next branch can stay aligned
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
