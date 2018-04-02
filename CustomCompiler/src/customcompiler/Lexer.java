@@ -506,7 +506,8 @@ public class Lexer extends javax.swing.JFrame {
         private void Block() {
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
                 if(blockCount > 1) { // If new block is created with while or if
-                    cst.statementListIncrement(); // Make sure the Statement list is aligned
+                    cst.statementListIncrement(); // Matching last StatementList before new open bracket
+                    
                     // Adds Statement List branch to tree
                     cst.addNode("Statement List", "branch");
                 
@@ -515,7 +516,11 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Starts the new block within a block
                     cst.addNode("Block", "branch");
-                    ast.scaleToBlock();
+                    if(blockCount > 2) {
+                        ast.scaleToBlock();
+                    } else {
+                        ast.endChildren();
+                    }
                     
                 }
                 
@@ -665,8 +670,18 @@ public class Lexer extends javax.swing.JFrame {
                         Statement(); // If this not the only }
                     }
                 } else { // Not an empty set of brackets ---> {ε}
-                    // Adds Statement List branch to tree
-                    cst.addNode("Statement List", "branch");
+                    
+                    if(blockCount > 1) {
+                        cst.statementListIncrement();
+                        // Adds Statement List branch to tree
+                        cst.addNode("Statement List", "branch");
+                        System.out.println("THIS ONE");
+                    } else {
+                        // Adds Statement List branch to tree
+                        cst.addNode("Statement List", "branch");
+                        System.out.println(" NO THIS ONE");
+                    }
+                        
                     
                     // Meets last Block parent
                     cst.scaleToBlock();
@@ -685,7 +700,7 @@ public class Lexer extends javax.swing.JFrame {
                         Program(); // Goes to program to finish program and continue if there are more programs
                     } else {
                         System.out.println("reach");
-                        Statement(); // If this not the only }
+                        StatementList(); // If this not the only }
                     }
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
@@ -965,6 +980,10 @@ public class Lexer extends javax.swing.JFrame {
                     blockCount++; // New block
                     Block(); // Restart new block
                     
+                } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // In case of new line
+                    matchAndDevour(tokenType.newLine);
+                    System.out.println("matched: \n");
+                    PrintStatement(); // reloop to properly finish or continue code
                 } else {
                     // Lines close parenthesis to open parenthesis within print statement
                     cst.scaleToPrintStatement();
@@ -980,6 +999,10 @@ public class Lexer extends javax.swing.JFrame {
                     
                     StatementList(); // If there are more statements left
                 }
+            } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // In case of new line
+                matchAndDevour(tokenType.newLine);
+                System.out.println("matched: \n");
+                PrintStatement(); // Loop back into statement to finish or continue properly
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -1311,11 +1334,11 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.Quote);
                 outputAreaParser.append("PARSER: parseStringExpr()\n");
                 outputAreaParser.append("PARSER: parseQuote()\n");
-                
-                while(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
+                System.out.println("IM HERE");
+                while (tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
                     // Allows me to get the current CHAR and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf");
-                    
+                    System.out.println("rey");
                     // Adds  branch to tree
                     cst.addNode("Char List", "branch");
                     
@@ -1324,7 +1347,7 @@ public class Lexer extends javax.swing.JFrame {
                     matchAndDevour(tokenType.CHAR);
                     outputAreaParser.append("PARSER: parseCHAR()\n");
                 }
-                
+                System.out.println("IM a HERE");
                 if(tokens.get(currentToken).getType().equals(tokenType.Quote)) {
                     // Matches position to last spotted quote
                     cst.scaleToQuote();
@@ -1391,15 +1414,15 @@ public class Lexer extends javax.swing.JFrame {
                         // Match first then see whats next
                         matchAndDevour(tokenType.closeParenthesis);
                         outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
-
+     ///-------CHECK IFNEED TO LINK TO LAST (
                         // Creates the leaf node closeParen
                         cst.addNode(")", "leaf");
                         
                         if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
-                            // Aligns branch to its block
-                            ast.endChildren();
                             blockCount++;
                             Block(); // Restart new block
+                        } else {
+                            PrintStatement(); //In case of newlines
                         }
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
@@ -1426,8 +1449,10 @@ public class Lexer extends javax.swing.JFrame {
                         if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
                             // Aligns branch to its block
                             ast.endChildren();
-
+                            blockCount++;
                             Block(); // Restart new block
+                        } else {
+                            PrintStatement();
                         }
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");

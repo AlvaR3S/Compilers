@@ -157,6 +157,19 @@ public class customCST {
         }
     }
     
+    public void endStatementListIncrement() {
+        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+            this.cur = this.cur.parent;
+            if("Block".equals(this.cur.parent.name)) {  
+                endChildren();
+                this.cur = this.cur.parent;
+                if("Statement List".equals(this.cur.parent.name)) {
+                    endChildren(); // Needs a little push to be aligned correctly
+                    break;
+                }
+            }
+        }
+    }
     
     /**
      * 

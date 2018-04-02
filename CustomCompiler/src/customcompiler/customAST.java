@@ -141,7 +141,7 @@ public class customAST {
                  * so this is a little push in order for close bracket
                  * to land as a child in the block branch accordingly  
                  */
-                //endChildren();
+                endChildren();
                 break;
             }
         }
