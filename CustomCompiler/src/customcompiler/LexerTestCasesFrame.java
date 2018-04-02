@@ -51,6 +51,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         checkBox15 = new javax.swing.JCheckBox();
         labelInput2 = new javax.swing.JLabel();
         checkBox14 = new javax.swing.JCheckBox();
+        checkBox16 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -204,6 +205,14 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
             }
         });
 
+        checkBox16.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox16.setText("Line of nestedness");
+        checkBox16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox16ActionPerformed(evt);
+            }
+        });
+
         menuLexer.setToolTipText("");
 
         menuFile.setText("File");
@@ -228,10 +237,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(checkBox12)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -258,26 +263,28 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                         .addGap(193, 193, 193)
                         .addComponent(checkBox4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(checkBox9))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(310, 310, 310)
                         .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(90, 90, 90)
-                        .addComponent(checkBox13))
+                        .addComponent(checkBox16))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(90, 90, 90)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBox6)
-                            .addComponent(checkBox10)
-                            .addComponent(checkBox11))
-                        .addGap(172, 172, 172)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBox15)
-                            .addComponent(labelInput2)
-                            .addComponent(checkBox5)
-                            .addComponent(checkBox14))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkBox6)
+                                    .addComponent(checkBox11)
+                                    .addComponent(checkBox10)
+                                    .addComponent(checkBox12)
+                                    .addComponent(checkBox13))
+                                .addGap(173, 173, 173)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkBox15)
+                                    .addComponent(labelInput2)
+                                    .addComponent(checkBox5)
+                                    .addComponent(checkBox14)))
+                            .addComponent(checkBox9))))
                 .addGap(0, 59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -305,23 +312,28 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(checkBox6)
                     .addComponent(checkBox5))
-                .addGap(12, 12, 12)
-                .addComponent(checkBox9)
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkBox10)
-                    .addComponent(labelInput2))
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkBox11)
-                    .addComponent(checkBox15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkBox12)
-                    .addComponent(checkBox14))
-                .addGap(12, 12, 12)
-                .addComponent(checkBox13)
-                .addGap(32, 32, 32)
+                .addComponent(checkBox9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(labelInput2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox14))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox13)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkBox16)
+                .addGap(2, 2, 2)
                 .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -529,6 +541,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
             "{{{{{{}}} /* comments are ignored */ }}}}$\n" +
             "{ /* comments are still ignored */ int @}$");
         }
+        if(checkBox16.isSelected()) {
+            inputArea.append("{/*OneLongLine*/while(true){print(g)while(x==2){print(\"ssss\")while(2+2){if(\"s\"!=\"ss\"){print((\"x\"!=y))}}}}}$");
+        }
         
         lex.setVisible(true);
         lex.setEnabled(true);
@@ -579,6 +594,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox14ActionPerformed
 
+    private void checkBox16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox16ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox16ActionPerformed
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -623,6 +642,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox13;
     private javax.swing.JCheckBox checkBox14;
     private javax.swing.JCheckBox checkBox15;
+    private javax.swing.JCheckBox checkBox16;
     private javax.swing.JCheckBox checkBox2;
     private javax.swing.JCheckBox checkBox3;
     private javax.swing.JCheckBox checkBox4;

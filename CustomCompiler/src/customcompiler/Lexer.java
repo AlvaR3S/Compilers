@@ -655,7 +655,7 @@ public class Lexer extends javax.swing.JFrame {
              
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 // IF THE INPUT IS AN EMPTY SET ---> ε
-                if(tokens.get(currentToken - 1).getType().equals(tokenType.openBracket)) {
+                if(tokens.get(currentToken - 1).getType().equals(tokenType.openBracket)) { // last } in an empty condition on same line
                     // Adds Statement List branch to tree
                     cst.addNode("Statement List", "branch");
                     cst.endChildren();
@@ -672,29 +672,9 @@ public class Lexer extends javax.swing.JFrame {
                     if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
                         Program(); // Goes to program to finish program and continue if there are more programs
                     } else {
-                        Statement(); // If this not the only }
-                    }
-                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.openBracket)) {
-                    
-                    cst.addNode("Statement List", "branch");
-                    cst.endChildren();
-                    
-                    
-                    //Creates the leaf node of Block }
-                    cst.addNode("}", "leaf");
-                    
-                    matchAndDevour(tokenType.closeBracket);
-                    closeBraceCount++;
-                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                    System.out.println("matched: }\n");
-
-                    // If EOP is found
-                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                        Program(); // Goes to program to finish program and continue if there are more programs
-                    } else {
                         StatementList(); // If this not the only }
                     }
-                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket)) { // for ending empty conditions
+                } else if(tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket)) { // repeating } for ending conditions on the one line
                     cst.scaleToBlock();
                     
                     //Creates the leaf node of Block }
@@ -710,59 +690,90 @@ public class Lexer extends javax.swing.JFrame {
                         Program(); // Goes to program to finish program and continue if there are more programs
                     } else {
                         StatementList(); // If this not the only }
-                    } 
-                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeParenthesis)) { // For ending print statements within conditions
-                    // Adds Statement List branch to tree
-                    cst.addNode("Statement List", "branch"); // last statement list
-                    cst.scaleToBlock();
-                    
-                    //Creates the leaf node of Block }
-                    cst.addNode("}", "leaf");
-                    
-                    matchAndDevour(tokenType.closeBracket);
-                    closeBraceCount++;
-                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                    System.out.println("matched: }\n");
-
-                    // If EOP is found
-                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                        Program(); // Goes to program to finish program and continue if there are more programs
-                    } else {
-                        StatementList(); // If this not the only }
-                    }    
-                } else { // Not an empty set of brackets ---> {ε}
-                    
-                    if(scopeLevel > 0) {
-                        cst.statementListIncrement();
+                    }
+                } else if(tokens.get(currentToken - 1).getType().equals(tokenType.closeParenthesis)) { // For ending print statements within conditions on one line
                         // Adds Statement List branch to tree
-                        cst.addNode("Statement List", "branch");
-                        System.out.println("THIS ONE");
-                    } else {
-                        // Adds Statement List branch to tree
-                        cst.addNode("Statement List", "branch");
-                        System.out.println(" NO THIS ONE");
-                    }
-                        
-                    
-                    // Meets last Block parent
-                    cst.scaleToBlock();
-                    
-                    //Creates the leaf node of Block }
-                    cst.addNode("}", "leaf");
-                    
-                    matchAndDevour(tokenType.closeBracket);
-                    closeBraceCount++;
-                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
-                    System.out.println("matched: }\n");
+                        cst.addNode("Statement List", "branch"); // last statement list
+                        cst.scaleToBlock();
 
-                    // If EOP is found
-                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                        System.out.println("door");
-                        Program(); // Goes to program to finish program and continue if there are more programs
-                    } else {
-                        System.out.println("reach");
-                        StatementList(); // If this not the only }
+                        //Creates the leaf node of Block }
+                        cst.addNode("}", "leaf");
+
+                        matchAndDevour(tokenType.closeBracket);
+                        closeBraceCount++;
+                        outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                        System.out.println("matched: }\n");
+
+                        // If EOP is found
+                        if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                            Program(); // Goes to program to finish program and continue if there are more programs
+                        } else {
+                            StatementList(); // If this not the only }
+                        } 
+                } else if(tokens.get(currentToken - 1).getType().equals(tokenType.newLine)) { // newline cases
+                    if(tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket)) { // repeating } for ending conditions on new line
+                        cst.scaleToBlock();
+
+                        //Creates the leaf node of Block }
+                        cst.addNode("}", "leaf");
+
+                        matchAndDevour(tokenType.closeBracket);
+                        closeBraceCount++;
+                        outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                        System.out.println("matched: }\n");
+
+                        // If EOP is found
+                        if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                            Program(); // Goes to program to finish program and continue if there are more programs
+                        } else {
+                            StatementList(); // If this not the only }
+                        }
+                    } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeParenthesis)) { // For ending print statements within conditions
+                        // Adds Statement List branch to tree
+                        cst.addNode("Statement List", "branch"); // last statement list
+                        cst.scaleToBlock();
+
+                        //Creates the leaf node of Block }
+                        cst.addNode("}", "leaf");
+
+                        matchAndDevour(tokenType.closeBracket);
+                        closeBraceCount++;
+                        outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                        System.out.println("matched: }\n");
+
+                        // If EOP is found
+                        if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                            Program(); // Goes to program to finish program and continue if there are more programs
+                        } else {
+                            StatementList(); // If this not the only }
+                        } 
+                    } else if(tokens.get(currentToken - 2).getType().equals(tokenType.openBracket)) { // last } in an empty condition has new line
+                    
+                        cst.addNode("Statement List", "branch");
+                        cst.endChildren();
+
+
+                        //Creates the leaf node of Block }
+                        cst.addNode("}", "leaf");
+
+                        matchAndDevour(tokenType.closeBracket);
+                        closeBraceCount++;
+                        outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                        System.out.println("matched: }\n");
+
+                        // If EOP is found
+                        if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                            Program(); // Goes to program to finish program and continue if there are more programs
+                        } else {
+                            StatementList(); // If this not the only }
+                        }
+                    } else { // error
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                     }
+                } else { // error                   
+                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                 // Adds Statement List branch to tree
