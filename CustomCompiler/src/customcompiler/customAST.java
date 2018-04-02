@@ -1,8 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//-----------------------------------------
+// treeDemo.js
+//
+// By Alan G. Labouseur, based on the 2009
+// work by Michael Ardizzone and Tim Smith.
+// Modified by Reynaldo Alvarez
+//-----------------------------------------
+
+
 package customcompiler;
 
 import static jdk.nashorn.internal.objects.Global.undefined;
@@ -137,7 +141,7 @@ public class customAST {
                  * so this is a little push in order for close bracket
                  * to land as a child in the block branch accordingly  
                  */
-                endChildren();
+                //endChildren();
                 break;
             }
         }

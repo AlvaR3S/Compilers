@@ -3,7 +3,10 @@
 //
 // By Alan G. Labouseur, based on the 2009
 // work by Michael Ardizzone and Tim Smith.
+// Modified by Reynaldo Alvarez
 //-----------------------------------------
+
+
 package customcompiler;
 
 
@@ -96,17 +99,8 @@ public class customCST {
                  * so this is a little push in order for close parenthesis
                  * to land as a child in print statement accordingly  
                  */
-//                if("{".equals(this.cur.parent.name)) {
-//                    this.cur = this.cur.parent;
-//                    if("Print Statement".equals(this.cur.parent.name)) {
-//                        endChildren();
-//                        System.out.println("jenga");
-//                        break; 
-//                    }
-//                } else {
-                    endChildren();
-                    break;
-                //}
+                endChildren();
+                break;
             }
         }
     }

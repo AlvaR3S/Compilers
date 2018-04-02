@@ -394,6 +394,7 @@ public class Lexer extends javax.swing.JFrame {
         private int currentToken = 0;
         private int i = 1;
         int error = lex.getErrorCount();
+        private int blockCount = 1;
         private int openBraceCount = 0;
         private int closeBraceCount = 0;
         TokenType tokenType;
@@ -504,9 +505,23 @@ public class Lexer extends javax.swing.JFrame {
          */        
         private void Block() {
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
-                // Adds the block Node to the ast tree
-                ast.addNode("Block", "branch");
+                if(blockCount > 1) { // If new block is created with while or if
+                    cst.statementListIncrement(); // Make sure the Statement list is aligned
+                    // Adds Statement List branch to tree
+                    cst.addNode("Statement List", "branch");
                 
+                    // Adds Statement branch to tree
+                    cst.addNode("Statement", "branch");
+                    
+                    // Starts the new block within a block
+                    cst.addNode("Block", "branch");
+                    ast.scaleToBlock();
+                    
+                }
+                
+                // Adds the block Node to the ast tree
+                ast.addNode("Block", "branch"); 
+
                 //Creates the leaf node of Block {
                 cst.addNode("{", "leaf");
                 
@@ -947,7 +962,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Aligns branch to its block
                     ast.endChildren();
-                    
+                    blockCount++; // New block
                     Block(); // Restart new block
                     
                 } else {
@@ -1255,7 +1270,6 @@ public class Lexer extends javax.swing.JFrame {
                         Program(); // loop to the beginning
                     }
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
-                    ast.endChildren(); // So it next branch can stay aligned
                     PrintStatement(); // Loop back to PrintStatement
                     
                 } else if(tokens.get(currentToken).getType().equals(tokenType.assignmentStatement)) { // An AssignmentStatement
@@ -1384,7 +1398,7 @@ public class Lexer extends javax.swing.JFrame {
                         if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
                             // Aligns branch to its block
                             ast.endChildren();
-
+                            blockCount++;
                             Block(); // Restart new block
                         }
                     } else {
@@ -1430,7 +1444,7 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
-                ast.addNode("NotEquivalentTo", "branch"); // Adds the boolop to the ast
+                ast.addNode("isNotEquivalentTo", "branch"); // Adds the boolop to the ast
                 
                 //ast.endChildren(); // So it next branch can stay aligned
                 
@@ -1442,9 +1456,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
-                //ast.addNode("EquivalentTo", "branch"); // Adds the boolop to the ast
+                ast.addNode("isEquivalentTo", "branch"); // Adds the boolop to the ast
                 
-                ast.endChildren(); // So it next branch can stay aligned
+                //ast.endChildren(); // So it next branch can stay aligned
                 
                 matchAndDevour(tokenType.boolopEqualTo);
                 outputAreaParser.append("PARSER: parseBoolopEqualTo()\n");
@@ -1470,7 +1484,7 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
-                ast.endChildren(); // So it next branch can stay aligned
+                //ast.endChildren(); // So it next branch can stay aligned
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
