@@ -394,7 +394,7 @@ public class Lexer extends javax.swing.JFrame {
         private int currentToken = 0;
         private int i = 1;
         int error = lex.getErrorCount();
-        private int blockCount = 1;
+        private int scopeLevel = 0;
         private int openBraceCount = 0;
         private int closeBraceCount = 0;
         TokenType tokenType;
@@ -505,8 +505,17 @@ public class Lexer extends javax.swing.JFrame {
          */        
         private void Block() {
             if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) {
-                if(blockCount > 1) { // If new block is created with while or if
-                    cst.statementListIncrement(); // Matching last StatementList before new open bracket
+                if(scopeLevel > 0) { // If new block is created with while or if
+                    if(scopeLevel > 1) {
+                        ast.scaleToBlock();
+                        cst.statementListIncrement(); // Matching last StatementList before new open bracket
+                        System.out.println("not here");
+                    } else {
+                        ast.endChildren();
+                        cst.statementListIncrement();
+                        System.out.println("HERE");
+                    }
+                    
                     
                     // Adds Statement List branch to tree
                     cst.addNode("Statement List", "branch");
@@ -516,11 +525,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Starts the new block within a block
                     cst.addNode("Block", "branch");
-                    if(blockCount > 2) {
-                        ast.scaleToBlock();
-                    } else {
-                        ast.endChildren();
-                    }
+                    
                     
                 }
                 
@@ -669,9 +674,65 @@ public class Lexer extends javax.swing.JFrame {
                     } else {
                         Statement(); // If this not the only }
                     }
+                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.openBracket)) {
+                    
+                    cst.addNode("Statement List", "branch");
+                    cst.endChildren();
+                    
+                    
+                    //Creates the leaf node of Block }
+                    cst.addNode("}", "leaf");
+                    
+                    matchAndDevour(tokenType.closeBracket);
+                    closeBraceCount++;
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
+
+                    // If EOP is found
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program(); // Goes to program to finish program and continue if there are more programs
+                    } else {
+                        StatementList(); // If this not the only }
+                    }
+                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket)) { // for ending empty conditions
+                    cst.scaleToBlock();
+                    
+                    //Creates the leaf node of Block }
+                    cst.addNode("}", "leaf");
+                    
+                    matchAndDevour(tokenType.closeBracket);
+                    closeBraceCount++;
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
+
+                    // If EOP is found
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program(); // Goes to program to finish program and continue if there are more programs
+                    } else {
+                        StatementList(); // If this not the only }
+                    } 
+                } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeParenthesis)) { // For ending print statements within conditions
+                    // Adds Statement List branch to tree
+                    cst.addNode("Statement List", "branch"); // last statement list
+                    cst.scaleToBlock();
+                    
+                    //Creates the leaf node of Block }
+                    cst.addNode("}", "leaf");
+                    
+                    matchAndDevour(tokenType.closeBracket);
+                    closeBraceCount++;
+                    outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                    System.out.println("matched: }\n");
+
+                    // If EOP is found
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program(); // Goes to program to finish program and continue if there are more programs
+                    } else {
+                        StatementList(); // If this not the only }
+                    }    
                 } else { // Not an empty set of brackets ---> {ε}
                     
-                    if(blockCount > 1) {
+                    if(scopeLevel > 0) {
                         cst.statementListIncrement();
                         // Adds Statement List branch to tree
                         cst.addNode("Statement List", "branch");
@@ -977,13 +1038,8 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Aligns branch to its block
                     ast.endChildren();
-                    blockCount++; // New block
+                    scopeLevel++; // New block
                     Block(); // Restart new block
-                    
-                } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // In case of new line
-                    matchAndDevour(tokenType.newLine);
-                    System.out.println("matched: \n");
-                    PrintStatement(); // reloop to properly finish or continue code
                 } else {
                     // Lines close parenthesis to open parenthesis within print statement
                     cst.scaleToPrintStatement();
@@ -1414,14 +1470,16 @@ public class Lexer extends javax.swing.JFrame {
                         // Match first then see whats next
                         matchAndDevour(tokenType.closeParenthesis);
                         outputAreaParser.append("PARSER: parseCloseParenthesis()\n");
-     ///-------CHECK IFNEED TO LINK TO LAST (
+                        
+                        ///-------CHECK IFNEED TO LINK TO LAST (
                         // Creates the leaf node closeParen
                         cst.addNode(")", "leaf");
                         
                         if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
-                            blockCount++;
+                            scopeLevel++; // Add scope level
                             Block(); // Restart new block
                         } else {
+                            scopeLevel++; // There will still be a new scope
                             PrintStatement(); //In case of newlines
                         }
                     } else {
@@ -1436,7 +1494,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                     outputAreaParser.append("PARSER: parseExpr()\n");
                     matchAndDevour(tokenType.boolvalFalse);
-                    outputAreaParser.append("PARSER: parseBoolvalTrue()\n");
+                    outputAreaParser.append("PARSER: parseBoolvalFalse()\n");
                     
                     if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) { // Checking for closeParenthesis
                         // Match first then see whats next
@@ -1447,11 +1505,10 @@ public class Lexer extends javax.swing.JFrame {
                         cst.addNode(")", "leaf");
                         
                         if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
-                            // Aligns branch to its block
-                            ast.endChildren();
-                            blockCount++;
+                            scopeLevel++;
                             Block(); // Restart new block
                         } else {
+                            scopeLevel++;
                             PrintStatement();
                         }
                     } else {
