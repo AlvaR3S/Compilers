@@ -768,8 +768,24 @@ public class Lexer extends javax.swing.JFrame {
                             StatementList(); // If this not the only }
                         }
                     } else { // error
-                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        // Adds Statement List branch to tree
+                        cst.addNode("Statement List", "branch"); // last statement list
+                        cst.scaleToBlock();
+
+                        //Creates the leaf node of Block }
+                        cst.addNode("}", "leaf");
+
+                        matchAndDevour(tokenType.closeBracket);
+                        closeBraceCount++;
+                        outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
+                        System.out.println("matched: }\n");
+
+                        // If EOP is found
+                        if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                            Program(); // Goes to program to finish program and continue if there are more programs
+                        } else {
+                            StatementList(); // If this not the only }
+                        } 
                     }
                 } else { // error                   
                     outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
