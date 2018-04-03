@@ -9,6 +9,7 @@ package customcompiler;
 import static customcompiler.Lexer.TokenType.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
@@ -51,6 +52,7 @@ public class Lexer extends javax.swing.JFrame {
     public int errorCount = 0;
     
     private int reset = 0;
+    
     
     
     // ------------------------------------------------------------
@@ -189,11 +191,14 @@ public class Lexer extends javax.swing.JFrame {
         Quote("\""),
         
         // Empty String
-        //empty("({)(.*?)(})"),
+
+        /**
+         *
+         */
+        
         
         // Comments
         comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
-        
         
         Pattern pattern;
         
@@ -246,7 +251,7 @@ public class Lexer extends javax.swing.JFrame {
          * else they are unrecognized 
          */
         public Token() {
-
+            
             int i = 1;
             int warningCount = 0;
             int numberOfEop = 0;
@@ -256,8 +261,8 @@ public class Lexer extends javax.swing.JFrame {
 
             String input = inputArea.getText();
             String output = outputArea.getText();
-
-
+            
+            
 
             boolean errorToken = false;
 
@@ -266,12 +271,14 @@ public class Lexer extends javax.swing.JFrame {
 
             // Loops through the input and finds valid tokens
             while(tokenMatcher.find()) {
-                 if(tokenMatcher.group(TokenType.newLine.name()) != null) {
+                if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                      continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
                      continue;
+//                } else if(tokenMatcher.group(TokenType.empty.name()) != null) {
+//                    tokens.add(new Token(TokenType.empty, tokenMatcher.group(TokenType.empty.name())));     
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
                 } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
@@ -319,7 +326,10 @@ public class Lexer extends javax.swing.JFrame {
                     System.out.println("Unrecognized token found."); // Catches other tokens that aren'cst allowed if not in (unrecognized)
                     errorToken = true;
                     errorCount++;    
-                }        
+                } 
+                
+              
+                
             }
 
             // Error if there is no input
@@ -348,7 +358,6 @@ public class Lexer extends javax.swing.JFrame {
                 } else {
                     outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens   
                 }
-
                 
                 if(token.type == EOP) {
                     outputArea.append("LEXER: Lex completed successfully.\n\n");
@@ -400,7 +409,9 @@ public class Lexer extends javax.swing.JFrame {
         TokenType tokenType;
         customCST cst = new customCST();
         customAST ast = new customAST();
-       
+        ArrayList<String> charList = new ArrayList<String>();
+        
+        
         public Parser() { }
         
         /**
@@ -494,6 +505,9 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds the block Node to the tree
                 cst.addNode("Block", "branch");
                 
+                // Adds ast block branch
+                ast.addNode("Block", "branch");
+                
                 Block();
             }
         }
@@ -544,10 +558,10 @@ public class Lexer extends javax.swing.JFrame {
                 
             } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) {
                 // Aligns Statement List with last statement
-                cst.statementListIncrement();
+                //cst.statementListIncrement();
                 
                 // Adds Statement List branch to tree to the last } occurance
-                cst.addNode("Statement List", "branch");
+               // cst.addNode("Statement List", "branch");
                 
                 // Meets last Block parent
                 cst.scaleToBlock();
@@ -559,7 +573,7 @@ public class Lexer extends javax.swing.JFrame {
                 closeBraceCount++;
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: }\n");
-                
+                System.out.println("hi");
                 // When looping of } finishes there should be a $
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
                     Program(); // Goes to program to finish program
@@ -581,6 +595,8 @@ public class Lexer extends javax.swing.JFrame {
                     StatementList();
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) { // incase of dupilicates (Block())
                     Block(); // Goes back into block to find finishing touches
+                } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // When looping of } finishes there should be a $
+                    Program(); // Goes to program to finish program
                 } else {
                     StatementList(); // More to be done...
                 }    
@@ -1408,6 +1424,7 @@ public class Lexer extends javax.swing.JFrame {
          */
         private void StringExpr() {
             if(tokens.get(currentToken).getType().equals(tokenType.Quote)) { // Checking for Quotes
+                
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                 
@@ -1417,21 +1434,39 @@ public class Lexer extends javax.swing.JFrame {
                 matchAndDevour(tokenType.Quote);
                 outputAreaParser.append("PARSER: parseStringExpr()\n");
                 outputAreaParser.append("PARSER: parseQuote()\n");
-                System.out.println("IM HERE");
-                while (tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
+                
+                // Clears last list for new char list * Avoids duplication *
+                charList.clear();
+                
+                while(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
+                    
+                    
                     // Allows me to get the current CHAR and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf");
-                    System.out.println("rey");
+                   
                     // Adds  branch to tree
                     cst.addNode("Char List", "branch");
                     
-                    ast.addNode(tokens.get(currentToken).getData(), "leaf");
-                    
+                    // Adds current char to new arraylist for ast disply *Helps with AssignmentStatement ambiguity*
+                    charList.add(tokens.get(currentToken).getData()); 
+                   
                     matchAndDevour(tokenType.CHAR);
                     outputAreaParser.append("PARSER: parseCHAR()\n");
                 }
-                System.out.println("IM a HERE");
+                
+                
                 if(tokens.get(currentToken).getType().equals(tokenType.Quote)) {
+                    
+                    // We save it to CHARLIST and add CHARLIST because on every string add charlist saves the char in order for later output
+                    // In order to remove , from the array list we must append ""
+                    String CHARLIST = ""; // CHARLIST is the very first space
+                    for(String CHAR : charList) {  // We loop through the newly created array list of chars
+                       CHARLIST = CHARLIST + CHAR + ""; // Back "" is the space after every char they are closed to keep chars together  
+                    }   
+                   
+                    // add charList to ast before next quote
+                    ast.addNode(CHARLIST, "leaf");
+                    
                     // Matches position to last spotted quote
                     cst.scaleToQuote();
                     
@@ -1591,9 +1626,7 @@ public class Lexer extends javax.swing.JFrame {
                 cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
                 // Allows me to get the current ID (char) and add to the ast
-                ast.addNode(tokens.get(currentToken).getData(), "leaf");
-                
-                //ast.endChildren(); // So it next branch can stay aligned
+                ast.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
