@@ -451,7 +451,7 @@ public class Lexer extends javax.swing.JFrame {
         
         private void SymbolTable() {
             if(i == 1) {
-                if(semanticError > 0 || idList.isEmpty()) {
+                if(semanticError > 0) {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis\n\n");
                 } else {
