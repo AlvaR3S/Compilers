@@ -495,6 +495,8 @@ public class Lexer extends javax.swing.JFrame {
                     
                     ast.restartFamily(); // Clear family tree for next program
                     
+                    idList.clear(); // restarts list of ids before new program
+                    
                     Program(); // when end reached loop back to the top
                 }             
             } else {
@@ -1223,14 +1225,15 @@ public class Lexer extends javax.swing.JFrame {
                 idList.add(tokens.get(currentToken).getData()); // Add 
                 
                 System.out.println(idList); 
-                
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
-                }
+                } 
+                
+                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
                 outputAreaParser.append("PARSER: parseType()\n"); // ID is valid
@@ -1503,6 +1506,9 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                if(!idList.contains(tokens.get(currentToken).getData())) {
+                    semanticError++;
+                }
                 
                 // Adds Char List branch to tree
                 cst.addNode("Char List", "branch");
