@@ -88,7 +88,7 @@ public class customAST {
         //a--;
         
         for(int i=0;i<(curDepth - a); i++) {
-            this.cur = this.cur.parent;
+            tempCur = tempParent;
         }
         
         endChildren();

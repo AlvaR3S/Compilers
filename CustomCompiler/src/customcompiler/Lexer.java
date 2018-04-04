@@ -500,6 +500,18 @@ public class Lexer extends javax.swing.JFrame {
                     astOutputArea.append("-----------------------------\n");
                 }
                 
+                if(i > 1) { // Separates trees accordingly
+                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSemantics.append("---------------------------------------\n");
+                    outputAreaSemantics.append("Name Type        Scope  Line\n");
+                    outputAreaSemantics.append("---------------------------------------\n");
+                } else {
+                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSemantics.append("---------------------------------------\n");
+                    outputAreaSemantics.append("Name Type        Scope  Line\n");
+                    outputAreaSemantics.append("---------------------------------------\n");
+                }
+                
                 // Adding the root node
                 cst.addNode("Program", "branch");
                 
@@ -875,7 +887,7 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adds Print Statement branch to tree
                 cst.addNode("Print Statement", "branch");
-                ast.scaleToLayer(scope);
+               // ast.scaleToLayer(scope);
                 
                 
                 // Adds print statement as a branch to AST
@@ -890,7 +902,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
                 // Adds Statement branch to tree
                 cst.addNode("Statement", "branch");
-                ast.scaleToLayer(scope);
+               // ast.scaleToLayer(scope);
                 // Adds Assignment Statement branch to tree
                 cst.addNode("Assignment Statement", "branch");
                 
@@ -911,7 +923,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeInt)) {
                 // Adds Statement branch to tree
                 cst.addNode("Statement", "branch");
-                ast.scaleToLayer(scope);
+                //ast.scaleToLayer(scope);
                 // Adds Variable Declaration branch to tree
                 cst.addNode("Variable Declaration", "branch");
                 
@@ -932,7 +944,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeString)) {
                 // Adds Statement branch to tree
                 cst.addNode("Statement", "branch");
-                ast.scaleToLayer(scope);
+               // ast.scaleToLayer(scope);
                 // Adds Variable Declaration branch to tree
                 cst.addNode("Variable Declaration", "branch");
                 
@@ -953,7 +965,7 @@ public class Lexer extends javax.swing.JFrame {
             } else if(tokens.get(currentToken).getType().equals(tokenType.typeBoolean)) {
                 // Adds Statement branch to tree
                 cst.addNode("Statement", "branch");
-                ast.scaleToLayer(scope);
+               // ast.scaleToLayer(scope);
                 // Adds Variable Declaration branch to tree
                 cst.addNode("Variable Declaration", "branch");
                 
@@ -978,7 +990,7 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds If Statement branch to tree
                 cst.addNode("If Statement", "branch");
                 
-                ast.scaleToLayer(scope);
+              //  ast.scaleToLayer(scope);
                 
                 // Adds If Statement branch to the ast tree
                 ast.addNode("If Statement", "branch", lineNumber);
@@ -995,7 +1007,7 @@ public class Lexer extends javax.swing.JFrame {
                 // Adds While Statement branch to tree
                 cst.addNode("While Statement", "branch");
                 
-                ast.scaleToLayer(scope);
+              //  ast.scaleToLayer(scope);
                 
                 // Adds While Statement branch to the ast tree
                 ast.addNode("While Statement", "branch", lineNumber);
@@ -1171,6 +1183,13 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf", lineNumber);
                 
+                if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
+                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineNumber + "\n");
+                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
+                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineNumber + "\n");
+                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
+                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineNumber + "\n");
+                }
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
                 outputAreaParser.append("PARSER: parseType()\n"); // ID is valid
@@ -1705,15 +1724,15 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaSemantics.append("-----------------------------\n");
                 }
             
-            if(ast.root.name.compareTo("Program") != 0){
+            if(ast.root.name.compareTo("Program") != 0) { // Should never get here
                 //Throw error
                 
             } else {
                 if(ast.root.children == null) {
                     //Throw error
-                    
+                    System.out.println(ast.root.children.get(0).name);
                 } else {
-                    for(int j = 0; j < ast.root.children.size(); j++){
+                    for(int j = 0; j < ast.root.children.size(); j++) {
                         ast.cur = ast.root.children.get(j);
                         System.out.println(ast.root.children.get(0).name);
                         Block();
@@ -1724,7 +1743,7 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         private void Block() {
-            if(ast.cur.name.compareTo("Block") != 0) { //
+            if(ast.cur.name.compareTo("Block") != 0) { // 
                 //Throw error
             } else {
                 astNodes blockCur = ast.cur;
@@ -1733,7 +1752,7 @@ public class Lexer extends javax.swing.JFrame {
                     //Throw error
                 } else {
                     
-                    for(int j = 0; j < blockCur.children.size(); j++){
+                    for(int j = 0; j < blockCur.children.size(); j++) {
                         if(blockCur.children.get(j).name.compareTo("Block") == 0) {
                             ast.cur = blockCur.children.get(j);
                             Block();
@@ -2098,7 +2117,7 @@ public class Lexer extends javax.swing.JFrame {
 
         outputAreaSemantics.setEditable(false);
         outputAreaSemantics.setColumns(20);
-        outputAreaSemantics.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        outputAreaSemantics.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
         outputAreaSemantics.setRows(5);
         outputAreaSemantics.setTabSize(2);
         outputAreaSemantics.setToolTipText("");
@@ -2298,7 +2317,7 @@ public class Lexer extends javax.swing.JFrame {
        
         Parser parse = new Parser(token);
         
-        Semantics semantics = new Semantics(parse);
+        //Semantics semantics = new Semantics(parse);
       
     }//GEN-LAST:event_buttonLexActionPerformed
     
