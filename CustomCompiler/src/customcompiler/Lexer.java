@@ -42,23 +42,23 @@ public class Lexer extends javax.swing.JFrame {
     public ArrayList<Token> tokens = new ArrayList<Token>();
     
     // Gets the current Token position
-    public int currentTokenPosition = 0;
+    private int curLineNum = 0;
     
     // Gets the line number of the current Token
-    public int lineNumber = 1;
+    private int lineNumber = 1;
     
-    public int tokenID;
+    private int errorCount = 0;
     
-    public int errorCount = 0;
-    
-    private int reset = 0;
-    
+    private int warningCount = 0;
     
     
     // ------------------------------------------------------------
     // -----------------[Getters and Setters]----------------------
     // ------------------------------------------------------------
-    
+
+    public int getCurLineNum() {
+        return curLineNum;
+    }
     
     public JTextArea getInputArea() {
         return inputArea;
@@ -77,10 +77,6 @@ public class Lexer extends javax.swing.JFrame {
     public JTextArea getOutputAreaParser() {
         return outputAreaParser;
     }
-
-    public int getTokenID() {
-        return tokenID;
-    }
     
     public ArrayList<Token> getTokens() {
         return tokens;
@@ -92,6 +88,10 @@ public class Lexer extends javax.swing.JFrame {
 
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    public int getWarningCount() {
+        return warningCount;
     }
     
     
@@ -221,13 +221,14 @@ public class Lexer extends javax.swing.JFrame {
     public class Token {
         public TokenType type;
         public String data;
-
+        
+        
+         
         // Creating the characteristics of a token
         public Token(TokenType type, String data) {
             this.type = type;
             this.data = data;
         }
-
         
         // Getter method for getting Token types
         public TokenType getType() {
@@ -253,9 +254,7 @@ public class Lexer extends javax.swing.JFrame {
         public Token() {
             
             int i = 1;
-            int warningCount = 0;
-            int numberOfEop = 0;
-            int lexSuccess = 0;
+            
 
             Parser info = new Parser();
 
@@ -273,6 +272,7 @@ public class Lexer extends javax.swing.JFrame {
             while(tokenMatcher.find()) {
                 if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
+                    curLineNum++;
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                      continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
@@ -360,12 +360,8 @@ public class Lexer extends javax.swing.JFrame {
                 }
                 
                 if(token.type == EOP) {
-                    outputArea.append("LEXER: Lex completed successfully.\n\n");
-                    lexSuccess++;
+                    outputArea.append("LEXER: Lex completed successfully.\n\n"); 
                     i++;
-                     // If there is more than one $ there is more than one lexeing program
-                    numberOfEop++;
-              
                     outputArea.append("\nLEXER: Lexing program " + i + "...\n");
                     outputArea.append("-----------------------------\n");
                 }
@@ -402,7 +398,9 @@ public class Lexer extends javax.swing.JFrame {
         Lexer lex = new Lexer();
         private int currentToken = 0;
         private int i = 1;
-        int error = lex.getErrorCount();
+        int lexError = lex.getErrorCount();
+        int lexWarning = lex.getWarningCount();
+        int lexLineNum = lex.getCurLineNum();
         private int scope = 0;
         private int openBraceCount = 0;
         private int closeBraceCount = 0;
@@ -437,6 +435,19 @@ public class Lexer extends javax.swing.JFrame {
         }
 
         
+        private void Semantics() {
+            outputAreaSemantics.append("Program " + i + " Lexical Analysis\n");
+            outputAreaSemantics.append("Program " + i + " Lexical analysis produced " + lexError + " error(s) and " + lexWarning + " warning(s)\n\n");
+
+            outputAreaSemantics.append("Program " + i + " Parsing\n");
+            outputAreaSemantics.append("Program " + i + " Parsing produced 0 error(s) and 0 warning(s)\n\n");
+
+            outputAreaSemantics.append("Program " + i + " Semantic Analysis\n");
+            outputAreaSemantics.append("Program " + i + " Semantic analysis produced 0 error(s) and 0 warning(s)\n\n");
+
+            outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
+        }
+        
         /**
          * 
          * Program       ::== Block $
@@ -453,16 +464,7 @@ public class Lexer extends javax.swing.JFrame {
                     cstOutputArea.append("CST for program " + i + ": Skipped due to PARSER error(s).\n\n");
                     
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
-                    outputAreaSemantics.append("Program " + i + " Lexical Analysis\n");
-                    outputAreaSemantics.append("Program " + i + " Lexical analysis produced 0 error(s) and 0 warning(s)\n\n");
-                    
-                    outputAreaSemantics.append("Program " + i + " Parsing\n");
-                    outputAreaSemantics.append("Program " + i + " Parsing produced 0 error(s) and 0 warning(s)\n\n");
-                    
-                    outputAreaSemantics.append("Program " + i + " Semantic Analysis\n");
-                    outputAreaSemantics.append("Program " + i + " Semantic analysis produced 0 error(s) and 0 warning(s)\n\n");
-                    
-                    outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
+                    Semantics();
                     
                     // loops the $ node to match the Block branch
                     cst.scaleToRoot();
@@ -1702,100 +1704,6 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                 Program(); // loop to the beginning
             }    
-        }
-    }
-
-    /**
-     * 
-     * SEMANTICS CLASS
-     */
-    public class Semantics {
-        Parser parser;
-        customAST ast;
-        int i = -1;
-        int scope = 0;
-        int lineNum = 1;
-        
-        public Semantics(Parser parser) {
-            this.parser = parser;
-            this.ast = parser.ast;
-            i = parser.i;
-            
-            Analyze();
-        }
-        
-        private void Analyze() {
-            
-            if(i > 1) { // Separates trees accordingly
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("-----------------------------\n");
-                    outputAreaSymbolTable.append("Name Type      Scope  Line\n");
-                    outputAreaSymbolTable.append("-----------------------------\n");
-                } else {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("-----------------------------\n");
-                    outputAreaSymbolTable.append("Name Type      Scope  Line\n");
-                    outputAreaSymbolTable.append("-----------------------------\n");
-                }
-            
-            if(ast.root.name.compareTo("Program") != 0) { // Should never get here
-                //Throw error
-                
-            } else {
-                if(ast.root.children == null) {
-                    //Throw error
-                    System.out.println(ast.root.children.get(0).name);
-                } else {
-                    for(int j = 0; j < ast.root.children.size(); j++) {
-                        ast.cur = ast.root.children.get(j);
-                        System.out.println(ast.root.children.get(0).name);
-                        Block();
-                        
-                    }
-                }
-            }
-        }
-        
-        private void Block() {
-            if(ast.cur.name.compareTo("Block") != 0) { // 
-                //Throw error
-            } else {
-                astNodes blockCur = ast.cur;
-                
-                if(blockCur.children == null) {
-                    //Throw error
-                } else {
-                    
-                    for(int j = 0; j < blockCur.children.size(); j++) {
-                        if(blockCur.children.get(j).name.compareTo("Block") == 0) {
-                            ast.cur = blockCur.children.get(j);
-                            Block();
-                        } else {
-                           ast.cur = blockCur.children.get(j);
-                           Statement();
-                        }
-                    }
-                }
-                scope++;
-            }
-        }
-        
-        private void Statement() {
-            if(ast.cur.name.compareTo("Variable Declaration") == 0) { // Handles the outputting of the symbol table
-                outputAreaSymbolTable.append(ast.cur.children.get(0).name);
-                outputAreaSymbolTable.append("	 	" + ast.cur.children.get(1).name);
-                outputAreaSymbolTable.append("	 	" + scope);
-                outputAreaSymbolTable.append("	 	" + ast.cur.lineNum + "\n");
-                
-            } else if(ast.cur.name.compareTo("Print Statement") == 0) {
-                
-            } else if(ast.cur.name.compareTo("Assignment Statement") == 0) {
-                
-            } else if(ast.cur.name.compareTo("If Statement") == 0) {
-                
-            } else if(ast.cur.name.compareTo("While Statement") == 0) {
-                
-            }
         }
     }
 
