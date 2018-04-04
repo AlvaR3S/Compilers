@@ -451,7 +451,7 @@ public class Lexer extends javax.swing.JFrame {
         
         private void SymbolTable() {
             if(i == 1) {
-                if(semanticError > 0 || idList.isEmpty()) {
+                if(semanticError > 0) {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis\n\n");
                 } else {
@@ -466,9 +466,12 @@ public class Lexer extends javax.swing.JFrame {
                     } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
                         outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
                     } 
+                    if(idList.isEmpty()) {
+                        outputAreaSymbolTable.append("No variables declared");
+                    }
                 }
             } else if(i > 1) { // Separates trees accordingly
-                if(semanticError > 0 || idList.isEmpty()) {
+                if(semanticError > 0) {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis");
                 } else {
@@ -483,6 +486,9 @@ public class Lexer extends javax.swing.JFrame {
                     } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
                         outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
                     } 
+                }
+                if(idList.isEmpty()) {
+                    outputAreaSymbolTable.append("No variables declared");
                 }
             }
         }
