@@ -444,7 +444,7 @@ public class Lexer extends javax.swing.JFrame {
             outputAreaSemantics.append("Program " + i + " Parsing produced 0 error(s) and 0 warning(s)\n\n");
 
             outputAreaSemantics.append("Program " + i + " Semantic Analysis\n");
-            outputAreaSemantics.append("Program " + i + " Semantic analysis produced 0 error(s) and 0 warning(s)\n\n");
+            outputAreaSemantics.append("Program " + i + " Semantic analysis produced " + semanticError + " error(s) and 0 warning(s)\n\n");
 
             outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
         }
@@ -939,7 +939,6 @@ public class Lexer extends javax.swing.JFrame {
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 if(!idList.contains(tokens.get(currentToken).getData())) {
-                    
                     semanticError++;
                 }
                 
