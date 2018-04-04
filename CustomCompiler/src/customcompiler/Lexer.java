@@ -451,9 +451,9 @@ public class Lexer extends javax.swing.JFrame {
         
         private void SymbolTable() {
             if(i == 1) {
-                if(semanticError > 0) {
+                if(semanticError > 0 || idList.isEmpty()) {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis");
+                    outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis\n\n");
                 } else {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("---------------------------------------\n");
@@ -468,7 +468,7 @@ public class Lexer extends javax.swing.JFrame {
                     } 
                 }
             } else if(i > 1) { // Separates trees accordingly
-                if(semanticError > 0) {
+                if(semanticError > 0 || idList.isEmpty()) {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis");
                 } else {
