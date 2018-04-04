@@ -449,44 +449,6 @@ public class Lexer extends javax.swing.JFrame {
             outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
         }
         
-        private void SymbolTable() {
-            if(i == 1) {
-                if(semanticError > 0) {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis\n\n");
-                } else {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
-                    } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
-                    } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
-                    } 
-                }
-            } else if(i > 1) { // Separates trees accordingly
-                if(semanticError > 0) {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("not produced due to error(s) detected\n by semantic anaylysis");
-                } else {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
-                    } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
-                    } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
-                        outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
-                    } 
-                }
-            }
-        }
-        
         /**
          * 
          * Program       ::== Block $
@@ -504,8 +466,6 @@ public class Lexer extends javax.swing.JFrame {
                     
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
-                    
-                    SymbolTable();
                     
                     // loops the $ node to match the Block branch
                     cst.scaleToRoot();
@@ -556,7 +516,17 @@ public class Lexer extends javax.swing.JFrame {
                     astOutputArea.append("-----------------------------\n");
                 }
                 
-                
+                if(i > 1) { // Separates trees accordingly
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                } else {
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                }
                 
                 
                 
@@ -1255,13 +1225,13 @@ public class Lexer extends javax.swing.JFrame {
                 idList.add(tokens.get(currentToken).getData()); // Add 
                 
                 System.out.println(idList); 
-//                if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
-//                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
-//                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
-//                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
-//                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
-//                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
-//                } 
+                if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
+                } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
+                } 
                
                 
                 
