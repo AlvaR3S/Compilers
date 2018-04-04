@@ -501,16 +501,18 @@ public class Lexer extends javax.swing.JFrame {
                 }
                 
                 if(i > 1) { // Separates trees accordingly
-                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSemantics.append("---------------------------------------\n");
-                    outputAreaSemantics.append("Name Type        Scope  Line\n");
-                    outputAreaSemantics.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
                 } else {
-                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSemantics.append("---------------------------------------\n");
-                    outputAreaSemantics.append("Name Type        Scope  Line\n");
-                    outputAreaSemantics.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
                 }
+                
+                
                 
                 // Adding the root node
                 cst.addNode("Program", "branch");
@@ -1184,11 +1186,11 @@ public class Lexer extends javax.swing.JFrame {
                 ast.addNode(tokens.get(currentToken).getData(), "leaf", lineNumber);
                 
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
-                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineNumber + "\n");
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineNumber + "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
-                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineNumber + "\n");
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineNumber + "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
-                    outputAreaSemantics.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineNumber + "\n");
+                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineNumber + "\n");
                 }
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
@@ -1714,15 +1716,15 @@ public class Lexer extends javax.swing.JFrame {
         private void Analyze() {
             
             if(i > 1) { // Separates trees accordingly
-                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSemantics.append("-----------------------------\n");
-                    outputAreaSemantics.append("Name Type      Scope  Line\n");
-                    outputAreaSemantics.append("-----------------------------\n");
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("-----------------------------\n");
+                    outputAreaSymbolTable.append("Name Type      Scope  Line\n");
+                    outputAreaSymbolTable.append("-----------------------------\n");
                 } else {
-                    outputAreaSemantics.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSemantics.append("-----------------------------\n");
-                    outputAreaSemantics.append("Name Type      Scope  Line\n");
-                    outputAreaSemantics.append("-----------------------------\n");
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("-----------------------------\n");
+                    outputAreaSymbolTable.append("Name Type      Scope  Line\n");
+                    outputAreaSymbolTable.append("-----------------------------\n");
                 }
             
             if(ast.root.name.compareTo("Program") != 0) { // Should never get here
@@ -1769,10 +1771,10 @@ public class Lexer extends javax.swing.JFrame {
         
         private void Statement() {
             if(ast.cur.name.compareTo("Variable Declaration") == 0) { // Handles the outputting of the symbol table
-                outputAreaSemantics.append(ast.cur.children.get(0).name);
-                outputAreaSemantics.append("	 	" + ast.cur.children.get(1).name);
-                outputAreaSemantics.append("	 	" + scope);
-                outputAreaSemantics.append("	 	" + ast.cur.lineNum + "\n");
+                outputAreaSymbolTable.append(ast.cur.children.get(0).name);
+                outputAreaSymbolTable.append("	 	" + ast.cur.children.get(1).name);
+                outputAreaSymbolTable.append("	 	" + scope);
+                outputAreaSymbolTable.append("	 	" + ast.cur.lineNum + "\n");
                 
             } else if(ast.cur.name.compareTo("Print Statement") == 0) {
                 
@@ -1826,7 +1828,7 @@ public class Lexer extends javax.swing.JFrame {
         buttonClearAll2 = new javax.swing.JButton();
         panelSemantics = new javax.swing.JPanel();
         scrollPaneInput2 = new javax.swing.JScrollPane();
-        outputAreaSemantics = new javax.swing.JTextArea();
+        outputAreaSymbolTable = new javax.swing.JTextArea();
         scrollPaneOutput2 = new javax.swing.JScrollPane();
         astOutputArea = new javax.swing.JTextArea();
         labelInput2 = new javax.swing.JLabel();
@@ -1836,6 +1838,18 @@ public class Lexer extends javax.swing.JFrame {
         buttonQuit2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         buttonClearAll3 = new javax.swing.JButton();
+        panelSemantics1 = new javax.swing.JPanel();
+        scrollPaneInput3 = new javax.swing.JScrollPane();
+        outputAreaSemantics = new javax.swing.JTextArea();
+        scrollPaneOutput3 = new javax.swing.JScrollPane();
+        astOutputAreaCodeGen = new javax.swing.JTextArea();
+        labelInput3 = new javax.swing.JLabel();
+        labelTitle3 = new javax.swing.JLabel();
+        labelOutput3 = new javax.swing.JLabel();
+        buttonTestCases3 = new javax.swing.JButton();
+        buttonQuit3 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        buttonClearAll4 = new javax.swing.JButton();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemQuit = new javax.swing.JMenuItem();
@@ -2116,15 +2130,15 @@ public class Lexer extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Parser", panelParser);
 
-        outputAreaSemantics.setEditable(false);
-        outputAreaSemantics.setColumns(20);
-        outputAreaSemantics.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
-        outputAreaSemantics.setRows(5);
-        outputAreaSemantics.setTabSize(2);
-        outputAreaSemantics.setToolTipText("");
-        outputAreaSemantics.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        outputAreaSemantics.setVerifyInputWhenFocusTarget(false);
-        scrollPaneInput2.setViewportView(outputAreaSemantics);
+        outputAreaSymbolTable.setEditable(false);
+        outputAreaSymbolTable.setColumns(20);
+        outputAreaSymbolTable.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
+        outputAreaSymbolTable.setRows(5);
+        outputAreaSymbolTable.setTabSize(2);
+        outputAreaSymbolTable.setToolTipText("");
+        outputAreaSymbolTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        outputAreaSymbolTable.setVerifyInputWhenFocusTarget(false);
+        scrollPaneInput2.setViewportView(outputAreaSymbolTable);
 
         astOutputArea.setEditable(false);
         astOutputArea.setColumns(20);
@@ -2137,10 +2151,10 @@ public class Lexer extends javax.swing.JFrame {
         scrollPaneOutput2.setViewportView(astOutputArea);
 
         labelInput2.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        labelInput2.setText("Semantic Analysis Output");
+        labelInput2.setText("Symbol Table Output");
 
         labelTitle2.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
-        labelTitle2.setText("Custom Compiler: Semantic Analyzer");
+        labelTitle2.setText("Custom Compiler: Code Analysis");
         labelTitle2.setAlignmentX(45.0F);
         labelTitle2.setAlignmentY(15.0F);
 
@@ -2185,12 +2199,12 @@ public class Lexer extends javax.swing.JFrame {
             .addGroup(panelSemanticsLayout.createSequentialGroup()
                 .addGroup(panelSemanticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelSemanticsLayout.createSequentialGroup()
-                        .addGap(228, 228, 228)
+                        .addGap(281, 281, 281)
                         .addComponent(labelTitle2))
                     .addGroup(panelSemanticsLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
+                        .addGap(170, 170, 170)
                         .addComponent(labelInput2)
-                        .addGap(352, 352, 352)
+                        .addGap(391, 391, 391)
                         .addComponent(labelOutput2))
                     .addGroup(panelSemanticsLayout.createSequentialGroup()
                         .addGap(32, 32, 32)
@@ -2232,7 +2246,125 @@ public class Lexer extends javax.swing.JFrame {
                     .addComponent(buttonClearAll3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jTabbedPane1.addTab("Semantics", panelSemantics);
+        jTabbedPane1.addTab("Visuals", panelSemantics);
+
+        outputAreaSemantics.setEditable(false);
+        outputAreaSemantics.setColumns(20);
+        outputAreaSemantics.setFont(new java.awt.Font("Helvetica", 0, 18)); // NOI18N
+        outputAreaSemantics.setRows(5);
+        outputAreaSemantics.setTabSize(2);
+        outputAreaSemantics.setToolTipText("");
+        outputAreaSemantics.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        outputAreaSemantics.setVerifyInputWhenFocusTarget(false);
+        scrollPaneInput3.setViewportView(outputAreaSemantics);
+
+        astOutputAreaCodeGen.setEditable(false);
+        astOutputAreaCodeGen.setColumns(20);
+        astOutputAreaCodeGen.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        astOutputAreaCodeGen.setRows(5);
+        astOutputAreaCodeGen.setTabSize(2);
+        astOutputAreaCodeGen.setToolTipText("");
+        astOutputAreaCodeGen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        astOutputAreaCodeGen.setVerifyInputWhenFocusTarget(false);
+        scrollPaneOutput3.setViewportView(astOutputAreaCodeGen);
+
+        labelInput3.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelInput3.setText("Semantic Analysis Output");
+
+        labelTitle3.setFont(new java.awt.Font("Helvetica Neue", 3, 36)); // NOI18N
+        labelTitle3.setText("Custom Compiler: Semantic Analyzer");
+        labelTitle3.setAlignmentX(45.0F);
+        labelTitle3.setAlignmentY(15.0F);
+
+        labelOutput3.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        labelOutput3.setText("Code Generation");
+
+        buttonTestCases3.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonTestCases3.setText("Test Cases");
+        buttonTestCases3.setToolTipText("Opens the test case menu");
+        buttonTestCases3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTestCases3ActionPerformed(evt);
+            }
+        });
+
+        buttonQuit3.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonQuit3.setText("Quit");
+        buttonQuit3.setToolTipText("Exits Program");
+        buttonQuit3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonQuit3ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Helvetica", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel5.setText("* Reset program to erase previous information");
+
+        buttonClearAll4.setFont(new java.awt.Font("Helvetica", 0, 16)); // NOI18N
+        buttonClearAll4.setText("Reset Program");
+        buttonClearAll4.setToolTipText("Removes text from input and output fields");
+        buttonClearAll4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonClearAll4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelSemantics1Layout = new javax.swing.GroupLayout(panelSemantics1);
+        panelSemantics1.setLayout(panelSemantics1Layout);
+        panelSemantics1Layout.setHorizontalGroup(
+            panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSemantics1Layout.createSequentialGroup()
+                .addGroup(panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelSemantics1Layout.createSequentialGroup()
+                        .addGap(247, 247, 247)
+                        .addComponent(labelTitle3))
+                    .addGroup(panelSemantics1Layout.createSequentialGroup()
+                        .addGap(146, 146, 146)
+                        .addComponent(labelInput3)
+                        .addGap(324, 324, 324)
+                        .addComponent(labelOutput3))
+                    .addGroup(panelSemantics1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addGroup(panelSemantics1Layout.createSequentialGroup()
+                                .addComponent(buttonClearAll4)
+                                .addGap(356, 356, 356)
+                                .addComponent(buttonTestCases3)
+                                .addGap(399, 399, 399)
+                                .addComponent(buttonQuit3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(35, Short.MAX_VALUE))
+            .addGroup(panelSemantics1Layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(scrollPaneInput3, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollPaneOutput3, javax.swing.GroupLayout.PREFERRED_SIZE, 459, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
+        );
+        panelSemantics1Layout.setVerticalGroup(
+            panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSemantics1Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(labelTitle3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInput3)
+                    .addComponent(labelOutput3))
+                .addGap(20, 20, 20)
+                .addGroup(panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneInput3, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneOutput3, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(93, 93, 93)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelSemantics1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonTestCases3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonQuit3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClearAll4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jTabbedPane1.addTab("Semantics", panelSemantics1);
 
         menuLexer.setToolTipText("");
 
@@ -2440,6 +2572,31 @@ public class Lexer extends javax.swing.JFrame {
         this.setEnabled(false);
     }//GEN-LAST:event_menutItemGrammarActionPerformed
 
+    private void buttonTestCases3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTestCases3ActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LexerTestCasesFrame().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_buttonTestCases3ActionPerformed
+
+    private void buttonQuit3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonQuit3ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_buttonQuit3ActionPerformed
+
+    private void buttonClearAll4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonClearAll4ActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Lexer().setVisible(true);
+            }
+        });
+        this.setVisible(false);
+        this.setEnabled(false);
+    }//GEN-LAST:event_buttonClearAll4ActionPerformed
+
     
     // ------------------------------------------------------------
     // --------------------[MAIN]----------------------------------
@@ -2485,33 +2642,41 @@ public class Lexer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea astOutputArea;
+    private javax.swing.JTextArea astOutputAreaCodeGen;
     private javax.swing.JButton buttonClearAll;
     private javax.swing.JButton buttonClearAll2;
     private javax.swing.JButton buttonClearAll3;
+    private javax.swing.JButton buttonClearAll4;
     public javax.swing.JButton buttonLex;
     private javax.swing.JButton buttonQuit;
     private javax.swing.JButton buttonQuit1;
     private javax.swing.JButton buttonQuit2;
+    private javax.swing.JButton buttonQuit3;
     private javax.swing.JButton buttonTestCases;
     private javax.swing.JButton buttonTestCases1;
     private javax.swing.JButton buttonTestCases2;
+    private javax.swing.JButton buttonTestCases3;
     private javax.swing.JTextArea cstOutputArea;
     private javax.swing.JTextArea inputArea;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelInput;
     private javax.swing.JLabel labelInput1;
     private javax.swing.JLabel labelInput2;
+    private javax.swing.JLabel labelInput3;
     private javax.swing.JLabel labelOutput;
     private javax.swing.JLabel labelOutput1;
     private javax.swing.JLabel labelOutput2;
+    private javax.swing.JLabel labelOutput3;
     private javax.swing.JLabel labelTitle;
     private javax.swing.JLabel labelTitle1;
     private javax.swing.JLabel labelTitle2;
+    private javax.swing.JLabel labelTitle3;
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenuItem menuItemQuit;
@@ -2523,13 +2688,17 @@ public class Lexer extends javax.swing.JFrame {
     private javax.swing.JTextArea outputArea;
     private javax.swing.JTextArea outputAreaParser;
     private javax.swing.JTextArea outputAreaSemantics;
+    private javax.swing.JTextArea outputAreaSymbolTable;
     private javax.swing.JPanel panelLexer;
     private javax.swing.JPanel panelParser;
     private javax.swing.JPanel panelSemantics;
+    private javax.swing.JPanel panelSemantics1;
     private javax.swing.JScrollPane scrollPaneInput1;
     private javax.swing.JScrollPane scrollPaneInput2;
+    private javax.swing.JScrollPane scrollPaneInput3;
     private javax.swing.JScrollPane scrollPaneOutput;
     private javax.swing.JScrollPane scrollPaneOutput1;
     private javax.swing.JScrollPane scrollPaneOutput2;
+    private javax.swing.JScrollPane scrollPaneOutput3;
     // End of variables declaration//GEN-END:variables
 }
