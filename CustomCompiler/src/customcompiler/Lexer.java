@@ -453,8 +453,6 @@ public class Lexer extends javax.swing.JFrame {
          * Program       ::== Block $
          */        
         private void Program() {
-            
-            
             if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // In case end comes sooner than expected
                 // Error case when parser finishes with uneven number of '{' and '}'
                 if(closeBraceCount != openBraceCount) {
@@ -907,7 +905,7 @@ public class Lexer extends javax.swing.JFrame {
             }
             
             if(tokens.get(currentToken).getType().equals(tokenType.printStatement)) {
-               
+                printCount++;
                 System.out.println("printCount: " + printCount);
                 System.out.println("scope: " + scope);
                 // Adds Statement branch to tree
@@ -915,12 +913,9 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Adds Print Statement branch to tree
                 cst.addNode("Print Statement", "branch");
-               // ast.scaleToLayer(scope);
-                
                 
                 // Adds print statement as a branch to AST
                 ast.addNode("Print Statement", "branch");
-                  
                 
                 matchAndDevour(tokenType.printStatement);
                 outputAreaParser.append("PARSER: parseStatement()\n");
@@ -1161,6 +1156,11 @@ public class Lexer extends javax.swing.JFrame {
                     // Increments branch correctly
                     cst.statementListIncrement();
                     
+                    if(scope > 0) {
+                        ast.scaleToB();
+                    } else {
+                        ast.scaleToParent();
+                    }
                     StatementList(); // If there are more statements left
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // In case of new line

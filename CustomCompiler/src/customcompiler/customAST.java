@@ -73,60 +73,51 @@ public class customAST {
         }
     }
     
-    public void scaleToLayer(int a) {
-        astNodes tempParent = this.cur.parent;
-        astNodes tempCur = this.cur;
-        //int curDepth = 0;
-        
-        while((tempParent != null) && (tempParent.name != undefined)) {
-            tempCur = tempParent;
-            tempParent = tempParent.parent;
-            curDepth++;
-        }
-        
-        //curDepth--;
-        //a--;
-        
-        for(int i=0;i<(curDepth - a); i++) {
-            tempCur = tempParent;
-        }
-        
-        endChildren();
-    }
+//    public void scaleToLayer(int a) {
+//        astNodes tempParent = this.cur.parent;
+//        astNodes tempCur = this.cur;
+//        //int curDepth = 0;
+//        
+//        while((tempParent != null) && (tempParent.name != undefined)) {
+//            tempCur = tempParent;
+//            tempParent = tempParent.parent;
+//            curDepth++;
+//        }
+//        
+//        //curDepth--;
+//        //a--;
+//        
+//        for(int i=0;i<(curDepth - a); i++) {
+//            tempCur = tempParent;
+//        }
+//        
+//        endChildren();
+//    }
     
     /**
      * 
      * When a closed parenthesis is added 
      * it must be aligned to its previous open parenthesis
      */
-    public void scaleToPrintStatement() {
-        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+    public void scaleToB() {
+        while(this.cur.parent.name != "Block") {
             this.cur = this.cur.parent;
-            if("Print Statement".equals(this.cur.parent.name)) {
-                /**
-                 * stops one before print statement, 
-                 * so this is a little push in order for close parenthesis
-                 * to land as a child in print statement accordingly  
-                 */
-                endChildren();
-                break;
-            }
+            endChildren();
         }
     }
     
     
-    public void scaleToVarDecl() {
-        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
+    public void scaleToParent() {
+        while(this.cur.parent.name != "Program") {
             this.cur = this.cur.parent;
-            if("Variable Declaration".equals(this.cur.parent.name)) {
+
+        
                 /**
                  * stops one before print statement, 
                  * so this is a little push in order for close parenthesis
                  * to land as a child in print statement accordingly  
                  */
-                endChildren();
-                break;
-            }
+            
         }
     }
 
@@ -223,6 +214,9 @@ public class customAST {
                 traversalResult += "<" + node.name + ">";
                 traversalResult += "\n";
             } else if(node.name.equals("Block")) {
+                traversalResult += "<" + node.name + ">";
+                traversalResult += "\n";
+            } else if(node.name.equals("Print Statement")) {
                 traversalResult += "<" + node.name + ">";
                 traversalResult += "\n";
             } else {
