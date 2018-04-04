@@ -1708,6 +1708,9 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf"); 
+                if(!idList.contains(tokens.get(currentToken).getData())) {
+                    semanticError++;
+                }
                 
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
