@@ -1506,10 +1506,7 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
-                if(!idList.contains(tokens.get(currentToken).getData())) {
-                    semanticError++;
-                }
-                
+               
                 // Adds Char List branch to tree
                 cst.addNode("Char List", "branch");
                 
