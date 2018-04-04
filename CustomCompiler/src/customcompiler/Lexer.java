@@ -1196,6 +1196,7 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
                
                 // Attaches to previous Statement List
+                
                 cst.statementListIncrement();
                 
                 // Aligns branch to its block
