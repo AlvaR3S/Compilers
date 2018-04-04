@@ -19,6 +19,7 @@ public class customAST {
         
     astNodes root;
     astNodes cur = new astNodes();
+    int curDepth = 0;
     Lexer.Token token;
     
     public customAST() {
@@ -37,9 +38,9 @@ public class customAST {
      * @param name
      * @param kind 
      */
-    public void addNode(String name, String kind) {
+    public void addNode(String name, String kind, int lineNum) {
         // Construct the node object.
-        astNodes node = new astNodes(name);
+        astNodes node = new astNodes(name, lineNum);
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {
@@ -72,6 +73,26 @@ public class customAST {
         }
     }
     
+    public void scaleToLayer(int a) {
+        astNodes tempParent = this.cur.parent;
+        astNodes tempCur = this.cur;
+        //int curDepth = 0;
+        
+        while((tempParent != null) && (tempParent.name != undefined)) {
+            tempCur = tempParent;
+            tempParent = tempParent.parent;
+            curDepth++;
+        }
+        
+        //curDepth--;
+        //a--;
+        
+        for(int i=0;i<(curDepth - a); i++) {
+            this.cur = this.cur.parent;
+        }
+        
+        endChildren();
+    }
     
     /**
      * 
@@ -103,7 +124,7 @@ public class customAST {
                  * so this is a little push in order for close parenthesis
                  * to land as a child in print statement accordingly  
                  */
-                //endChildren();
+                endChildren();
                 break;
             }
         }
