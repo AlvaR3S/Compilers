@@ -405,11 +405,12 @@ public class Lexer extends javax.swing.JFrame {
         private int openBraceCount = 0;
         private int closeBraceCount = 0;
         private int printCount = 0;
+        private int semanticError = 0;
         TokenType tokenType;
         customCST cst = new customCST();
         customAST ast = new customAST();
         ArrayList<String> charList = new ArrayList<String>();
-        
+        ArrayList<String> idList = new ArrayList<String>();        
         
         public Parser() { }
         
@@ -937,6 +938,12 @@ public class Lexer extends javax.swing.JFrame {
                 // Displays what the ID is in this assignment statement
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
+                if(!idList.contains(tokens.get(currentToken).getData())) {
+                    
+                    semanticError++;
+                }
+                
+                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseStatement()\n");
                 System.out.println("matched: ID\n");
@@ -1213,6 +1220,10 @@ public class Lexer extends javax.swing.JFrame {
                
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                
+                idList.add(tokens.get(currentToken).getData()); // Add 
+                
+                System.out.println(idList); 
                 
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
