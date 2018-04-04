@@ -38,9 +38,9 @@ public class customAST {
      * @param name
      * @param kind 
      */
-    public void addNode(String name, String kind, int lineNum) {
+    public void addNode(String name, String kind) {
         // Construct the node object.
-        astNodes node = new astNodes(name, lineNum);
+        astNodes node = new astNodes(name);
         
         // Check to see if it needs to be the root node.
         if (this.root == null) {

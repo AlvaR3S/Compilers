@@ -16,13 +16,12 @@ public class astNodes {
     LinkedList<astNodes> children = new LinkedList<astNodes>();
     astNodes parent = null;
     String name = null;
-    int lineNum = -1;
+   
         
     public astNodes() { }
     
-    public astNodes(String name, int lineNum) {
+    public astNodes(String name) {
         this.name = name;
-        this.lineNum = lineNum;
     }
     
     public astNodes(String name, astNodes parent, LinkedList<astNodes> children) {
