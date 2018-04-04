@@ -72,38 +72,16 @@ public class customAST {
             this.cur = this.cur.parent;
         }
     }
-    
-//    public void scaleToLayer(int a) {
-//        astNodes tempParent = this.cur.parent;
-//        astNodes tempCur = this.cur;
-//        //int curDepth = 0;
-//        
-//        while((tempParent != null) && (tempParent.name != undefined)) {
-//            tempCur = tempParent;
-//            tempParent = tempParent.parent;
-//            curDepth++;
-//        }
-//        
-//        //curDepth--;
-//        //a--;
-//        
-//        for(int i=0;i<(curDepth - a); i++) {
-//            tempCur = tempParent;
-//        }
-//        
-//        endChildren();
-//    }
-    
+
     /**
      * 
-     * When a closed parenthesis is added 
-     * it must be aligned to its previous open parenthesis
+     * Aligns AST parents to current scope
      */
-    public void scaleToB() {
+    public void scaleToBlock() {
         while(this.cur.parent.name != "Block") {
             this.cur = this.cur.parent;
-            endChildren();
         }
+        endChildren();
     }
     
     
@@ -133,27 +111,6 @@ public class customAST {
             this.cur = this.cur.parent;
             if("Statement List".equals(this.cur.parent.name)) {
                 endChildren(); // Needs a little push to be aligned correctly
-                break;
-            }
-        }
-    }
-    
-    
-    /**
-     * 
-     * Aligns close brackets 
-     * to its appropriate open bracket
-     */
-    public void scaleToBlock() {
-        while((this.cur.parent != null) && (this.cur.parent.name != undefined)) {
-            this.cur = this.cur.parent;
-            if("Block".equals(this.cur.parent.name)) {
-                /**
-                 * stops one before Program, 
-                 * so this is a little push in order for close bracket
-                 * to land as a child in the block branch accordingly  
-                 */
-                endChildren();
                 break;
             }
         }
