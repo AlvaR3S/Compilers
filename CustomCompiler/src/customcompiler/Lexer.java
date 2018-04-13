@@ -1672,9 +1672,14 @@ public class Lexer extends javax.swing.JFrame {
 
                         // add charList to ast before next quote
                         ast.addNode(CHARLIST, "leaf");
-
-                        // Matches position to last spotted quote
-                        cst.scaleToQuote();
+                        
+                        if(charList.size() > 2) {
+                            // Matches position to last spotted quote
+                            cst.scaleToQuote();
+                        } else {
+                            cst.endChildren(); // IF there is only one char
+                        }
+                        
 
                         // Allows me to get the current quote and add to node as leaf
                         cst.addNode(tokens.get(currentToken).getData(), "leaf");
