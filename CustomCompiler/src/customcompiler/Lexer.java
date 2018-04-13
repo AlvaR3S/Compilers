@@ -1292,13 +1292,13 @@ public class Lexer extends javax.swing.JFrame {
                 
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
                    // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
-                   printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                   printList.add(tokens.get(currentToken).getData() + "          " + tokens.get(currentToken - 1).getData() + "           " + scope + "         " + lineCount+ "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
                     // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
-                    printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                    printList.add(tokens.get(currentToken).getData() + "          " + tokens.get(currentToken - 1).getData() + "      " + scope + "         " + lineCount + "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
                     // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
-                    printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                    printList.add(tokens.get(currentToken).getData() + "          " + tokens.get(currentToken - 1).getData() + "  " + scope + "         " + lineCount + "\n");
                 } 
                 
                
@@ -1522,18 +1522,18 @@ public class Lexer extends javax.swing.JFrame {
                         
                         if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
                             BooleanExpr(); // continues the BooleanExpr
-
+                        
                         } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
                             BooleanExpr(); // continues the BooleanExpr
                         
                         } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                             PrintStatement(); // Loop back to PrintStatement 
-                                
+                        
                         } else { // New Lines and 
                             cst.statementListIncrement(); // Attaches to previous Statement List
                             ast.scaleToBlock(); // Aligns AST parent to its current Block
                             StatementList();
-                        }  
+                        }
                     } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
                         if(!idList.contains(tokens.get(currentToken).getData())) {
                             semanticError++;
@@ -1548,9 +1548,19 @@ public class Lexer extends javax.swing.JFrame {
                             outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
                             outputAreaParser.append("PARSER: parseCHAR()\n");
                             System.out.println("matched: CHAR\n");
-                            
-                            AssignmentStatement(); // Go finish AssignmentStatement
-                        } else {
+                            if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                                BooleanExpr(); // continues the BooleanExpr
+                        
+                            } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                                BooleanExpr(); // continues the BooleanExpr
+
+                            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                                PrintStatement(); // Loop back to PrintStatement 
+
+                            } else {
+                                AssignmentStatement(); // Go finish AssignmentStatement
+                            }
+                        } else if(idList.contains(tokens.get(currentToken).getData())) {
                             // Allows me to get the String of current CHAR and add to node as leaf
                             cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
@@ -1562,8 +1572,22 @@ public class Lexer extends javax.swing.JFrame {
                             outputAreaParser.append("PARSER: parseCHAR()\n");
                             System.out.println("matched: CHAR\n");
                             
-                            AssignmentStatement(); // Go finish AssignmentStatement
-                            
+                            if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                                BooleanExpr(); // continues the BooleanExpr
+                        
+                            } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                                BooleanExpr(); // continues the BooleanExpr
+
+                            } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                                PrintStatement(); // Loop back to PrintStatement 
+
+                            } else {
+                                AssignmentStatement(); // Go finish AssignmentStatement
+                            }
+                        } else {
+                            outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                            outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                            Program(); // loop to the beginning
                         } 
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
