@@ -254,7 +254,7 @@ public class Lexer extends javax.swing.JFrame {
         public Token() {
             
             int i = 1;
-            
+            int currentLexToken = 0;
 
             Parser info = new Parser();
 
@@ -262,66 +262,96 @@ public class Lexer extends javax.swing.JFrame {
             String output = outputArea.getText();
             
             
+            
 
             boolean errorToken = false;
 
 
             Matcher tokenMatcher = getMatcher();
-
+            Pattern tokenPattern = null;
+                
             // Loops through the input and finds valid tokens
             while(tokenMatcher.find()) {
                 if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                     curLineNum++;
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
-                     continue;
+                    continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
-                     continue;
-//                } else if(tokenMatcher.group(TokenType.empty.name()) != null) {
-//                    tokens.add(new Token(TokenType.empty, tokenMatcher.group(TokenType.empty.name())));     
+                    continue;
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
+                    if(tokens.get(currentLexToken - 1).getType().equals(type.Quote)) {
+                        
+                        if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
+                            tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
+                            currentLexToken++;
+                        }
+                    } else {
+                        tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
+                        currentLexToken++;
+                    }
                 } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
                     tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
                     tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
                     tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
                     tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
                     tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
                     tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
                     tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
                     tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
                     tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
                     tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
                     tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.Quote.name()) != null) {
                     tokens.add(new Token(TokenType.Quote, tokenMatcher.group(TokenType.Quote.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
                     tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
                     errorCount++;
+                    currentLexToken++;
                 } else {
                     System.out.println("Unrecognized token found."); // Catches other tokens that aren'cst allowed if not in (unrecognized)
                     errorToken = true;
@@ -436,6 +466,9 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
 
+        public int getCurrentToken() {
+            return currentToken;
+        }
         
         private void Semantics() {
             outputAreaSemantics.append("Program " + i + " Lexical Analysis\n");
@@ -453,21 +486,35 @@ public class Lexer extends javax.swing.JFrame {
         private void SymbolTable() {
             if(semanticError > 1) { // If there is a semantic error skip tree
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("not produced due to error(s) detected by semantic analysis");
-                    
-            } else {
+                    outputAreaSymbolTable.append("not produced due to error(s) detected by \nsemantic analysis.\n\n"); 
+                    outputAreaSymbolTable.append("------------------------------------------------------------------\n");
+            } else if(idList.isEmpty()) {
+                outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                outputAreaSymbolTable.append("not produced due to no variable declarations.\n\n"); 
+                outputAreaSymbolTable.append("------------------------------------------------------------------\n");
+            } else {    
                 if(i > 1) { // Separates trees accordingly
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("---------------------------------------\n");
                     outputAreaSymbolTable.append("Name Type        Scope  Line\n");
                     outputAreaSymbolTable.append("---------------------------------------\n");
                     
+                    String result = ""; // CHARLIST is the very first space
+                    
+                    for(String list : printList) {  // We loop through the newly created array list of chars
+                       result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
+                    } 
+                    
+                    outputAreaSymbolTable.append(result);
+                    
                 } else {
                     outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
                     outputAreaSymbolTable.append("---------------------------------------\n");
                     outputAreaSymbolTable.append("Name Type        Scope  Line\n");
                     outputAreaSymbolTable.append("---------------------------------------\n");
-                     String result = ""; // CHARLIST is the very first space
+                    
+                    String result = ""; // CHARLIST is the very first space
+                    
                     for(String list : printList) {  // We loop through the newly created array list of chars
                        result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
                     } 
@@ -477,6 +524,17 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
+        private void ResetData() {
+            cst.restartFamily(); // Clear family tree for next program
+                    
+            ast.restartFamily(); // Clear family tree for next program
+
+            idList.clear(); // restarts list of ids before new program
+
+            printList.clear(); // restarts list of ids before new program
+            
+            semanticError = 0;
+        }
         
         /**
          * 
@@ -496,6 +554,7 @@ public class Lexer extends javax.swing.JFrame {
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
                     SymbolTable();
+                    
                     // loops the $ node to match the Block branch
                     cst.scaleToRoot();
                     
@@ -520,11 +579,7 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: parse()\n");
                     outputAreaParser.append("PARSER: parseProgram()\n");
                     
-                    cst.restartFamily(); // Clear family tree for next program
-                    
-                    ast.restartFamily(); // Clear family tree for next program
-                    
-                    idList.clear(); // restarts list of ids before new program
+                    ResetData(); // Resets all data for next program
                     
                     Program(); // when end reached loop back to the top
                 }             
@@ -544,11 +599,6 @@ public class Lexer extends javax.swing.JFrame {
                     astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
                     astOutputArea.append("-----------------------------\n");
                 }
-                
-                
-                
-                
-                
                 
                 // Adding the root node
                 cst.addNode("Program", "branch");
@@ -848,7 +898,16 @@ public class Lexer extends javax.swing.JFrame {
                     } else { // error
                         // Adds Statement List branch to tree
                         cst.addNode("Statement List", "branch"); // last statement list
-                        cst.scaleToBlock();
+                        
+                        if(i > 1) {
+                            cst.scaleToBlock();
+                        } else {
+                            for(int reloop = 0; reloop <= scope; reloop++) { // loops to match last block
+                                cst.scaleToBlock();
+                            }
+                        }
+                        
+                        
 
                         //Creates the leaf node of Block }
                         cst.addNode("}", "leaf");
@@ -859,7 +918,6 @@ public class Lexer extends javax.swing.JFrame {
                         System.out.println("matched: }\n");
 
                         scope--;
-                        //ast.scaleToLayer(scope);
                         
                         // If EOP is found
                         if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
@@ -1243,7 +1301,7 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
-                idList.add(tokens.get(currentToken).getData()); // Add 
+                idList.add(tokens.get(currentToken).getData()); // Add char to ID list 
                 
                 System.out.println(idList); 
                 
@@ -1251,14 +1309,14 @@ public class Lexer extends javax.swing.JFrame {
                    // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                    printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
-                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
+                    // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
+                    printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
-                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
+                    // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
+                    printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                 } 
                 
                
-                
-                
                 matchAndDevour(tokenType.CHAR);
                 outputAreaParser.append("PARSER: parseVarDecl()\n"); // VarDecl is valid
                 outputAreaParser.append("PARSER: parseType()\n"); // ID is valid
@@ -1494,8 +1552,19 @@ public class Lexer extends javax.swing.JFrame {
                     } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
                         if(!idList.contains(tokens.get(currentToken).getData())) {
                             semanticError++;
-                            SymbolTable();
-                            Program(); // loop to the beginning  
+                            
+                            // Allows me to get the String of current CHAR and add to node as leaf
+                            cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
+                
+                            // Allows me to get the current ID (char) and add to the ast
+                            ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                            
+                            matchAndDevour(tokenType.CHAR);
+                            outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                            outputAreaParser.append("PARSER: parseCHAR()\n");
+                            System.out.println("matched: CHAR\n");
+                            
+                            AssignmentStatement(); // Go finish AssignmentStatement
                         } else {
                             // Allows me to get the String of current CHAR and add to node as leaf
                             cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
