@@ -46,7 +46,6 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Custom Compiler: Lexer");
         setBounds(new java.awt.Rectangle(20, 20, 0, 0));
-        setPreferredSize(new java.awt.Dimension(570, 502));
 
         labelTitle1.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         labelTitle1.setText("Test Case Help");
@@ -135,7 +134,7 @@ public class LexerTestCasesHelpFrame extends javax.swing.JFrame {
                                 .addGap(119, 119, 119)
                                 .addComponent(labelTitle1))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(245, 245, 245)
+                        .addGap(240, 240, 240)
                         .addComponent(buttonReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(98, Short.MAX_VALUE))
         );

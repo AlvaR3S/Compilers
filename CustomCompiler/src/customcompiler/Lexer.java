@@ -410,7 +410,8 @@ public class Lexer extends javax.swing.JFrame {
         customCST cst = new customCST();
         customAST ast = new customAST();
         ArrayList<String> charList = new ArrayList<String>();
-        ArrayList<String> idList = new ArrayList<String>();        
+        ArrayList<String> idList = new ArrayList<String>();  
+        ArrayList<String> printList = new ArrayList<String>();  
         
         public Parser() { }
         
@@ -449,6 +450,34 @@ public class Lexer extends javax.swing.JFrame {
             outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
         }
         
+        private void SymbolTable() {
+            if(semanticError > 1) { // If there is a semantic error skip tree
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("not produced due to error(s) detected by semantic analysis");
+                    
+            } else {
+                if(i > 1) { // Separates trees accordingly
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    
+                } else {
+                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
+                    outputAreaSymbolTable.append("---------------------------------------\n");
+                     String result = ""; // CHARLIST is the very first space
+                    for(String list : printList) {  // We loop through the newly created array list of chars
+                       result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
+                    } 
+                    
+                    outputAreaSymbolTable.append(result);
+                }
+            }
+        }
+        
+        
         /**
          * 
          * Program       ::== Block $
@@ -466,7 +495,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
-                    
+                    SymbolTable();
                     // loops the $ node to match the Block branch
                     cst.scaleToRoot();
                     
@@ -516,17 +545,8 @@ public class Lexer extends javax.swing.JFrame {
                     astOutputArea.append("-----------------------------\n");
                 }
                 
-                if(i > 1) { // Separates trees accordingly
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                } else {
-                    outputAreaSymbolTable.append("\nProgram " + i + " Symbol Table\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                    outputAreaSymbolTable.append("Name Type        Scope  Line\n");
-                    outputAreaSymbolTable.append("---------------------------------------\n");
-                }
+                
+                
                 
                 
                 
@@ -1064,6 +1084,7 @@ public class Lexer extends javax.swing.JFrame {
                 } else {
                     StatementList();
                 }
+                
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                 // Adds Statement List branch to tree
                 cst.addNode("Statement List", "branch");
@@ -1139,7 +1160,7 @@ public class Lexer extends javax.swing.JFrame {
                     cst.addNode(")", "leaf");
                     
                     PrintStatement(); // Finish Print Statement
-                } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements
+                } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // For If and While statements or single line
                     // Lines close parenthesis to open parenthesis within print statement
                     cst.scaleToCondition();
 
@@ -1215,7 +1236,7 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 lineCount++;
             }
-           if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
+            if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Checking for CHARS
                 // Allows me to get the current CHAR and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
                
@@ -1225,15 +1246,17 @@ public class Lexer extends javax.swing.JFrame {
                 idList.add(tokens.get(currentToken).getData()); // Add 
                 
                 System.out.println(idList); 
+                
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
-                    outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                   // outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
+                   printList.add(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "	  	    " + scope + "	   " + lineCount+ "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeString)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + " 	    " + scope + "	   " + lineCount + "\n");
                 } else if(tokens.get(currentToken -1).getType().equals(tokenType.typeBoolean)) {
                     outputAreaSymbolTable.append(tokens.get(currentToken).getData() + "	 	" + tokens.get(currentToken - 1).getData() + "   " + scope + "	         " + lineCount + "\n");
                 } 
-               
                 
+               
                 
                 
                 matchAndDevour(tokenType.CHAR);
@@ -1468,6 +1491,26 @@ public class Lexer extends javax.swing.JFrame {
                             ast.scaleToBlock(); // Aligns AST parent to its current Block
                             StatementList();
                         }  
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                        if(!idList.contains(tokens.get(currentToken).getData())) {
+                            semanticError++;
+                            SymbolTable();
+                            Program(); // loop to the beginning  
+                        } else {
+                            // Allows me to get the String of current CHAR and add to node as leaf
+                            cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
+                
+                            // Allows me to get the current ID (char) and add to the ast
+                            ast.addNode(tokens.get(currentToken).getData(), "leaf");
+                            
+                            matchAndDevour(tokenType.CHAR);
+                            outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                            outputAreaParser.append("PARSER: parseCHAR()\n");
+                            System.out.println("matched: CHAR\n");
+                            
+                            AssignmentStatement(); // Go finish AssignmentStatement
+                            
+                        } 
                     } else {
                         outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                         outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
@@ -1508,27 +1551,25 @@ public class Lexer extends javax.swing.JFrame {
                 
                 // Allows me to get the current quote and add to node as leaf
                 cst.addNode(tokens.get(currentToken).getData(), "leaf");
-               
-                // Adds Char List branch to tree
-                cst.addNode("Char List", "branch");
                 
                 matchAndDevour(tokenType.Quote);
                 outputAreaParser.append("PARSER: parseStringExpr()\n");
                 outputAreaParser.append("PARSER: parseQuote()\n");
-                
+                 
+
                 // Clears last list for new char list * Avoids duplication *
                 charList.clear();
-                
+
                 while(tokens.get(currentToken).getType().equals(tokenType.CHAR)) { // Loops through charlist
                     // Allows me to get the current CHAR and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf");
-                   
+
                     // Adds  branch to tree
                     cst.addNode("Char List", "branch");
-                    
+
                     // Adds current char to new arraylist for ast disply *Helps with AssignmentStatement ambiguity*
                     charList.add(tokens.get(currentToken).getData()); 
-                   
+
                     matchAndDevour(tokenType.CHAR);
                     outputAreaParser.append("PARSER: parseCHAR()\n");
                 }
@@ -1536,41 +1577,63 @@ public class Lexer extends javax.swing.JFrame {
                 
                 if(tokens.get(currentToken).getType().equals(tokenType.Quote)) {
                     
-                    // We save it to CHARLIST and add CHARLIST because on every string add charlist saves the char in order for later output
-                    // In order to remove , from the array list we must append ""
-                    String CHARLIST = ""; // CHARLIST is the very first space
-                    for(String CHAR : charList) {  // We loop through the newly created array list of chars
-                       CHARLIST = CHARLIST + CHAR + ""; // Back "" is the space after every char they are closed to keep chars together  
+                    if(tokens.get(currentToken - 1).getType().equals(tokenType.Quote)) { // Last token was a quote
+                        // Allows me to get the current quote and add to node as leaf
+                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
+                        
+                        matchAndDevour(tokenType.Quote);
+                        outputAreaParser.append("PARSER: parseQuote()\n");
+                        
+                        // Next Token has to be a closed parenthesis
+                        if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                            PrintStatement(); // Loop back to PrintStatement 
+                            
+                        } else { // Expected Token not found
+                            outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                            outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                            Program(); // loop to the beginning  
+                        }
+                    } else if (tokens.get(currentToken - 1).getType().equals(tokenType.CHAR)) { // Last quote was a char
+                        // We save it to CHARLIST and add CHARLIST because on every string add charlist saves the char in order for later output
+                        // In order to remove , from the array list we must append ""
+                        String CHARLIST = ""; // CHARLIST is the very first space
+                        for(String CHAR : charList) {  // We loop through the newly created array list of chars
+                           CHARLIST = CHARLIST + CHAR + ""; // Back "" is the space after every char they are closed to keep chars together  
+                        }   
+
+                        // add charList to ast before next quote
+                        ast.addNode(CHARLIST, "leaf");
+
+                        // Matches position to last spotted quote
+                        cst.scaleToQuote();
+
+                        // Allows me to get the current quote and add to node as leaf
+                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                        matchAndDevour(tokenType.Quote);
+                        outputAreaParser.append("PARSER: parseQuote()\n");
+
+                        if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                            BooleanExpr(); // continues the BooleanExpr
+
+                        } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { // Checking for BOOLOP
+                            BooleanExpr(); // continues the BooleanExpr
+
+                        } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                            PrintStatement(); // Loop back to PrintStatement    
+
+                        } else {
+                            cst.statementListIncrement(); // Attaches to previous Statement List
+                            ast.scaleToBlock(); // Aligns AST parent to its current Block
+                            StatementList();
+                        }
+                    } else { // Expected Token not found
+                        outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                        outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                        Program(); // loop to the beginning 
                     }   
-                   
-                    // add charList to ast before next quote
-                    ast.addNode(CHARLIST, "leaf");
-                    
-                    // Matches position to last spotted quote
-                    cst.scaleToQuote();
-                    
-                    // Allows me to get the current quote and add to node as leaf
-                    cst.addNode(tokens.get(currentToken).getData(), "leaf");
-                    
-                    matchAndDevour(tokenType.Quote);
-                    outputAreaParser.append("PARSER: parseQuote()\n");
-                    
-                    if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
-                        BooleanExpr(); // continues the BooleanExpr
-
-                    } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { // Checking for BOOLOP
-                        BooleanExpr(); // continues the BooleanExpr
-
-                    } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
-                        PrintStatement(); // Loop back to PrintStatement    
-
-                    } else {
-                        cst.statementListIncrement(); // Attaches to previous Statement List
-                        ast.scaleToBlock(); // Aligns AST parent to its current Block
-                        StatementList();
-                    }    
                 }
-            } else { // Not a BoolopExpr so go to finish the printStatement
+            } else { // Expected Token not found
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
                 Program(); // loop to the beginning 
