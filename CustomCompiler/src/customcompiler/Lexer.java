@@ -139,11 +139,11 @@ public class Lexer extends javax.swing.JFrame {
         
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
-        typeInt("int"),
-        typeString("string"),
-        typeBoolean("boolean"),
+        typeInt("((?<!\")|(?<![a-z]))int\\s(?![a-z]{2}|[a-z]\")"),
+        typeString("((?<!\")|(?<![a-z]))string\\s(?![a-z]{2}|[a-z]\")"),
+        typeBoolean("((?<!\")|(?<![a-z]))boolean\\s(?![a-z]{2}|[a-z]\")"),
         
-        // Statemenets
+        // Statemenetsrive
         ifStatement("if"),
         whileStatement("while"),
         printStatement("print"),
@@ -152,7 +152,7 @@ public class Lexer extends javax.swing.JFrame {
         boolvalFalse("false"),
         boolvalTrue("true"),
         
-        // Identifiers
+        // Identifiers 
         
        
         // Numbers
@@ -189,13 +189,6 @@ public class Lexer extends javax.swing.JFrame {
         
         // Quote
         Quote("\""),
-        
-        // Empty String
-
-        /**
-         *
-         */
-        
         
         // Comments
         comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
@@ -266,7 +259,7 @@ public class Lexer extends javax.swing.JFrame {
 
             boolean errorToken = false;
 
-
+                    
             Matcher tokenMatcher = getMatcher();
             Pattern tokenPattern = null;
                 
@@ -281,16 +274,8 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
                     continue;
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
-                    if(tokens.get(currentLexToken - 1).getType().equals(type.Quote)) {
-                        
-                        if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
-                            tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-                            currentLexToken++;
-                        }
-                    } else {
-                        tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-                        currentLexToken++;
-                    }
+                    tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
+                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
                     tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
                     currentLexToken++;
