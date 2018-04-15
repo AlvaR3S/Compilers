@@ -57,11 +57,11 @@ public class Lexer extends javax.swing.JFrame {
     // ------------------------------------------------------------
 
     public int getCurLineNum() {
-        return curLineNum;
+        return this.curLineNum;
     }
     
     public JTextArea getInputArea() {
-        return inputArea;
+        return this.inputArea;
     }
     
     public String getInput() {
@@ -75,26 +75,24 @@ public class Lexer extends javax.swing.JFrame {
     }
 
     public JTextArea getOutputAreaParser() {
-        return outputAreaParser;
+        return this.outputAreaParser;
     }
     
     public ArrayList<Token> getTokens() {
-        return tokens;
+        return this.tokens;
     }
 
     public int getErrorCount() {
-        return errorCount;
+        return this.errorCount;
     }
 
     public int getLineNumber() {
-        return lineNumber;
+        return this.lineNumber;
     }
 
     public int getWarningCount() {
         return warningCount;
     }
-    
-    
     
     public Pattern getPatterns() {
          
@@ -107,7 +105,7 @@ public class Lexer extends javax.swing.JFrame {
         return tokenPatterns;
     }
     
-     public Matcher getMatcher() {
+    public Matcher getMatcher() {
         Pattern patterns = getPatterns();
         
         String input = inputArea.getText();
@@ -119,7 +117,7 @@ public class Lexer extends javax.swing.JFrame {
     }
 
     public JButton getButtonClearAll() {
-        return buttonClearAll;
+        return this.buttonClearAll;
     }
 
     public void setButtonClearAll(JButton buttonClearAll) {
@@ -247,104 +245,70 @@ public class Lexer extends javax.swing.JFrame {
         public Token() {
             
             int i = 1;
-            int currentLexToken = 0;
 
             Parser info = new Parser();
 
             String input = inputArea.getText();
             String output = outputArea.getText();
-            
-            
-            
-
-            boolean errorToken = false;
-
                     
             Matcher tokenMatcher = getMatcher();
-            Pattern tokenPattern = null;
                 
             // Loops through the input and finds valid tokens
             while(tokenMatcher.find()) {
                 if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
                     curLineNum++;
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                     continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
                     continue;
                 } else if(tokenMatcher.group(TokenType.typeInt.name()) != null) {
                     tokens.add(new Token(TokenType.typeInt, tokenMatcher.group(TokenType.typeInt.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.typeString.name()) != null) {
                     tokens.add(new Token(TokenType.typeString, tokenMatcher.group(TokenType.typeString.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.typeBoolean.name()) != null) {
                     tokens.add(new Token(TokenType.typeBoolean, tokenMatcher.group(TokenType.typeBoolean.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.ifStatement.name()) != null) {
                     tokens.add(new Token(TokenType.ifStatement, tokenMatcher.group(TokenType.ifStatement.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.whileStatement.name()) != null) {
                     tokens.add(new Token(TokenType.whileStatement, tokenMatcher.group(TokenType.whileStatement.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.printStatement.name()) != null) {
                     tokens.add(new Token(TokenType.printStatement, tokenMatcher.group(TokenType.printStatement.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.assignmentStatement.name()) != null) {
                     tokens.add(new Token(TokenType.assignmentStatement, tokenMatcher.group(TokenType.assignmentStatement.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.CHAR.name()) != null) {
                     tokens.add(new Token(TokenType.CHAR, tokenMatcher.group(TokenType.CHAR.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolvalFalse.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalFalse, tokenMatcher.group(TokenType.boolvalFalse.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolvalTrue.name()) != null) {
                     tokens.add(new Token(TokenType.boolvalTrue, tokenMatcher.group(TokenType.boolvalTrue.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.digit.name()) != null) {
                     tokens.add(new Token(TokenType.digit, tokenMatcher.group(TokenType.digit.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.intopAddition.name()) != null) {
                     tokens.add(new Token(TokenType.intopAddition, tokenMatcher.group(TokenType.intopAddition.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolopNotEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopNotEqualTo, tokenMatcher.group(TokenType.boolopNotEqualTo.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.boolopEqualTo.name()) != null) {
                     tokens.add(new Token(TokenType.boolopEqualTo, tokenMatcher.group(TokenType.boolopEqualTo.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.openBracket.name()) != null) {
                     tokens.add(new Token(TokenType.openBracket, tokenMatcher.group(TokenType.openBracket.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.closeBracket.name()) != null) {
                     tokens.add(new Token(TokenType.closeBracket, tokenMatcher.group(TokenType.closeBracket.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.openParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.openParenthesis, tokenMatcher.group(TokenType.openParenthesis.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.closeParenthesis.name()) != null) {
                     tokens.add(new Token(TokenType.closeParenthesis, tokenMatcher.group(TokenType.closeParenthesis.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.EOP.name()) != null) {
                     tokens.add(new Token(TokenType.EOP, tokenMatcher.group(TokenType.EOP.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.Quote.name()) != null) {
                     tokens.add(new Token(TokenType.Quote, tokenMatcher.group(TokenType.Quote.name())));
-                    currentLexToken++;
                 } else if(tokenMatcher.group(TokenType.unrecognized.name()) != null) {
                     tokens.add(new Token(TokenType.unrecognized, tokenMatcher.group(TokenType.unrecognized.name())));
                     errorCount++;
-                    currentLexToken++;
                 } else {
                     System.out.println("Unrecognized token found."); // Catches other tokens that aren'cst allowed if not in (unrecognized)
-                    errorToken = true;
                     errorCount++;    
                 } 
-                
-              
-                
             }
 
             // Error if there is no input
@@ -353,18 +317,12 @@ public class Lexer extends javax.swing.JFrame {
                 errorCount++;
             }
             
-
-
             // Prints befeore anything else at the top once
             outputArea.append("\nLEXER: Lexing program 1...\n");
             outputArea.append("-----------------------------\n");
             
             // Outputs a stream of tokens from the given input
-            for(Token token : tokens) {
-                int index = token.data.indexOf("$");
-
-                boolean moreThanOnce = index != -1 && index != input.lastIndexOf("$");
-
+            for(Token token : tokens) {  
                 // When an unrecognized token is found print error message else print the token
                 if(token.type == unrecognized) {
                     outputArea.append("LEXER: ERROR: Unrecognized token: " + token.data + " on line " + lineNumber + "\n");
@@ -398,10 +356,6 @@ public class Lexer extends javax.swing.JFrame {
                 outputArea.append("Lex completed with:\n [" + warningCount + "] Warning(s) "
                                 + "and [" + errorCount + "] Error(s).\n\n"); 
             }
-            
-            
-            
-           
         }
     }     
     
@@ -569,12 +523,15 @@ public class Lexer extends javax.swing.JFrame {
 
             printList.clear(); // restarts list of ids before new program
             
+            charList.clear();
+            
             semanticError = 0;
             
             openBraceCount = 0;
             
             closeBraceCount = 0;
         }
+        
         
         /**
          * 
