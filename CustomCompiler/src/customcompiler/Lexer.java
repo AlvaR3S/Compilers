@@ -435,12 +435,23 @@ public class Lexer extends javax.swing.JFrame {
          * @param token
          */
         public Parser(Token token){
-            outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
-            outputAreaParser.append("------------------------------------------\n");
-            outputAreaParser.append("PARSER: parse()\n");
-            outputAreaParser.append("PARSER: parseProgram()\n");
-            
-            Program();
+            if(lexError > 0) {
+                outputAreaParser.append("\nPARSER: Skipped due to LEXER error(s)");
+                outputAreaParser.append("------------------------------------------\n\n");
+                
+                TreeErrors();
+                Semantics();
+                SymbolTable();
+
+                ResetData();
+            } else {
+                outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
+                outputAreaParser.append("------------------------------------------\n");
+                outputAreaParser.append("PARSER: parse()\n");
+                outputAreaParser.append("PARSER: parseProgram()\n");
+
+                Program();
+            }
         }
 
         public void matchAndDevour(TokenType tokenMatch) {
@@ -456,7 +467,7 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         private void Semantics() {
-            outputAreaSemantics.append("Program " + i + " Lexical Analysis\n");
+            outputAreaSemantics.append("\nProgram " + i + " Lexical Analysis\n");
             outputAreaSemantics.append("Program " + i + " Lexical analysis produced " + lexError + " error(s) and " + lexWarning + " warning(s)\n\n");
 
             outputAreaSemantics.append("Program " + i + " Parsing\n");
@@ -509,6 +520,46 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
+        private void Trees() {
+            if(i > 1) { // Separates trees accordingly
+                cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
+                cstOutputArea.append("-----------------------------\n");
+            } else {
+                cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
+                cstOutputArea.append("-----------------------------\n");
+            }
+
+            if(i > 1) { // Separates trees accordingly
+                astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
+                astOutputArea.append("-----------------------------\n");
+            } else {
+                astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
+                astOutputArea.append("-----------------------------\n");
+            }
+        }
+        
+        private void TreeErrors() {
+            cstOutputArea.append("\nCST for program " + i + ": Skipped due to PARSER error(s).\n\n");
+            cstOutputArea.append("--------------------------------------------------\n");
+            astOutputArea.append("\nAST for program " + i + ": Skipped due to PARSER error(s).\n\n");
+            astOutputArea.append("--------------------------------------------------\n");
+        }
+        
+        private void ContinueProgram() {
+            if(currentToken < tokens.size()) { // in case Program is not finished
+                System.out.println("Program running more than once\n");
+                i++;
+                outputAreaParser.append("\nPARSER: Parsing program " + i + "...\n");
+                outputAreaParser.append("------------------------------------------\n");
+                outputAreaParser.append("PARSER: parse()\n");
+                outputAreaParser.append("PARSER: parseProgram()\n");
+
+                ResetData(); // Resets all data for next program
+
+                Program(); // when end reached loop back to the top
+            }
+        }
+        
         private void ResetData() {
             cst.restartFamily(); // Clear family tree for next program
                     
@@ -519,6 +570,10 @@ public class Lexer extends javax.swing.JFrame {
             printList.clear(); // restarts list of ids before new program
             
             semanticError = 0;
+            
+            openBraceCount = 0;
+            
+            closeBraceCount = 0;
         }
         
         /**
@@ -534,8 +589,14 @@ public class Lexer extends javax.swing.JFrame {
                     matchAndDevour(tokenType.EOP); 
                     System.out.println("matched $\n");
                     
-                    cstOutputArea.append("CST for program " + i + ": Skipped due to PARSER error(s).\n\n");
-                    
+                    TreeErrors();
+                    Semantics();
+                    SymbolTable();
+                    System.out.println("scope: " + scope);
+                    System.out.println("openBracketCount: " + openBraceCount);
+                    System.out.println("openBracketCount: " + openBraceCount);
+                    ResetData();
+                    ContinueProgram(); // If program not done
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
                     SymbolTable();
@@ -545,7 +606,12 @@ public class Lexer extends javax.swing.JFrame {
                     
                     // Adding EOP leaf Node
                     cst.addNode("$", "leaf");
-
+                    Trees();
+                    
+                    System.out.println("scope: " + scope);
+                    System.out.println("openBracketCount: " + openBraceCount);
+                    System.out.println("openBracketCount: " + openBraceCount);
+                    
                     cstOutputArea.append(cst.toString());
                     
                     astOutputArea.append(ast.toString());
@@ -554,36 +620,9 @@ public class Lexer extends javax.swing.JFrame {
                     System.out.println("matched $\n");
 
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
-                }
-                
-                if(currentToken < tokens.size()) { // in case Program is not finished
-                    System.out.println("Program running more than once\n");
-                    i++;
-                    outputAreaParser.append("\nPARSER: Parsing program " + i + "...\n");
-                    outputAreaParser.append("------------------------------------------\n");
-                    outputAreaParser.append("PARSER: parse()\n");
-                    outputAreaParser.append("PARSER: parseProgram()\n");
-                    
-                    ResetData(); // Resets all data for next program
-                    
-                    Program(); // when end reached loop back to the top
-                }             
+                    ContinueProgram(); // If program not done
+                }           
             } else {
-                if(i > 1) { // Separates trees accordingly
-                    cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
-                    cstOutputArea.append("-----------------------------\n");
-                } else {
-                    cstOutputArea.append("\nProgram " + i + " Concrete Syntax Tree\n");
-                    cstOutputArea.append("-----------------------------\n");
-                }
-                
-                if(i > 1) { // Separates trees accordingly
-                    astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
-                    astOutputArea.append("-----------------------------\n");
-                } else {
-                    astOutputArea.append("\n\nProgram " + i + " Abstract Syntax Tree\n");
-                    astOutputArea.append("-----------------------------\n");
-                }
                 
                 // Adding the root node
                 cst.addNode("Program", "branch");
@@ -653,8 +692,11 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: parseStatementList()\n");
                 System.out.println("matched: }\n");
                 
+                scope--;
+                
                 // When looping of } finishes there should be a $
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                    System.out.println("mmmmm");
                     Program(); // Goes to program to finish program
                 } else {
                     Block(); // Continue if there are more programs
@@ -676,7 +718,6 @@ public class Lexer extends javax.swing.JFrame {
                     
                     StatementList();
                 } else if(tokens.get(currentToken).getType().equals(tokenType.closeBracket)) { // incase of dupilicates (Block())
-                    scope--;
                     Block(); // Goes back into block to find finishing touches
                 } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // When looping of } finishes there should be a $
                     Program(); // Goes to program to finish program
@@ -1525,6 +1566,19 @@ public class Lexer extends javax.swing.JFrame {
                         
                         } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
                             BooleanExpr(); // continues the BooleanExpr
+                            
+                        } else if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) {                    
+                            // Allows me to get the current intop and add to node as leaf
+                            cst.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                            // If there is an addition symbol in the statement
+                            ast.addNode("Plus", "branch");
+
+                            matchAndDevour(tokenType.intopAddition);
+                            outputAreaParser.append("PARSER: parseIntop()\n");
+                            System.out.println("matched: Intop\n");
+                            
+                            IntExpr();
                         
                         } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                             PrintStatement(); // Loop back to PrintStatement 
@@ -1553,7 +1607,20 @@ public class Lexer extends javax.swing.JFrame {
                         
                             } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
                                 BooleanExpr(); // continues the BooleanExpr
+                                
+                            } else if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) {                    
+                                // Allows me to get the current intop and add to node as leaf
+                                cst.addNode(tokens.get(currentToken).getData(), "leaf");
 
+                                // If there is an addition symbol in the statement
+                                ast.addNode("Plus", "branch");
+
+                                matchAndDevour(tokenType.intopAddition);
+                                outputAreaParser.append("PARSER: parseIntop()\n");
+                                System.out.println("matched: Intop\n");
+
+                                IntExpr();
+                                
                             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
                                 PrintStatement(); // Loop back to PrintStatement 
 
@@ -1607,7 +1674,88 @@ public class Lexer extends javax.swing.JFrame {
                     cst.statementListIncrement(); // Attaches to previous Statement List
                     ast.scaleToBlock(); // Aligns AST parent to its current Block
                     StatementList();
-                }    
+                }
+            } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
+                if(!idList.contains(tokens.get(currentToken).getData())) {
+                    semanticError++;
+
+                    // Allows me to get the String of current CHAR and add to node as leaf
+                    cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
+
+                    // Allows me to get the current ID (char) and add to the ast
+                    ast.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                    matchAndDevour(tokenType.CHAR);
+                    outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                    outputAreaParser.append("PARSER: parseCHAR()\n");
+                    System.out.println("matched: CHAR\n");
+                    if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) {                    
+                        // Allows me to get the current intop and add to node as leaf
+                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                        // If there is an addition symbol in the statement
+                        ast.addNode("Plus", "branch");
+
+                        matchAndDevour(tokenType.intopAddition);
+                        outputAreaParser.append("PARSER: parseIntop()\n");
+                        System.out.println("matched: Intop\n");
+
+                        IntExpr();
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                        PrintStatement(); // Loop back to PrintStatement 
+
+                    } else {
+                        AssignmentStatement(); // Go finish AssignmentStatement
+                    }
+                } else if(idList.contains(tokens.get(currentToken).getData())) {
+                    // Allows me to get the String of current CHAR and add to node as leaf
+                    cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
+
+                    // Allows me to get the current ID (char) and add to the ast
+                    ast.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                    matchAndDevour(tokenType.CHAR);
+                    outputAreaParser.append("PARSER: parseID()\n"); // ID is valid
+                    outputAreaParser.append("PARSER: parseCHAR()\n");
+                    System.out.println("matched: CHAR\n");
+
+                    if(tokens.get(currentToken).getType().equals(tokenType.boolopNotEqualTo)) { // Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.boolopEqualTo)) { //Checking for BOOLOP
+                        BooleanExpr(); // continues the BooleanExpr
+                    
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.intopAddition)) {                    
+                        // Allows me to get the current intop and add to node as leaf
+                        cst.addNode(tokens.get(currentToken).getData(), "leaf");
+
+                        // If there is an addition symbol in the statement
+                        ast.addNode("Plus", "branch");
+
+                        matchAndDevour(tokenType.intopAddition);
+                        outputAreaParser.append("PARSER: parseIntop()\n");
+                        System.out.println("matched: Intop\n");
+
+                        IntExpr();
+                        
+                    } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
+                        PrintStatement(); // Loop back to PrintStatement 
+
+                    } else {
+                        AssignmentStatement(); // Go finish AssignmentStatement
+                    }
+                } else {
+                    outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    Program(); // loop to the beginning
+                }
             } else { // If IntExpr doesn'cst start with a digit
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
