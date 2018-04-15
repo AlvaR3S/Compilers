@@ -42,7 +42,7 @@ public class Lexer extends javax.swing.JFrame {
     public ArrayList<Token> tokens = new ArrayList<Token>();
     
     // Gets the current Token position
-    private int curLineNum = 0;
+    private int curToken = 0;
     
     // Gets the line number of the current Token
     private int lineNumber = 1;
@@ -56,10 +56,6 @@ public class Lexer extends javax.swing.JFrame {
     // -----------------[Getters and Setters]----------------------
     // ------------------------------------------------------------
 
-    public int getCurLineNum() {
-        return this.curLineNum;
-    }
-    
     public JTextArea getInputArea() {
         return this.inputArea;
     }
@@ -257,7 +253,6 @@ public class Lexer extends javax.swing.JFrame {
             while(tokenMatcher.find()) {
                 if(tokenMatcher.group(TokenType.newLine.name()) != null) {
                     tokens.add(new Token(TokenType.newLine, tokenMatcher.group(TokenType.newLine.name())));
-                    curLineNum++;
                 } else if(tokenMatcher.group(TokenType.whiteSpace.name()) != null) {
                     continue;
                 } else if(tokenMatcher.group(TokenType.comment.name()) != null) {
@@ -329,14 +324,22 @@ public class Lexer extends javax.swing.JFrame {
                 } else if(token.type == newLine) { // Gets the current token line number and recognizes if new program is lexing
                     lineNumber++;
                 } else {
-                    outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens   
+                    outputArea.append("LEXER:" + token + " on line " + lineNumber + "\n"); // Prints out tokens
                 }
                 
                 if(token.type == EOP) {
-                    outputArea.append("LEXER: Lex completed successfully.\n\n"); 
-                    i++;
-                    outputArea.append("\nLEXER: Lexing program " + i + "...\n");
-                    outputArea.append("-----------------------------\n");
+                    if(errorCount > 0) {
+                        outputArea.append("LEXER: Lex completed with " + errorCount + " error(s)\n\n");
+                        errorCount = 0; // Reset for next program
+                        i++;
+                        outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+                        outputArea.append("-----------------------------\n");
+                    } else {
+                        outputArea.append("LEXER: Lex completed successfully.\n\n"); 
+                        i++;
+                        outputArea.append("\nLEXER: Lexing program " + i + "...\n");
+                        outputArea.append("-----------------------------\n");
+                    }
                 }
             }
 
@@ -367,7 +370,6 @@ public class Lexer extends javax.swing.JFrame {
         Lexer lex = new Lexer();
         private int currentToken = 0;
         private int i = 1;
-        int lexError = lex.getErrorCount();
         int lexWarning = lex.getWarningCount();
         private int lineCount = 1;
         private int scope = 0;
@@ -375,6 +377,8 @@ public class Lexer extends javax.swing.JFrame {
         private int closeBraceCount = 0;
         private int printCount = 0;
         private int semanticError = 0;
+        private int parseError = 0;
+        private int parseWarning = 0;
         TokenType tokenType;
         customCST cst = new customCST();
         customAST ast = new customAST();
@@ -388,44 +392,33 @@ public class Lexer extends javax.swing.JFrame {
          * Starts and finishes the parse - will be called through button run
          * @param token
          */
-        public Parser(Token token){
-            if(lexError > 0) {
-                outputAreaParser.append("\nPARSER: Skipped due to LEXER error(s)");
-                outputAreaParser.append("------------------------------------------\n\n");
-                
-                TreeErrors();
-                Semantics();
-                SymbolTable();
+        public Parser(Token token) {
+            outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
+            outputAreaParser.append("------------------------------------------\n");
+            outputAreaParser.append("PARSER: parse()\n");
+            outputAreaParser.append("PARSER: parseProgram()\n");
 
-                ResetData();
-            } else {
-                outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
-                outputAreaParser.append("------------------------------------------\n");
-                outputAreaParser.append("PARSER: parse()\n");
-                outputAreaParser.append("PARSER: parseProgram()\n");
-
-                Program();
-            }
+            Program();
         }
-
+        
         public void matchAndDevour(TokenType tokenMatch) {
             if(tokenMatch.equals(tokens.get(currentToken).getType())) {
                 System.out.println("current token: " + tokenMatch + "\n"); 
                 System.out.println("current token pos: " + currentToken + "\n");
                 currentToken++;
-            }
+            } 
         }
-
+        
         public int getCurrentToken() {
             return currentToken;
         }
         
         private void Semantics() {
             outputAreaSemantics.append("\nProgram " + i + " Lexical Analysis\n");
-            outputAreaSemantics.append("Program " + i + " Lexical analysis produced " + lexError + " error(s) and " + lexWarning + " warning(s)\n\n");
+            outputAreaSemantics.append("Program " + i + " Lexical analysis produced " + errorCount + " error(s) and " + lexWarning + " warning(s)\n\n");
 
             outputAreaSemantics.append("Program " + i + " Parsing\n");
-            outputAreaSemantics.append("Program " + i + " Parsing produced 0 error(s) and 0 warning(s)\n\n");
+            outputAreaSemantics.append("Program " + i + " Parsing produced " + parseError + " error(s) and " + parseWarning + " warning(s)\n\n");
 
             outputAreaSemantics.append("Program " + i + " Semantic Analysis\n");
             outputAreaSemantics.append("Program " + i + " Semantic analysis produced " + semanticError + " error(s) and 0 warning(s)\n\n");
@@ -493,9 +486,9 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         private void TreeErrors() {
-            cstOutputArea.append("\nCST for program " + i + ": Skipped due to PARSER error(s).\n\n");
+            cstOutputArea.append("\nCST for program " + i + ": Skipped due to PARSER error(s).\n");
             cstOutputArea.append("--------------------------------------------------\n");
-            astOutputArea.append("\nAST for program " + i + ": Skipped due to PARSER error(s).\n\n");
+            astOutputArea.append("\nAST for program " + i + ": Skipped due to PARSER error(s).\n");
             astOutputArea.append("--------------------------------------------------\n");
         }
         
@@ -530,6 +523,8 @@ public class Lexer extends javax.swing.JFrame {
             openBraceCount = 0;
             
             closeBraceCount = 0;
+            
+            scope = 0;
         }
         
         
@@ -552,7 +547,7 @@ public class Lexer extends javax.swing.JFrame {
                     System.out.println("scope: " + scope);
                     System.out.println("openBracketCount: " + openBraceCount);
                     System.out.println("openBracketCount: " + openBraceCount);
-                    ResetData();
+                    
                     ContinueProgram(); // If program not done
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
@@ -578,7 +573,17 @@ public class Lexer extends javax.swing.JFrame {
 
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                     ContinueProgram(); // If program not done
-                }           
+                }  
+            } else if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) { // In case end comes sooner than expected
+                matchAndDevour(tokenType.unrecognized);
+                while(tokens.size() > currentToken) {
+                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                        Program();
+                    } else {
+                        matchAndDevour(tokens.get(currentToken).getType());
+                    }
+                }
+                
             } else {
                 
                 // Adding the root node
@@ -595,7 +600,7 @@ public class Lexer extends javax.swing.JFrame {
                 Block();
             }
         }
-
+        
         
         /**
          * 
@@ -684,6 +689,8 @@ public class Lexer extends javax.swing.JFrame {
             } else {
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n");
+                parseError++;
+                Program();
             }              
         }
         
@@ -912,6 +919,8 @@ public class Lexer extends javax.swing.JFrame {
                 } else { // error                   
                     outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                     outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                    parseError++;
+                    Program();
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // incase of dupilicates (Block())
                 // Adds Statement List branch to tree
@@ -949,6 +958,8 @@ public class Lexer extends javax.swing.JFrame {
             } else {                
                 outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with 1 error\n\n"); // incase of dupilicates (Block())
+                parseError++;
+                Program();
             }   
         }
         
@@ -1267,7 +1278,7 @@ public class Lexer extends javax.swing.JFrame {
                 Program(); // loop to the beginning 
            }
         }
-
+        
         
         /**
          * 
