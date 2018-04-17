@@ -845,17 +845,25 @@ public class Lexer extends javax.swing.JFrame {
                             StatementList(); // If this not the only }
                         }
                     } else if(tokens.get(currentToken - 2).getType().equals(tokenType.closeParenthesis)) { // For ending print statements within conditions
+                        closeBraceCount++;
                         // Adds Statement List branch to tree
                         cst.addNode("Statement List", "branch"); // last statement list
-                        cst.scaleToBlock();
-
+                        if(closeBraceCount > 1) {
+                            for(int scaleBlock = 0; scaleBlock < closeBraceCount;scaleBlock++) {
+                                cst.scaleToBlock();
+                            }
+                        } else {
+                            cst.scaleToBlock();
+                        }
+                        
+                        
                         //Creates the leaf node of Block }
                         cst.addNode("}", "leaf");
                         
                         scope--;
                         
                         matchAndDevour(tokenType.closeBracket);
-                        closeBraceCount++;
+                        
                         outputAreaParser.append("PARSER: parseStatementList()\n"); // incase of dupilicates (Block())
                         System.out.println("matched: }\n");
 
