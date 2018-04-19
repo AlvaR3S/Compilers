@@ -381,6 +381,8 @@ public class Lexer extends javax.swing.JFrame {
         private int parseError = 0;
         private int parseWarning = 0;
         private int indexOfTypeAndID = 0;
+        private int semanticCount = 0;
+        private int idAndLocation = 0;
         TokenType tokenType;
         customCST cst = new customCST();
         customAST ast = new customAST();
@@ -390,7 +392,7 @@ public class Lexer extends javax.swing.JFrame {
         ArrayList<String> typeList = new ArrayList<String>();
         ArrayList<Integer> scopeList = new ArrayList<Integer>();
         ArrayList<Integer> idLocation = new ArrayList<Integer>();
-        ArrayList<Integer> typeLocation = new ArrayList<Integer>();
+        ArrayList<String> semanticErrorList = new ArrayList<String>();
 
         
         //-----------------------------------
@@ -511,12 +513,24 @@ public class Lexer extends javax.swing.JFrame {
                     if((iD1 != iD2) && (idList.get(iD1).equals(idList.get(iD2)))) {
                         if(scopeList.get(iD1).equals(scopeList.get(iD2))) {
                             outputAreaSemantics.append("Error: The id " + idList.get(iD1) + " on line " + idLocation.get(iD1) + " is a duplicate\n");
-                            outputAreaSemantics.append(scopeList.get(iD1).toString() + scopeList.get(iD2).toString());
                             semanticError++;
                         }
                     } 
                 }
             }
+            
+            if(semanticCount > 0) {
+                semanticError++;
+                String result = ""; // CHARLIST is the very first space
+                    
+                    for(String list : semanticErrorList) {  // We loop through the newly created array list of chars
+                       result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
+                    } 
+                    
+                    outputAreaSemantics.append(result);
+            }
+            
+            
         }
         
         private void Semantics() {
@@ -672,7 +686,7 @@ public class Lexer extends javax.swing.JFrame {
                 FinishErrors(); // Finishes errors and continue program if not finish
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // Error EOP
                 if((!tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket))) { // Error case
-                    semanticError++;
+                    parseError++;
                     outputAreaParser.append("PARSER: ERROR: Got [" + tokens.get(currentToken).getType() + "] expected [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                     outputAreaParser.append("PARSER: Lexer failed with " + semanticError + " error\n\n");
                     FinishErrors(); // Finishes errors and continue program if not finish
@@ -1351,7 +1365,8 @@ public class Lexer extends javax.swing.JFrame {
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
                 if(!idList.contains(tokens.get(currentToken).getData())) {
-                    semanticError++;
+                    semanticCount++;
+                    semanticErrorList.add("Error: The id " + tokens.get(currentToken).getData() + " on line " + lineCount + " was used before being declared\n");
                 }
                 
                 
@@ -1637,7 +1652,6 @@ public class Lexer extends javax.swing.JFrame {
                 idList.add(tokens.get(currentToken).getData()); // Add char to ID list
                 
                 idLocation.add(lineCount);
-                typeLocation.add(indexOfTypeAndID);
                 
                 System.out.println(idList); 
                 System.out.println(scopeList);
@@ -1725,15 +1739,7 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 lineCount++;
             }
-//            if(tokens.get(currentToken - 1).getType().equals(tokenType.assignmentStatement)) { // Was last token an '=' ???
-//                if(tokens.get(currentToken - 2).getType().equals(tokenType.CHAR)) { // whats the id before the '=' ????
-//                    if(idList.get(scope).equals(typeList.get(indexOfTypeAndID))) {
-//                        System.out.println("Okay");
-//                    } else {
-//                        System.out.println("No go");
-//                    }
-//                }
-//            }
+            
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                 // Adds Expression branch to tree
                 cst.addNode("Expression", "branch");
@@ -1901,7 +1907,8 @@ public class Lexer extends javax.swing.JFrame {
                         }
                     } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
                         if(!idList.contains(tokens.get(currentToken).getData())) {
-                            semanticError++;
+                            semanticCount++;
+                            semanticErrorList.add("Error: The id " + tokens.get(currentToken).getData() + " on line " + lineCount + " was used before being declared\n");
                             
                             // Allows me to get the String of current CHAR and add to node as leaf
                             cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
@@ -1984,7 +1991,8 @@ public class Lexer extends javax.swing.JFrame {
                 }
             } else if(tokens.get(currentToken).getType().equals(tokenType.CHAR)) {
                 if(!idList.contains(tokens.get(currentToken).getData())) {
-                    semanticError++;
+                    semanticCount++;
+                    semanticErrorList.add("Error: The id " + tokens.get(currentToken).getData() + " on line " + lineCount + " was used before being declared\n");
 
                     // Allows me to get the String of current CHAR and add to node as leaf
                     cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
@@ -2293,7 +2301,8 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 if(!idList.contains(tokens.get(currentToken).getData())) {
-                    semanticError++;
+                    semanticCount++;
+                    semanticErrorList.add("Error: The id " + tokens.get(currentToken).getData() + " on line " + lineCount + " was used before being declared\n");
                 }
                 
                 matchAndDevour(tokenType.CHAR);
