@@ -387,6 +387,92 @@ public class Lexer extends javax.swing.JFrame {
         ArrayList<String> idList = new ArrayList<String>();  
         ArrayList<String> printList = new ArrayList<String>();
         ArrayList<String> typeList = new ArrayList<String>();
+        ArrayList<Integer> scopeList = new ArrayList<Integer>();
+
+        
+        //-----------------------------------
+        //-----------GETTERS-----------------
+        //-----------------------------------
+        
+        public Lexer getLex() {
+            return lex;
+        }
+
+        public int getI() {
+            return i;
+        }
+
+        public int getLexWarning() {
+            return lexWarning;
+        }
+
+        public int getLineCount() {
+            return lineCount;
+        }
+
+        public int getScope() {
+            return scope;
+        }
+
+        public int getLexError() {
+            return lexError;
+        }
+
+        public int getOpenBraceCount() {
+            return openBraceCount;
+        }
+
+        public int getCloseBraceCount() {
+            return closeBraceCount;
+        }
+
+        public int getPrintCount() {
+            return printCount;
+        }
+
+        public int getSemanticError() {
+            return semanticError;
+        }
+
+        public int getParseError() {
+            return parseError;
+        }
+
+        public int getParseWarning() {
+            return parseWarning;
+        }
+
+        public TokenType getTokenType() {
+            return tokenType;
+        }
+
+        public customCST getCst() {
+            return cst;
+        }
+
+        public customAST getAst() {
+            return ast;
+        }
+
+        public ArrayList<String> getCharList() {
+            return charList;
+        }
+
+        public ArrayList<String> getIdList() {
+            return idList;
+        }
+
+        public ArrayList<String> getPrintList() {
+            return printList;
+        }
+
+        public ArrayList<String> getTypeList() {
+            return typeList;
+        }
+
+        public ArrayList<Integer> getScopeList() {
+            return scopeList;
+        }
         
         public Parser() { }
         
@@ -494,6 +580,25 @@ public class Lexer extends javax.swing.JFrame {
             astOutputArea.append("--------------------------------------------------\n");
         }
         
+        private void FinishErrors() {
+            while(tokens.size() > currentToken) { // Finish off the rest and end the program
+                if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
+                    matchAndDevour(tokenType.EOP);
+                    TreeErrors();
+                    Semantics();
+                    SymbolTable();
+                    Program();
+                } else {
+                    if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) { // If theere are more unrecognized errors
+                        matchAndDevour(tokens.get(currentToken).getType());
+                        lexError++;
+                    } else {
+                        matchAndDevour(tokens.get(currentToken).getType());
+                    }
+                }
+            }
+        }
+        
         private void ContinueProgram() {
             if(currentToken < tokens.size()) { // in case Program is not finished
                 System.out.println("Program running more than once\n");
@@ -547,8 +652,9 @@ public class Lexer extends javax.swing.JFrame {
                 Program();
             } else {
                 parseError++;
-                outputAreaParser.append("PARSER: ERROR: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                outputAreaParser.append("PARSER: ERROR: Got [" + tokens.get(currentToken).getType() + "] expected [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
                 outputAreaParser.append("PARSER: Parse failed with " + parseError + " error\n\n");
+                Program();
             }
         }
         
@@ -570,9 +676,15 @@ public class Lexer extends javax.swing.JFrame {
                     SymbolTable();
                     System.out.println("scope: " + scope);
                     System.out.println("openBracketCount: " + openBraceCount);
-                    System.out.println("openBracketCount: " + openBraceCount);
+                    System.out.println("closeBracketCount: " + closeBraceCount);
                     
                     ContinueProgram(); // If program not done
+                } else if(!tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket) || tokens.get(currentToken - 1).getType().equals(tokenType.newLine)) { // In case end comes sooner than expected 
+                    outputAreaParser.append("PARSER: PARSER: Expected [" + tokens.get(currentToken).getType() + "] got [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
+                    outputAreaParser.append("PARSER: Parse failed with " + parseError + " error\n\n"); // incase of dupilicates (Block())
+                    parseError++;
+                    FinishErrors();
+                    
                 } else { // Program found no bracket errors or parse errors - finish parse and cst 
                     Semantics();
                     SymbolTable();
@@ -596,6 +708,9 @@ public class Lexer extends javax.swing.JFrame {
                     System.out.println("matched $\n");
 
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
+                    
+                    Assembler assembler = new Assembler(this);
+                    
                     ContinueProgram(); // If program not done
                 }  
             } else if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) { // In case end comes sooner than expected
@@ -613,22 +728,7 @@ public class Lexer extends javax.swing.JFrame {
                     }
                 }
             } else if(parseError > 0) { // In case end comes sooner than expected
-                while(tokens.size() > currentToken) { // Finish off the rest and end the program
-                    if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                        matchAndDevour(tokenType.EOP);
-                        TreeErrors();
-                        Semantics();
-                        SymbolTable();
-                        ContinueProgram();
-                    } else {
-                        if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) { // If theere are more unrecognized errors
-                            matchAndDevour(tokens.get(currentToken).getType());
-                            lexError++;
-                        } else {
-                            matchAndDevour(tokens.get(currentToken).getType());
-                        }
-                    }
-                }    
+                FinishErrors();    
             } else {
                 
                 // Adding the root node
@@ -735,6 +835,10 @@ public class Lexer extends javax.swing.JFrame {
                 }    
             } else {
                 if(!tokens.get(currentToken).getType().equals(tokenType.openBracket)) { // Avoid runtime error
+                    parseError++;
+                    outputAreaParser.append("PARSER: Parse failed with " + parseError + " error\n\n");
+                    Program();
+                } else if(!tokens.get(currentToken).getType().equals(tokenType.closeBracket)) { // Avoid runtime error
                     parseError++;
                     outputAreaParser.append("PARSER: Parse failed with " + parseError + " error\n\n");
                     Program();
@@ -1518,7 +1622,10 @@ public class Lexer extends javax.swing.JFrame {
                 
                 idList.add(tokens.get(currentToken).getData()); // Add char to ID list 
                 
+                scopeList.add(scope); // Add scope to scopeList
+                
                 System.out.println(idList); 
+                System.out.println(scopeList);
                 
                 if(tokens.get(currentToken -1).getType().equals(tokenType.typeInt)) {
                    typeList.add(tokens.get(currentToken -1).getData()); // Type Int
