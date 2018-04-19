@@ -131,6 +131,9 @@ public class Lexer extends javax.swing.JFrame {
         // -----------------|End of Program Marker|--------------------- \\
         EOP("[$]"),
         
+        // Quote
+        Quote("\""),
+        
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
         typeInt("((?<!\")|(?<![a-z]))int\\s(?![a-z]{2}|[a-z]\")"),
@@ -180,9 +183,6 @@ public class Lexer extends javax.swing.JFrame {
         
         // Unrecognized Tokens
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.|`|-]"),
-        
-        // Quote
-        Quote("\""),
         
         // Comments
         comment("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)");
