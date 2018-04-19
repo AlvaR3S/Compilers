@@ -505,12 +505,13 @@ public class Lexer extends javax.swing.JFrame {
         }
         
         private void SemanticErrors() {
-            // Checking to see if there are duplicates
+            // Checking to see if there are duplicates within the same scope
             for(int iD1 = 0; iD1 < idList.size(); iD1++) {
                 for(int iD2 = 0; iD2 < idList.size(); iD2++) {
-                    if(idList.get(iD1).equals(idList.get(iD2))) {
+                    if((iD1 != iD2) && (idList.get(iD1).equals(idList.get(iD2)))) {
                         if(scopeList.get(iD1).equals(scopeList.get(iD2))) {
-                            outputAreaSemantics.append("Error: The id " + idList.get(iD2) + " on line " + idLocation.get(iD2) + " is a duplicate\n");
+                            outputAreaSemantics.append("Error: The id " + idList.get(iD1) + " on line " + idLocation.get(iD1) + " is a duplicate\n");
+                            outputAreaSemantics.append(scopeList.get(iD1).toString() + scopeList.get(iD2).toString());
                             semanticError++;
                         }
                     } 
