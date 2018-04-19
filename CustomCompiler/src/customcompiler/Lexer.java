@@ -380,6 +380,7 @@ public class Lexer extends javax.swing.JFrame {
         private int semanticError = 0;
         private int parseError = 0;
         private int parseWarning = 0;
+        private int indexOfTypeAndID = 0;
         TokenType tokenType;
         customCST cst = new customCST();
         customAST ast = new customAST();
@@ -388,6 +389,8 @@ public class Lexer extends javax.swing.JFrame {
         ArrayList<String> printList = new ArrayList<String>();
         ArrayList<String> typeList = new ArrayList<String>();
         ArrayList<Integer> scopeList = new ArrayList<Integer>();
+        ArrayList<Integer> idLocation = new ArrayList<Integer>();
+        ArrayList<Integer> typeLocation = new ArrayList<Integer>();
 
         
         //-----------------------------------
@@ -501,6 +504,20 @@ public class Lexer extends javax.swing.JFrame {
             return currentToken;
         }
         
+        private void SemanticErrors() {
+            // Checking to see if there are duplicates
+            for(int iD1 = 0; iD1 < idList.size(); iD1++) {
+                for(int iD2 = 0; iD2 < idList.size(); iD2++) {
+                    if(idList.get(iD1).equals(idList.get(iD2))) {
+                        if(scopeList.get(iD1).equals(scopeList.get(iD2))) {
+                            outputAreaSemantics.append("Error: The id " + idList.get(iD2) + " on line " + idLocation.get(iD2) + " is a duplicate\n");
+                            semanticError++;
+                        }
+                    } 
+                }
+            }
+        }
+        
         private void Semantics() {
             outputAreaSemantics.append("\nProgram " + i + " Lexical Analysis\n");
             outputAreaSemantics.append("Program " + i + " Lexical analysis produced " + lexError + " error(s) and " + lexWarning + " warning(s)\n\n");
@@ -509,6 +526,7 @@ public class Lexer extends javax.swing.JFrame {
             outputAreaSemantics.append("Program " + i + " Parsing produced " + parseError + " error(s) and " + parseWarning + " warning(s)\n\n");
 
             outputAreaSemantics.append("Program " + i + " Semantic Analysis\n");
+            SemanticErrors();
             outputAreaSemantics.append("Program " + i + " Semantic analysis produced " + semanticError + " error(s) and 0 warning(s)\n\n");
 
             outputAreaSemantics.append("--------------------------------------------------------------------------------------\n\n");
@@ -1611,9 +1629,14 @@ public class Lexer extends javax.swing.JFrame {
                 // Allows me to get the current ID (char) and add to the ast
                 ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 
-                idList.add(tokens.get(currentToken).getData()); // Add char to ID list 
+                // keep track of ID and Type positions
+                indexOfTypeAndID++;
                 
                 scopeList.add(scope); // Add scope to scopeList
+                idList.add(tokens.get(currentToken).getData()); // Add char to ID list
+                
+                idLocation.add(lineCount);
+                typeLocation.add(indexOfTypeAndID);
                 
                 System.out.println(idList); 
                 System.out.println(scopeList);
@@ -1642,10 +1665,9 @@ public class Lexer extends javax.swing.JFrame {
                 ast.scaleToBlock();
                 
                 StatementList();
-                
             } else {
                 CheckForErrors();
-           }
+            }
         }
         
         
@@ -1702,7 +1724,15 @@ public class Lexer extends javax.swing.JFrame {
             if(tokens.get(currentToken).getType().equals(tokenType.newLine)) { // Accounting for a new line
                 lineCount++;
             }
-            
+//            if(tokens.get(currentToken - 1).getType().equals(tokenType.assignmentStatement)) { // Was last token an '=' ???
+//                if(tokens.get(currentToken - 2).getType().equals(tokenType.CHAR)) { // whats the id before the '=' ????
+//                    if(idList.get(scope).equals(typeList.get(indexOfTypeAndID))) {
+//                        System.out.println("Okay");
+//                    } else {
+//                        System.out.println("No go");
+//                    }
+//                }
+//            }
             if(tokens.get(currentToken).getType().equals(tokenType.digit)) { // Checking for digits
                 // Adds Expression branch to tree
                 cst.addNode("Expression", "branch");
