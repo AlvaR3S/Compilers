@@ -132,7 +132,7 @@ public class Lexer extends javax.swing.JFrame {
         EOP("[$]"),
         
         // Quote
-        Quote("\""),
+        Quote("(\")|(\\”)|(\\“)"),
         
         // -------------|Types|Numbers|Statements|Identifiers|Booleans|---------------- \\
         // Types
@@ -685,10 +685,10 @@ public class Lexer extends javax.swing.JFrame {
                 outputAreaParser.append("PARSER: Lexer failed with " + lexError + " error\n\n");
                 FinishErrors(); // Finishes errors and continue program if not finish
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // Error EOP
-                if((!tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket))) { // Error case
+                if((!tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 3).getType().equals(tokenType.closeBracket))) { // Error case
                     parseError++;
                     outputAreaParser.append("PARSER: ERROR: Got [" + tokens.get(currentToken).getType() + "] expected [" + tokens.get(currentToken - 1).getType() + "] on line " + lineNumber + "\n");
-                    outputAreaParser.append("PARSER: Lexer failed with " + semanticError + " error\n\n");
+                    outputAreaParser.append("PARSER: Lexer failed with " + parseError + " error\n\n");
                     FinishErrors(); // Finishes errors and continue program if not finish
                 }
             } else {
@@ -1795,7 +1795,6 @@ public class Lexer extends javax.swing.JFrame {
                     ast.scaleToBlock(); // Aligns AST parent to its current Block
                     StatementList();
                 } 
-            
             } else if(tokens.get(currentToken).getType().equals(tokenType.boolvalFalse)) { // Checking for boolval 
                 // Adds Expression branch to tree
                 cst.addNode("Expression", "branch");
@@ -1912,7 +1911,7 @@ public class Lexer extends javax.swing.JFrame {
                             
                             // Allows me to get the String of current CHAR and add to node as leaf
                             cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
-                
+                        
                             // Allows me to get the current ID (char) and add to the ast
                             ast.addNode(tokens.get(currentToken).getData(), "leaf");
                             
@@ -1932,11 +1931,11 @@ public class Lexer extends javax.swing.JFrame {
 
                                 // If there is an addition symbol in the statement
                                 ast.addNode("Plus", "branch");
-
+                                
                                 matchAndDevour(tokenType.intopAddition);
                                 outputAreaParser.append("PARSER: parseIntop()\n");
                                 System.out.println("matched: Intop\n");
-
+                        
                                 IntExpr();
                                 
                             } else if(tokens.get(currentToken).getType().equals(tokenType.closeParenthesis)) {                    
