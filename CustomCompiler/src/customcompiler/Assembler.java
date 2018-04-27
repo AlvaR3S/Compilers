@@ -80,13 +80,19 @@ public class Assembler {
         return null;
     }
     
+    /**
+     * Loops through the stored operations and 
+     * if one of these options are found then execute
+     * the proper action for that operation
+     * @param operations 
+     */
     private void dissassembleOperations(customAST operations[]) {
         for(int i = 0; i < operations.length; i++) {
-            if(operations[i].name = "Variable Declaration") {
+            if(operations[i].cur.name.equals("Variable Declaration")) {
                 handleVarDecl(operations[i]);
-            } else if(operations[i].name = "Assignment Statement") {
+            } else if(operations[i].cur.name.equals("Assignment Statement")) {
                handleAssStat(operations[i]);
-            } else if(operations[i].name = "Print Statment") {
+            } else if(operations[i].cur.name.equals("Print Statement")) {
                handlePrintStat(operations[i]); 
             } else {
                 System.out.println("Error: Improper operation attempted");
@@ -116,7 +122,7 @@ public class Assembler {
     private void handlePrintStat(customAST printStat) {
      //Load the heap w/ the necessary OPcodes for the print statement   
     }
-    }
+    
     
     private void incrementRegister() {
         if((int)currentRegister[1] < 9){
