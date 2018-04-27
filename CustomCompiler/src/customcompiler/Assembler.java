@@ -57,6 +57,7 @@ public class Assembler {
     ArrayList<String> idList;
     ArrayList<Integer> scopeList;
     
+    
     public Assembler(Parser parser) {
         this.parser = parser;
         ast = parser.getAst();
@@ -66,8 +67,8 @@ public class Assembler {
     }
     
     private void initialize() {
-        astNodes operations = getOperations(ast);
-        dissassembleOperations(operations);
+        customAST operations[];
+        dissassembleOperations(operations[]);
     }
     
     private astNodes getOperations(customAST ast) {
@@ -79,11 +80,11 @@ public class Assembler {
         return null;
     }
     
-    private void dissassembleOperations(astNodes operations) {
-        for(int i = 0; i < operations; i++) {
+    private void dissassembleOperations(customAST operations[]) {
+        for(int i = 0; i < operations.length; i++) {
             if(operations[i].name = "Variable Declaration") {
                 handleVarDecl(operations[i]);
-            } else if(operations[i].name = "Assign Statement") {
+            } else if(operations[i].name = "Assignment Statement") {
                handleAssStat(operations[i]);
             } else if(operations[i].name = "Print Statment") {
                handlePrintStat(operations[i]); 
@@ -96,7 +97,7 @@ public class Assembler {
         // as well as store them in the heap
     }
     
-    private void handleVarDecl(astNode varDecl){
+    private void handleVarDecl(customAST varDecl){
         heap[heapRow][heapColumn] = "A9";
         incrementHeapRow();
         heap[heapRow][heapColumn] = "00";
@@ -107,12 +108,12 @@ public class Assembler {
         incrementHeapRow();
     }
     
-    private void handleAssStat(astNode assState) {
+    private void handleAssStat(customAST assState) {
         //Load the heap with the necessary OPcodes for the assign statement
         //from the information in the ASTNode
     }
     
-    private void handlePrintStat(astNode printStat) {
+    private void handlePrintStat(customAST printStat) {
      //Load the heap w/ the necessary OPcodes for the print statement   
     }
     }
