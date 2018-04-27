@@ -50,6 +50,8 @@ public class Assembler {
     int heapRow = 0;
     int heapColumn = 0;
     
+    char[] currentRegister = {'T','0'};
+    
     Parser parser;
     customAST ast;
     ArrayList<String> idList;
@@ -64,7 +66,64 @@ public class Assembler {
     }
     
     private void initialize() {
+        astNodes operations = getOperations(ast);
+        dissassembleOperations(operations);
+    }
+    
+    private astNodes getOperations(customAST ast) {
+        // Goes through AST tree and finds all
+        // operations such as VarDecl, AssignStatement, Print Statement
+        // stores them in an array of ASTNodes
+        // returns the array
         
+        return null;
+    }
+    
+    private void dissassembleOperations(astNodes operations) {
+        for(int i = 0; i < operations; i++) {
+            if(operations[i].name = "Variable Declaration") {
+                handleVarDecl(operations[i]);
+            } else if(operations[i].name = "Assign Statement") {
+               handleAssStat(operations[i]);
+            } else if(operations[i].name = "Print Statment") {
+               handlePrintStat(operations[i]); 
+            } else {
+                System.out.println("Error: Improper operation attempted");
+            }
+        }
+        
+        // Should convert all operations into their Op code
+        // as well as store them in the heap
+    }
+    
+    private void handleVarDecl(astNode varDecl){
+        heap[heapRow][heapColumn] = "A9";
+        incrementHeapRow();
+        heap[heapRow][heapColumn] = "00";
+        incrementHeapRow();
+        heap[heapRow][heapColumn] = "8D";
+        incrementHeapRow();
+        heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
+        incrementHeapRow();
+    }
+    
+    private void handleAssStat(astNode assState) {
+        //Load the heap with the necessary OPcodes for the assign statement
+        //from the information in the ASTNode
+    }
+    
+    private void handlePrintStat(astNode printStat) {
+     //Load the heap w/ the necessary OPcodes for the print statement   
+    }
+    }
+    
+    private void incrementRegister() {
+        if((int)currentRegister[1] < 9){
+            currentRegister[1] = currentRegister[1] + 1;
+        } else {
+            currentRegister[0] = currentRegister[0] + 1;
+            currentRegister[1] = '0';
+        }
     }
     
     private boolean incrementHeapColumn() {

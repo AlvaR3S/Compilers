@@ -131,6 +131,8 @@ public class Lexer extends javax.swing.JFrame {
         // -----------------|End of Program Marker|--------------------- \\
         EOP("[$]"),
         
+       
+        
         // Quote
         Quote("(\")|(\\”)|(\\“)"),
         
@@ -181,7 +183,7 @@ public class Lexer extends javax.swing.JFrame {
         // CHAR
         CHAR("[a-z]"), 
         
-        // Unrecognized Tokens
+         // Unrecognized Tokens
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.|`|-]"),
         
         // Comments
@@ -481,17 +483,27 @@ public class Lexer extends javax.swing.JFrame {
         
         public Parser() { }
         
+        
+
+        
+        //----------------------------------------------------
+        //-------------------------[METHODS]------------------
+        //----------------------------------------------------
         /**
          * Starts and finishes the parse - will be called through button run
          * @param token
          */
         public Parser(Token token) {
-            outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
-            outputAreaParser.append("------------------------------------------\n");
-            outputAreaParser.append("PARSER: parse()\n");
-            outputAreaParser.append("PARSER: parseProgram()\n");
+            if(errorCount > 0) {
+                CheckForErrors();
+            } else {
+                outputAreaParser.append("\nPARSER: Parsing program" + i + "...\n");
+                outputAreaParser.append("------------------------------------------\n");
+                outputAreaParser.append("PARSER: parse()\n");
+                outputAreaParser.append("PARSER: parseProgram()\n");
 
-            Program();
+                Program();
+            }
         }
         
         public void matchAndDevour(TokenType tokenMatch) {
@@ -616,12 +628,21 @@ public class Lexer extends javax.swing.JFrame {
         private void FinishErrors() {
             while(tokens.size() > currentToken) { // Finish off the rest and end the program
                 if(tokens.get(currentToken).getType().equals(tokenType.EOP)) {
-                    matchAndDevour(tokenType.EOP);
-                    TreeErrors();
-                    Semantics();
-                    SymbolTable();
-                    ResetData();
-                    Program();
+                    if(errorCount > 0) {
+                        matchAndDevour(tokenType.EOP);
+                        TreeErrors();
+                        Semantics();
+                        SymbolTable();
+                        ResetData();
+                        Program();
+                    } else {
+                        matchAndDevour(tokenType.EOP);
+                        TreeErrors();
+                        Semantics();
+                        SymbolTable();
+                        ResetData();
+                        Program();
+                    }
                 } else {
                     if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) { // If theere are more unrecognized errors
                         lexError++;
@@ -681,8 +702,8 @@ public class Lexer extends javax.swing.JFrame {
         private void CheckForErrors() {
             if(tokens.get(currentToken).getType().equals(tokenType.unrecognized)) {
                 lexError++;
-                outputAreaParser.append("PARSER: ERROR: Unexpected token received: [" + tokens.get(currentToken).getType() + "] on line " + lineNumber + "\n");
-                outputAreaParser.append("PARSER: Lexer failed with " + lexError + " error\n\n");
+                outputAreaParser.append("PARSER: Skipped due to LEXER error(s)");
+                
                 FinishErrors(); // Finishes errors and continue program if not finish
             } else if(tokens.get(currentToken).getType().equals(tokenType.EOP)) { // Error EOP
                 if((!tokens.get(currentToken - 1).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 2).getType().equals(tokenType.closeBracket)) || (!tokens.get(currentToken - 3).getType().equals(tokenType.closeBracket))) { // Error case
@@ -2298,7 +2319,7 @@ public class Lexer extends javax.swing.JFrame {
                 cst.addNode(tokens.get(currentToken).getData(), "leaf"); 
                 
                 // Allows me to get the current ID (char) and add to the ast
-                ast.addNode(tokens.get(currentToken).getData(), "leaf"); 
+                ast.addNode(tokens.get(currentToken).getData(), "leaf");
                 if(!idList.contains(tokens.get(currentToken).getData())) {
                     semanticCount++;
                     semanticErrorList.add("Error: The id " + tokens.get(currentToken).getData() + " on line " + lineCount + " was used before being declared\n");
