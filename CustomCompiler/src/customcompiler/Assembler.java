@@ -79,7 +79,7 @@ public class Assembler {
         LinkedList<astNodes> operations = searchChildren(ast.root);
         dissassembleOperations(operations);
         
-        for(int i = 0; i < operations.size(); i++) {
+        for(int i=0;i<operations.size();i++) {
             System.out.println(operations.get(i).name);
            
         }
@@ -90,7 +90,7 @@ public class Assembler {
     private LinkedList<astNodes> searchChildren(astNodes node){
         LinkedList<astNodes> output = new LinkedList<astNodes>();
         
-        if(node.name.equals("Variable Declaration")) {
+         if(node.name.equals("Variable Declaration")) {
            output.add(node);
         } else if(node.name.equals("Assignment Statement")) {
             output.add(node);
@@ -149,13 +149,13 @@ public class Assembler {
     
     private void handleVarDecl(astNodes varDecl) {
         heap[heapRow][heapColumn] = "A9";
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = "00";
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = "8D";
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
-        incrementHeapColumn();
+        incrementHeapRow();
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
@@ -178,15 +178,17 @@ public class Assembler {
         }
         
         heap[heapRow][heapColumn] = "A9";
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = assignStatement.children.get(1).name;
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = "8D";
-        incrementHeapColumn();
+        incrementHeapRow();
         heap[heapRow][heapColumn] = "" + temp[0] + temp[1];
-        incrementHeapColumn();
+        incrementHeapRow();
         incrementRegister();
-                
+        
+        //if(newRegister){variables.add(assState.children.get(0).name);}
+        
         endOperation();
     }
     
@@ -198,7 +200,7 @@ public class Assembler {
     
     private void endOperation() {
         heap[heapRow][heapColumn] = "XX";
-        incrementHeapColumn();
+        incrementHeapRow();
     }
     
     private void incrementRegister() {
@@ -212,10 +214,9 @@ public class Assembler {
     
     private boolean incrementHeapColumn() {
         heapColumn++;
-        
-        if(heapColumn >= 8) {
+        if(heapColumn >= 12) {
             heapColumn = 0;
-            incrementHeapRow(); // When last column hits we start a new row
+            return incrementHeapRow();
         }
         
         return true;
@@ -224,15 +225,16 @@ public class Assembler {
     private boolean incrementHeapRow() {
         heapRow++;
         
-        if(heapRow >= 12) {
-            heapRow = 0;
+        if(heapRow >= 8) {
+            heapRow=0;
+            return false;
         }
         
         return true;
     }
     
     private char[] getVariableRegister(int n) {
-        char[] output = new char[1];
+        char[] output = new char[2];
         
         output[0] = (char) ('T' + (n / 10));
         output[1] = (char) (n % 10);
@@ -242,9 +244,8 @@ public class Assembler {
     
     private void checkHeap() {
         for(int i = 0; i < heap.length; i++) {
-            for(int j = 0; j < heap.length; i++) {
-              // codeOutput.append(heap[i][j]);
-               System.out.println(heap[i][j]);
+            for(int j = 0; j < heap[0].length; i++) {
+               codeOutput.append(heap[i][j]);
             }
         }
     }
