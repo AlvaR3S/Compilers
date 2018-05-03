@@ -95,7 +95,7 @@ public class Assembler {
             output.add(node);
         }
         
-        if(node.hasChildren()){
+        if(node.hasChildren()) {
             for(int i = 0; i < node.children.size(); i++) {
                 LinkedList<astNodes> temp = searchChildren(node.children.get(i));
                     
@@ -146,13 +146,13 @@ public class Assembler {
     
     private void handleVarDecl(astNodes varDecl) {
         heap[heapRow][heapColumn] = "A9";
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = "00";
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = "8D";
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
-        incrementHeapRow();
+        incrementHeapColumn();
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
@@ -175,13 +175,13 @@ public class Assembler {
         }
         
         heap[heapRow][heapColumn] = "A9";
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = assState.children.get(1).name;
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = "8D";
-        incrementHeapRow();
+        incrementHeapColumn();
         heap[heapRow][heapColumn] = "" + temp[0] + temp[1];
-        incrementHeapRow();
+        incrementHeapColumn();
         incrementRegister();
         
         //if(newRegister){variables.add(assState.children.get(0).name);}
@@ -197,7 +197,7 @@ public class Assembler {
     
     private void endOperation() {
         heap[heapRow][heapColumn] = "XX";
-        incrementHeapRow();
+        incrementHeapColumn();
     }
     
     private void incrementRegister() {
@@ -212,7 +212,7 @@ public class Assembler {
     private boolean incrementHeapColumn() {
         heapColumn++;
         
-        if(heapColumn >= 12) {
+        if(heapColumn >= 8) {
             heapColumn = 0;
             return incrementHeapRow();
         }
@@ -223,8 +223,8 @@ public class Assembler {
     private boolean incrementHeapRow() {
         heapRow++;
         
-        if(heapRow >= 8) {
-            heapRow=0;
+        if(heapRow >= 12) {
+            heapRow = 0;
             return false;
         }
         
@@ -240,7 +240,7 @@ public class Assembler {
         return output;
     }
     
-    private void checkHeap(){
+    private void checkHeap() {
         for(int i = 0; i < heap[0].length; i++) {
             for(int j = 0; j < heap[0].length; j++) {
                 System.out.println(heap[i][j]);
