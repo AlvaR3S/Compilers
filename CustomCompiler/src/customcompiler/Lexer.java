@@ -116,6 +116,12 @@ public class Lexer extends javax.swing.JFrame {
         return this.buttonClearAll;
     }
 
+    public JTextArea getAstOutputAreaCodeGen() {
+        return astOutputAreaCodeGen;
+    }
+    
+    
+
     public void setButtonClearAll(JButton buttonClearAll) {
         this.buttonClearAll = buttonClearAll;
     }
@@ -183,7 +189,7 @@ public class Lexer extends javax.swing.JFrame {
         // CHAR
         CHAR("[a-z]"), 
         
-         // Unrecognized Tokens
+        // Unrecognized Tokens
         unrecognized("[A-Z|~|!|@|#|%|^|&|*|_|:|<|>|?|;|'|,|.|`|-]"),
         
         // Comments

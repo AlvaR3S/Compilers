@@ -8,6 +8,7 @@ package customcompiler;
 import customcompiler.Lexer.Parser;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import javax.swing.JTextArea;
 
 
 
@@ -54,7 +55,8 @@ public class Assembler {
     char[] currentRegister = {'T','0'};
     LinkedList<String> variables;
     LinkedList<Integer> variableScopes;
-    
+    Lexer lex;
+    JTextArea codeOutput = lex.getAstOutputAreaCodeGen();
     Parser parser;
     customAST ast;
     ArrayList<String> idList;
@@ -77,8 +79,9 @@ public class Assembler {
         LinkedList<astNodes> operations = searchChildren(ast.root);
         dissassembleOperations(operations);
         
-        for(int i=0;i<operations.size();i++){
+        for(int i=0;i<operations.size();i++) {
             System.out.println(operations.get(i).name);
+           
         }
         
         checkHeap();
@@ -87,19 +90,19 @@ public class Assembler {
     private LinkedList<astNodes> searchChildren(astNodes node){
         LinkedList<astNodes> output = new LinkedList<astNodes>();
         
-         if(node.name.equals("Variable Declaration")){
+         if(node.name.equals("Variable Declaration")) {
            output.add(node);
-        } else if(node.name.equals("Assignment Statement")){
+        } else if(node.name.equals("Assignment Statement")) {
             output.add(node);
-        } else if(node.name.equals("Print Statement")){
+        } else if(node.name.equals("Print Statement")) {
             output.add(node);
         }
         
         if(node.hasChildren()){
-            for(int i=0;i<node.children.size();i++){
+            for(int i = 0;i < node.children.size(); i++) {
                 LinkedList<astNodes> temp = searchChildren(node.children.get(i));
                     
-                for(int j=0;j<temp.size();j++){
+                for(int j = 0; j < temp.size(); j++) {
                     output.add(temp.get(j));
                 }
                 
@@ -135,16 +138,16 @@ public class Assembler {
             if(operations.get(i).name.equals("Variable Declaration")) {
                 handleVarDecl(operations.get(i));
             } else if(operations.get(i).name.equals("Assignment Statement")) {
-               handleAssStat(operations.get(i));
+               handleAssignStatement(operations.get(i));
             } else if(operations.get(i).name.equals("Print Statement")) {
-               handlePrintStat(operations.get(i)); 
+               handlePrintStatement(operations.get(i)); 
             } else {
                 System.out.println("Error: Improper operation attempted");
             }
         }        
     }
     
-    private void handleVarDecl(astNodes varDecl){
+    private void handleVarDecl(astNodes varDecl) {
         heap[heapRow][heapColumn] = "A9";
         incrementHeapRow();
         heap[heapRow][heapColumn] = "00";
@@ -159,15 +162,15 @@ public class Assembler {
         endOperation();
     }
     
-    private void handleAssStat(astNodes assState) {
+    private void handleAssignStatement(astNodes assignStatement) {
         //Load the heap with the necessary OPcodes for the assign statement
         //from the information in the ASTNode
         
         char[] temp = currentRegister;
         boolean newRegister = true;
         
-        for(int i=0;i<variables.size();i++){
-            if(variables.get(i).equals(assState.children.get(0).name)){
+        for(int i = 0; i < variables.size();i++) {
+            if(variables.get(i).equals(assignStatement.children.get(0).name)) {
                 temp = getVariableRegister(i);
                 newRegister = false;
                 break;
@@ -176,7 +179,7 @@ public class Assembler {
         
         heap[heapRow][heapColumn] = "A9";
         incrementHeapRow();
-        heap[heapRow][heapColumn] = assState.children.get(1).name;
+        heap[heapRow][heapColumn] = assignStatement.children.get(1).name;
         incrementHeapRow();
         heap[heapRow][heapColumn] = "8D";
         incrementHeapRow();
@@ -189,7 +192,7 @@ public class Assembler {
         endOperation();
     }
     
-    private void handlePrintStat(astNodes printStat) {
+    private void handlePrintStatement(astNodes printStatement) {
      //Load the heap w/ the necessary OPcodes for the print statement
      
         endOperation();
@@ -201,7 +204,7 @@ public class Assembler {
     }
     
     private void incrementRegister() {
-        if((int)currentRegister[1] < 57){
+        if((int)currentRegister[1] < 57) {
             currentRegister[1] = (char)(currentRegister[1] + 1);
         } else {
             currentRegister[0] = (char)(currentRegister[0] + 1);
@@ -211,7 +214,6 @@ public class Assembler {
     
     private boolean incrementHeapColumn() {
         heapColumn++;
-        
         if(heapColumn >= 12) {
             heapColumn = 0;
             return incrementHeapRow();
@@ -231,19 +233,19 @@ public class Assembler {
         return true;
     }
     
-    private char[] getVariableRegister(int n){
+    private char[] getVariableRegister(int n) {
         char[] output = new char[2];
         
-        output[0] = (char)('T' + (n / 10));
-        output[1] = (char)(n % 10);
+        output[0] = (char) ('T' + (n / 10));
+        output[1] = (char) (n % 10);
         
         return output;
     }
     
-    private void checkHeap(){
-        for(int i=0;i<heap.length;i++){
-            for(int j=0;j<heap[0].length;i++){
-                System.out.println(heap[i][j]);
+    private void checkHeap() {
+        for(int i = 0; i < heap.length; i++) {
+            for(int j = 0; j < heap[0].length; i++) {
+               codeOutput.append(heap[i][j]);
             }
         }
     }
