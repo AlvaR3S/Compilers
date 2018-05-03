@@ -7,7 +7,6 @@ package customcompiler;
 
 import customcompiler.Lexer.Parser;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 
 
@@ -52,8 +51,6 @@ public class Assembler {
     int heapColumn = 0;
     
     char[] currentRegister = {'T','0'};
-    LinkedList<String> variables;
-    LinkedList<Integer> variableScopes;
     
     Parser parser;
     customAST ast;
@@ -61,11 +58,7 @@ public class Assembler {
     ArrayList<Integer> scopeList;
     
     
-    
     public Assembler(Parser parser) {
-        variables = new LinkedList<String>();
-        variableScopes = new LinkedList<Integer>();
-        
         this.parser = parser;
         ast = parser.getAst();
         idList = parser.getIdList();
@@ -74,54 +67,17 @@ public class Assembler {
     }
     
     private void initialize() {
-        LinkedList<astNodes> operations = searchChildren(ast.root);
-        dissassembleOperations(operations);
-        
-        for(int i=0;i<operations.size();i++){
-            System.out.println(operations.get(i).name);
-        }
-        
-        checkHeap();
+        customAST operations[];
+        dissassembleOperations(operations[]);
     }
     
-    private LinkedList<astNodes> searchChildren(astNodes node){
-        LinkedList<astNodes> output = new LinkedList<astNodes>();
+    private astNodes getOperations(customAST ast) {
+        // Goes through AST tree and finds all
+        // operations such as VarDecl, AssignStatement, Print Statement
+        // stores them in an array of ASTNodes
+        // returns the array
         
-         if(node.name.equals("Variable Declaration")){
-           output.add(node);
-        } else if(node.name.equals("Assignment Statement")){
-            output.add(node);
-        } else if(node.name.equals("Print Statement")){
-            output.add(node);
-        }
-        
-        if(node.hasChildren()){
-            for(int i=0;i<node.children.size();i++){
-                LinkedList<astNodes> temp = searchChildren(node.children.get(i));
-                    
-                for(int j=0;j<temp.size();j++){
-                    output.add(temp.get(j));
-                }
-                
-                /*if(node.children.get(i).hasChildren()) {
-                    LinkedList<astNodes> temp = searchChildren(node.children.get(i));
-                    
-                    for(int j=0;j<temp.size();j++){
-                        output.add(temp.get(j));
-                    }
-                } else {
-                    if(node.children.get(i).name.equals("Variable Declaration")){
-                        output.add(node.children.get(i));
-                    } else if(node.name.equals("Assignment Statement")){
-                        output.add(node.children.get(i));
-                    } else if(node.name.equals("Print Statement")){
-                        output.add(node.children.get(i));
-                    }
-                }*/
-            }
-        }
-        
-        return output;
+        return null;
     }
     
     /**
@@ -130,21 +86,24 @@ public class Assembler {
      * the proper action for that operation
      * @param operations 
      */
-    private void dissassembleOperations(LinkedList<astNodes> operations) {
-        for(int i = 0; i < operations.size(); i++) {
-            if(operations.get(i).name.equals("Variable Declaration")) {
-                handleVarDecl(operations.get(i));
-            } else if(operations.get(i).name.equals("Assignment Statement")) {
-               handleAssStat(operations.get(i));
-            } else if(operations.get(i).name.equals("Print Statement")) {
-               handlePrintStat(operations.get(i)); 
+    private void dissassembleOperations(customAST operations[]) {
+        for(int i = 0; i < operations.length; i++) {
+            if(operations[i].cur.name.equals("Variable Declaration")) {
+                handleVarDecl(operations[i]);
+            } else if(operations[i].cur.name.equals("Assignment Statement")) {
+               handleAssStat(operations[i]);
+            } else if(operations[i].cur.name.equals("Print Statement")) {
+               handlePrintStat(operations[i]); 
             } else {
                 System.out.println("Error: Improper operation attempted");
             }
-        }        
+        }
+        
+        // Should convert all operations into their Op code
+        // as well as store them in the heap
     }
     
-    private void handleVarDecl(astNodes varDecl){
+    private void handleVarDecl(customAST varDecl){
         heap[heapRow][heapColumn] = "A9";
         incrementHeapRow();
         heap[heapRow][heapColumn] = "00";
@@ -153,58 +112,23 @@ public class Assembler {
         incrementHeapRow();
         heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
         incrementHeapRow();
-        incrementRegister();
-        
-        variables.add(varDecl.children.get(1).name);
-        endOperation();
     }
     
-    private void handleAssStat(astNodes assState) {
+    private void handleAssStat(customAST assState) {
         //Load the heap with the necessary OPcodes for the assign statement
         //from the information in the ASTNode
-        
-        char[] temp = currentRegister;
-        boolean newRegister = true;
-        
-        for(int i=0;i<variables.size();i++){
-            if(variables.get(i).equals(assState.children.get(0).name)){
-                temp = getVariableRegister(i);
-                newRegister = false;
-                break;
-            }
-        }
-        
-        heap[heapRow][heapColumn] = "A9";
-        incrementHeapRow();
-        heap[heapRow][heapColumn] = assState.children.get(1).name;
-        incrementHeapRow();
-        heap[heapRow][heapColumn] = "8D";
-        incrementHeapRow();
-        heap[heapRow][heapColumn] = "" + temp[0] + temp[1];
-        incrementHeapRow();
-        incrementRegister();
-        
-        //if(newRegister){variables.add(assState.children.get(0).name);}
-        
-        endOperation();
     }
     
-    private void handlePrintStat(astNodes printStat) {
-     //Load the heap w/ the necessary OPcodes for the print statement
-     
-        endOperation();
+    private void handlePrintStat(customAST printStat) {
+     //Load the heap w/ the necessary OPcodes for the print statement   
     }
     
-    private void endOperation() {
-        heap[heapRow][heapColumn] = "XX";
-        incrementHeapRow();
-    }
     
     private void incrementRegister() {
-        if((int)currentRegister[1] < 57){
-            currentRegister[1] = (char)(currentRegister[1] + 1);
+        if((int)currentRegister[1] < 9){
+            currentRegister[1] = currentRegister[1] + 1;
         } else {
-            currentRegister[0] = (char)(currentRegister[0] + 1);
+            currentRegister[0] = currentRegister[0] + 1;
             currentRegister[1] = '0';
         }
     }
@@ -231,20 +155,4 @@ public class Assembler {
         return true;
     }
     
-    private char[] getVariableRegister(int n){
-        char[] output = new char[2];
-        
-        output[0] = (char)('T' + (n / 10));
-        output[1] = (char)(n % 10);
-        
-        return output;
-    }
-    
-    private void checkHeap(){
-        for(int i=0;i<heap.length;i++){
-            for(int j=0;j<heap[0].length;i++){
-                System.out.println(heap[i][j]);
-            }
-        }
-    }
 }

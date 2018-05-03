@@ -34,8 +34,4 @@ public class astNodes {
         child.parent = this;
         children.add(child);
     }
-    
-    public boolean hasChildren() {
-        return !children.isEmpty();
-    }
 }
