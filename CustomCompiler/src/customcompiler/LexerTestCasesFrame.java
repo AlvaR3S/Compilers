@@ -54,6 +54,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         checkBox16 = new javax.swing.JCheckBox();
         checkBox17 = new javax.swing.JCheckBox();
         checkBox18 = new javax.swing.JCheckBox();
+        checkBox19 = new javax.swing.JCheckBox();
         menuLexer = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuItemExit = new javax.swing.JMenuItem();
@@ -231,6 +232,14 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
             }
         });
 
+        checkBox19.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        checkBox19.setText("Go To");
+        checkBox19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBox19ActionPerformed(evt);
+            }
+        });
+
         menuLexer.setToolTipText("");
 
         menuFile.setText("File");
@@ -302,8 +311,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                                     .addComponent(labelInput2)
                                     .addComponent(checkBox5)
                                     .addComponent(checkBox14)
-                                    .addComponent(checkBox18))))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(checkBox18)
+                                    .addComponent(checkBox19))))))
+                .addGap(0, 59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(312, Short.MAX_VALUE)
                 .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -360,7 +370,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(checkBox14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(checkBox18)))
+                        .addComponent(checkBox18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkBox19)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
 
@@ -618,6 +630,33 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
                 "}$");
         }
         
+        if(checkBox19.isSelected()) {
+            inputArea.append("{ /* Project 3 Input file */\n"
+                      + "\tint a"
+                      + "\n"
+                      + "\tboolean b"
+                      + "\n"
+                      + "\t{"
+                      + "\n"
+                      + "\t\tstring c"
+                      + "\n"
+                      + "\t\ta = 5"
+                      + "\n"
+                      + "\t\tb = true /* no comment */"
+                      + "\n"
+                      + "\t\tc = \"inta\""
+                      + "\n"
+                      + "\t\tprint(c)"
+                      + "\n"
+                      + "\t}"
+                      + "\n"
+                      + "\tprint(b)"
+                      + "\n"
+                      + "\tprint(a)"
+                      + "\n"
+                      + "}$");  
+        }
+        
         lex.setVisible(true);
         lex.setEnabled(true);
         this.dispose();
@@ -679,6 +718,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox18ActionPerformed
 
+    private void checkBox19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox19ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox19ActionPerformed
+
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -726,6 +769,7 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBox16;
     private javax.swing.JCheckBox checkBox17;
     private javax.swing.JCheckBox checkBox18;
+    private javax.swing.JCheckBox checkBox19;
     private javax.swing.JCheckBox checkBox2;
     private javax.swing.JCheckBox checkBox3;
     private javax.swing.JCheckBox checkBox4;
