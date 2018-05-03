@@ -241,8 +241,8 @@ public class Assembler {
     }
     
     private void checkHeap(){
-        for(int i = 0; i < heap.length; i++) {
-            for(int j = 0; j < heap[0].length; i++) {
+        for(int i = 0; i < heap[0].length; i++) {
+            for(int j = 0; j < heap[0].length; j++) {
                 System.out.println(heap[i][j]);
             }
         }
