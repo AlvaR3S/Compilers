@@ -215,7 +215,7 @@ public class Assembler {
         
         if(heapColumn >= 8) {
             heapColumn = 0;
-            incrementHeapRow(); // When last column hits we start a new row
+            //incrementHeapRow(); // When last column hits we start a new row
         }
         
         return true;
@@ -226,6 +226,7 @@ public class Assembler {
         
         if(heapRow >= 12) {
             heapRow = 0;
+            return incrementHeapColumn();
         }
         
         return true;

@@ -89,6 +89,14 @@ public class Lexer extends javax.swing.JFrame {
     public int getWarningCount() {
         return warningCount;
     }
+
+    public JTextArea getAstOutputArea() {
+        return astOutputArea;
+    }
+    
+    public JTextArea getAstOutputAreaCodeGen() {
+        return astOutputAreaCodeGen;
+    }
     
     public Pattern getPatterns() {
          
