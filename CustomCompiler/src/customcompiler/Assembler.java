@@ -31,13 +31,8 @@ public class Assembler {
     ArrayList<String> idList;
     ArrayList<Integer> scopeList;
 
-    public String[][] getHeap() {
-        return heap;
-    }
+    public String[][] getHeap() { return heap; }
 
-   
-    
-    
     public enum Mnemonic {}
     
     public static enum OPCode {
@@ -65,9 +60,13 @@ public class Assembler {
         public String toString(){return opCode;}
     }
     
-   
-    
-    
+  
+    /**
+     * Starts the Code Generation phase
+     * Initializes and declares variables that we will use
+     * Leads into the initialize class
+     * @param parser 
+     */
     public Assembler(Parser parser) {
         variables = new LinkedList<String>();
         variableScopes = new LinkedList<Integer>();
@@ -75,59 +74,66 @@ public class Assembler {
         ast = parser.getAst();
         idList = parser.getIdList();
         scopeList = parser.getScopeList();
-        initialize();
+        gatherAndGenerate();
     }
     
-    private void initialize() {
+    
+    /**
+     * First step and Last step
+     * Begins by searching and storing information
+     * needed for code generation
+     * Ends by calling generateCode, which outputs the opCode
+     */
+    private void gatherAndGenerate() {
+        // Grabs the already created AST and places the pointer at the root node
         LinkedList<astNodes> operations = searchChildren(ast.root);
+        
+        // Takes the AST information and implements code gen
         dissassembleOperations(operations);
         
+        // Testing if the operations found are correct 
+        // for personal checking (Console output)
         for(int i = 0; i < operations.size(); i++) {
             System.out.println(operations.get(i).name);
         }
         
-        checkHeap();
+        generateCode(); // Output generated code
     }
     
+    
+    /**
+     * Searches through AST
+     * Finds Parent info and children info
+     * Stores children information for later use
+     * @param node
+     * @return 
+     */
     private LinkedList<astNodes> searchChildren(astNodes node) {
+        // Location where important information found will be stored
         LinkedList<astNodes> output = new LinkedList<astNodes>();
         
-        if(node.name.equals("Variable Declaration")) {
-           output.add(node);
-        } else if(node.name.equals("Assignment Statement")) {
-            output.add(node);
-        } else if(node.name.equals("Print Statement")) {
-            output.add(node);
-        }
-        
-        if(node.hasChildren()) {
-            for(int i = 0; i < node.children.size(); i++) {
+        // Pointers only hit Parents and checks if there are children
+        if(node.hasChildren()) { 
+            if(node.name.equals("Variable Declaration")) {
+                output.add(node);
+            } else if(node.name.equals("Assignment Statement")) {
+                output.add(node);
+            } else if(node.name.equals("Print Statement")) {
+                output.add(node);
+            }
+            
+            // Searching if current parent has any children and stores the value 
+            for(int i = 0; i < node.children.size(); i++) { 
                 LinkedList<astNodes> temp = searchChildren(node.children.get(i));
-                    
-                for(int j = 0; j < temp.size(); j++) {
+                // When the parents has a child that is also a parent keep searching through their children
+                for(int j = 0; j < temp.size(); j++) { // Eventually moving back up the tree if there still more children
                     output.add(temp.get(j));
                 }
-                
-                /*if(node.children.get(i).hasChildren()) {
-                    LinkedList<astNodes> temp = searchChildren(node.children.get(i));
-                    
-                    for(int j=0;j<temp.size();j++){
-                        output.add(temp.get(j));
-                    }
-                } else {
-                    if(node.children.get(i).name.equals("Variable Declaration")){
-                        output.add(node.children.get(i));
-                    } else if(node.name.equals("Assignment Statement")){
-                        output.add(node.children.get(i));
-                    } else if(node.name.equals("Print Statement")){
-                        output.add(node.children.get(i));
-                    }
-                }*/
             }
-        }
-        
+        }  
         return output;
     }
+    
     
     /**
      * Loops through the stored operations and 
@@ -136,11 +142,11 @@ public class Assembler {
      * @param operations 
      */
     private void dissassembleOperations(LinkedList<astNodes> operations) {
-        for(int i = 0; i < operations.size(); i++) {
+        for(int i = 0; i < operations.size(); i++) { // Loops through operations and finds specific names
             if(operations.get(i).name.equals("Variable Declaration")) {
                handleVarDecl(operations.get(i));
             } else if(operations.get(i).name.equals("Assignment Statement")) {
-               handleAssStat(operations.get(i));
+               handleAssignStatement(operations.get(i));
             } else if(operations.get(i).name.equals("Print Statement")) {
                handlePrintStat(operations.get(i)); 
             } else {
@@ -149,6 +155,12 @@ public class Assembler {
         }        
     }
     
+    
+    /**
+     * When a Parent is VarDecl
+     * This contains the correct OPCodes for VarDecl instances
+     * @param varDecl 
+     */
     private void handleVarDecl(astNodes varDecl) {
         heap[heapRow][heapColumn] = "A9";
         incrementHeapColumn();
@@ -157,22 +169,25 @@ public class Assembler {
         heap[heapRow][heapColumn] = "8D";
         incrementHeapColumn();
         heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
-        incrementHeapColumn();
+        incrementHeapColumn(); 
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
         endOperation();
     }
     
-    private void handleAssStat(astNodes assState) {
+    /**
+     * 
+     * @param assignStatement
+     */
+    private void handleAssignStatement(astNodes assignStatement) {
         //Load the heap with the necessary OPcodes for the assign statement
         //from the information in the ASTNode
-        
         char[] temp = currentRegister;
         boolean newRegister = true;
         
         for(int i = 0; i < variables.size(); i++) {
-            if(variables.get(i).equals(assState.children.get(0).name)) {
+            if(variables.get(i).equals(assignStatement.children.get(0).name)) {
                 temp = getVariableRegister(i);
                 newRegister = false;
                 break;
@@ -181,7 +196,7 @@ public class Assembler {
         
         heap[heapRow][heapColumn] = "A9";
         incrementHeapColumn();
-        heap[heapRow][heapColumn] = assState.children.get(1).name;
+        heap[heapRow][heapColumn] = assignStatement.children.get(1).name;
         incrementHeapColumn();
         heap[heapRow][heapColumn] = "8D";
         incrementHeapColumn();
@@ -242,7 +257,7 @@ public class Assembler {
         return output;
     }
     
-    private void checkHeap() {
+    private void generateCode() {
         for(int i = 0; i < heap[0].length; i++) {
             for(int j = 0; j < heap[0].length; j++) {
                 if(heap[i][j] == null) {
