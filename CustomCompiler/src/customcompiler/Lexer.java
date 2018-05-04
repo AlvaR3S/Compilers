@@ -93,6 +93,10 @@ public class Lexer extends javax.swing.JFrame {
     public JTextArea getAstOutputArea() {
         return astOutputArea;
     }
+
+    public void setAstOutputAreaCodeGen(JTextArea astOutputAreaCodeGen) {
+        this.astOutputAreaCodeGen = astOutputAreaCodeGen;
+    }
     
     public JTextArea getAstOutputAreaCodeGen() {
         return astOutputAreaCodeGen;
@@ -543,14 +547,12 @@ public class Lexer extends javax.swing.JFrame {
                 semanticError++;
                 String result = ""; // CHARLIST is the very first space
                     
-                    for(String list : semanticErrorList) {  // We loop through the newly created array list of chars
-                       result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
-                    } 
-                    
-                    outputAreaSemantics.append(result);
-            }
-            
-            
+                for(String list : semanticErrorList) {  // We loop through the newly created array list of chars
+                   result = result + list + ""; // Back "" is the space after every char they are closed to keep chars together  
+                } 
+
+                outputAreaSemantics.append(result);
+            }            
         }
         
         private void Semantics() {
@@ -728,6 +730,10 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
+        private void heapStructure() {
+            
+        }
+        
         /**
          * 
          * Program       ::== Block $
@@ -775,6 +781,8 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                     
                     Assembler assembler = new Assembler(this);
+                    
+                    astOutputAreaCodeGen.append(Arrays.deepToString(assembler.heap));
                     
                     ContinueProgram(); // If program not done
                 }  

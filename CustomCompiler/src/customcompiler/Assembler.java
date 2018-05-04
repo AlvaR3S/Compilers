@@ -5,9 +5,11 @@
  */
 package customcompiler;
 
-import customcompiler.Lexer.Parser;
+import customcompiler.Lexer.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import javax.swing.JTextArea;
 
 
 
@@ -16,11 +18,27 @@ import java.util.LinkedList;
  * @author reynaldoalvarez
  */
 public class Assembler {
+    String[][] heap = new String[12][8];
+    int heapRow = 0;
+    int heapColumn = 0;
     
-    
-    public enum Mnemonic {
-        
+    char[] currentRegister = {'T','0'};
+    LinkedList<String> variables;
+    LinkedList<Integer> variableScopes;
+    Lexer lex = new Lexer();
+    Parser parser;
+    customAST ast;
+    ArrayList<String> idList;
+    ArrayList<Integer> scopeList;
+
+    public String[][] getHeap() {
+        return heap;
     }
+
+   
+    
+    
+    public enum Mnemonic {}
     
     public static enum OPCode {
         LDAC("A9"), 
@@ -47,25 +65,12 @@ public class Assembler {
         public String toString(){return opCode;}
     }
     
-    String[][] heap = new String[12][8];
-    int heapRow = 0;
-    int heapColumn = 0;
-    
-    char[] currentRegister = {'T','0'};
-    LinkedList<String> variables;
-    LinkedList<Integer> variableScopes;
-    
-    Parser parser;
-    customAST ast;
-    ArrayList<String> idList;
-    ArrayList<Integer> scopeList;
-    
+   
     
     
     public Assembler(Parser parser) {
         variables = new LinkedList<String>();
         variableScopes = new LinkedList<Integer>();
-        
         this.parser = parser;
         ast = parser.getAst();
         idList = parser.getIdList();
@@ -87,7 +92,7 @@ public class Assembler {
     private LinkedList<astNodes> searchChildren(astNodes node) {
         LinkedList<astNodes> output = new LinkedList<astNodes>();
         
-         if(node.name.equals("Variable Declaration")) {
+        if(node.name.equals("Variable Declaration")) {
            output.add(node);
         } else if(node.name.equals("Assignment Statement")) {
             output.add(node);
@@ -133,13 +138,13 @@ public class Assembler {
     private void dissassembleOperations(LinkedList<astNodes> operations) {
         for(int i = 0; i < operations.size(); i++) {
             if(operations.get(i).name.equals("Variable Declaration")) {
-                handleVarDecl(operations.get(i));
+               handleVarDecl(operations.get(i));
             } else if(operations.get(i).name.equals("Assignment Statement")) {
                handleAssStat(operations.get(i));
             } else if(operations.get(i).name.equals("Print Statement")) {
                handlePrintStat(operations.get(i)); 
             } else {
-                System.out.println("Error: Improper operation attempted");
+               System.out.println("Error: Improper operation attempted");
             }
         }        
     }
@@ -184,14 +189,11 @@ public class Assembler {
         incrementHeapColumn();
         incrementRegister();
         
-        //if(newRegister){variables.add(assState.children.get(0).name);}
-        
         endOperation();
     }
     
     private void handlePrintStat(astNodes printStat) {
-     //Load the heap w/ the necessary OPcodes for the print statement
-     
+        //Load the heap w/ the necessary OPcodes for the print statement
         endOperation();
     }
     
@@ -232,7 +234,7 @@ public class Assembler {
     }
     
     private char[] getVariableRegister(int n) {
-        char[] output = new char[2];
+        char[] output = new char[1];
         
         output[0] = (char)('T' + (n / 10));
         output[1] = (char)(n % 10);
@@ -243,7 +245,12 @@ public class Assembler {
     private void checkHeap() {
         for(int i = 0; i < heap[0].length; i++) {
             for(int j = 0; j < heap[0].length; j++) {
-                System.out.println(heap[i][j]);
+                if(heap[i][j] == null) {
+                    System.out.println("00");
+                } else {
+                    System.out.println(heap[i][j]);
+                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
+                }
             }
         }
     }
