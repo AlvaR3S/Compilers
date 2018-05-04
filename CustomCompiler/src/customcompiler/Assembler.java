@@ -89,7 +89,7 @@ public class Assembler {
         LinkedList<astNodes> operations = searchChildren(ast.root);
         
         // Takes the AST information and implements code gen
-        dissassembleOperations(operations);
+        disassembleOperations(operations);
         
         // Testing if the operations found are correct 
         // for personal checking (Console output)
@@ -141,14 +141,14 @@ public class Assembler {
      * the proper action for that operation
      * @param operations 
      */
-    private void dissassembleOperations(LinkedList<astNodes> operations) {
+    private void disassembleOperations(LinkedList<astNodes> operations) {
         for(int i = 0; i < operations.size(); i++) { // Loops through operations and finds specific names
             if(operations.get(i).name.equals("Variable Declaration")) {
                handleVarDecl(operations.get(i));
             } else if(operations.get(i).name.equals("Assignment Statement")) {
                handleAssignStatement(operations.get(i));
             } else if(operations.get(i).name.equals("Print Statement")) {
-               handlePrintStat(operations.get(i)); 
+               handlePrintStatement(operations.get(i)); 
             } else {
                System.out.println("Error: Improper operation attempted");
             }
@@ -176,8 +176,10 @@ public class Assembler {
         endOperation();
     }
     
+    
     /**
-     * 
+     * When a Parent is Assignment Statement
+     * This contains the correct OPCodes for Assignment Statement instances
      * @param assignStatement
      */
     private void handleAssignStatement(astNodes assignStatement) {
@@ -188,7 +190,7 @@ public class Assembler {
         
         for(int i = 0; i < variables.size(); i++) {
             if(variables.get(i).equals(assignStatement.children.get(0).name)) {
-                temp = getVariableRegister(i);
+                temp = getVariableInRegister(i);
                 newRegister = false;
                 break;
             }
@@ -207,16 +209,31 @@ public class Assembler {
         endOperation();
     }
     
-    private void handlePrintStat(astNodes printStat) {
+    
+    /**
+     * When a Parent is Print Statement
+     * This contains the correct OPCodes for Print Statement instances
+     * @param printStat 
+     */
+    private void handlePrintStatement(astNodes printStat) {
         //Load the heap w/ the necessary OPcodes for the print statement
         endOperation();
     }
     
+    /**
+     * Double X's are placed after a statement
+     */
     private void endOperation() {
         heap[heapRow][heapColumn] = "XX";
         incrementHeapColumn();
     }
     
+    
+    /**
+     * Increments the Saved Number of VarDecls accordingly
+     * When 9 is reached the saving Letter e.g T turns into next Letter
+     * This is based off of ASCII order
+     */
     private void incrementRegister() {
         if((int)currentRegister[1] < 57) {
             currentRegister[1] = (char)(currentRegister[1] + 1);
@@ -226,37 +243,54 @@ public class Assembler {
         }
     }
     
+    
+    /**
+     * Increments the columns and when the end is reached
+     * columns value returns to 0 and moves onto next row
+     * @return 
+     */
     private boolean incrementHeapColumn() {
         heapColumn++;
-        
         if(heapColumn >= 8) {
             heapColumn = 0;
             return incrementHeapRow();
         }
-        
         return true;
     }
     
+    /**
+     * Rows are incremented only after reaching the 8/9th column number
+     * Stops at row 12 because these are the tables dimensions 
+     * @return 
+     */
     private boolean incrementHeapRow() {
         heapRow++;
-        
         if(heapRow >= 12) {
             heapRow = 0;
             return false;
         }
-        
         return true;
     }
     
-    private char[] getVariableRegister(int n) {
+    
+    /**
+     * Increments the Letter part of the VarDecl
+     * When 9 is reached the saving Letter e.g T turns into next Letter
+     * This is based off of ASCII order
+     * @param n
+     * @return 
+     */
+    private char[] getVariableInRegister(int n) {
         char[] output = new char[1];
-        
         output[0] = (char)('T' + (n / 10));
         output[1] = (char)(n % 10);
-        
         return output;
     }
     
+    
+    /**
+     * Outputs generated code from the disassembled
+     */
     private void generateCode() {
         for(int i = 0; i < heap[0].length; i++) {
             for(int j = 0; j < heap[0].length; j++) {
