@@ -98,10 +98,6 @@ public class Lexer extends javax.swing.JFrame {
         this.astOutputAreaCodeGen = astOutputAreaCodeGen;
     }
     
-    public JTextArea getAstOutputAreaCodeGen() {
-        return astOutputAreaCodeGen;
-    }
-    
     public Pattern getPatterns() {
          
         // Lexer takes the input, finds the patterns and places them into token format
@@ -407,7 +403,6 @@ public class Lexer extends javax.swing.JFrame {
         ArrayList<Integer> scopeList = new ArrayList<Integer>();
         ArrayList<Integer> idLocation = new ArrayList<Integer>();
         ArrayList<String> semanticErrorList = new ArrayList<String>();
-
         
         //-----------------------------------
         //-----------GETTERS-----------------
@@ -493,10 +488,12 @@ public class Lexer extends javax.swing.JFrame {
             return scopeList;
         }
         
+        public JTextArea getAstOutputAreaCodeGen() {
+            return astOutputAreaCodeGen;
+        }
+        
         public Parser() { }
         
-        
-
         
         //----------------------------------------------------
         //-------------------------[METHODS]------------------
@@ -730,9 +727,6 @@ public class Lexer extends javax.swing.JFrame {
             }
         }
         
-        private void heapStructure() {
-            
-        }
         
         /**
          * 
@@ -781,8 +775,20 @@ public class Lexer extends javax.swing.JFrame {
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                     
                     Assembler assembler = new Assembler(this);
-                    
-                    astOutputAreaCodeGen.append(Arrays.deepToString(assembler.heap));
+                    assembler.gatherAndGenerate();
+//                    for(int k = 0; k < assembler.heap[0].length; k++) {
+//                        for(int j = 0; j < assembler.heap[0].length; j++) {
+//                            if(assembler.heap[k][j] == null) {
+//                                System.out.println("00");
+//                                assembler.heap[k][j] = "00";
+//                                astOutputAreaCodeGen.append(assembler.heap[k][j]);
+//                            } else {    
+//                                System.out.println(Arrays.toString(assembler.heap));
+//                                astOutputAreaCodeGen.append(assembler.heap[k][j]);
+//                            }
+//                        }
+//                    }
+                    //astOutputAreaCodeGen.append(Arrays.deepToString(assembler.heap));
                     
                     ContinueProgram(); // If program not done
                 }  
@@ -3023,11 +3029,9 @@ public class Lexer extends javax.swing.JFrame {
     private void buttonLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLexActionPerformed
         
         Token token = new Token();
-       
+        
         Parser parse = new Parser(token);
         
-        //Semantics semantics = new Semantics(parse);
-      
     }//GEN-LAST:event_buttonLexActionPerformed
     
     // Exits the Lexer

@@ -18,9 +18,10 @@ import javax.swing.JTextArea;
  * @author reynaldoalvarez
  */
 public class Assembler {
-    String[][] heap = new String[12][8];
-    int heapRow = 0;
-    int heapColumn = 0;
+    String[] heap = new String[96];
+    int heapNum = 0;
+    int heapCount = 0;
+    int g = 0;
     
     char[] currentRegister = {'T','0'};
     LinkedList<String> variables;
@@ -31,11 +32,6 @@ public class Assembler {
     ArrayList<String> idList;
     ArrayList<Integer> scopeList;
 
-    public String[][] getHeap() { return heap; }
-
-    public int getHeapColumn() {
-        return heapColumn;
-    }
     
     public enum Mnemonic {}
     
@@ -78,7 +74,6 @@ public class Assembler {
         ast = parser.getAst();
         idList = parser.getIdList();
         scopeList = parser.getScopeList();
-        gatherAndGenerate();
     }
     
     
@@ -88,7 +83,7 @@ public class Assembler {
      * needed for code generation
      * Ends by calling generateCode, which outputs the opCode
      */
-    private void gatherAndGenerate() {
+    public void gatherAndGenerate() {
         // Grabs the already created AST and places the pointer at the root node
         LinkedList<astNodes> operations = searchChildren(ast.root);
         
@@ -97,9 +92,9 @@ public class Assembler {
         
         // Testing if the operations found are correct 
         // for personal checking (Console output)
-        for(int i = 0; i < operations.size(); i++) {
-            System.out.println(operations.get(i).name);
-        }
+//        for(int i = 0; i < operations.size(); i++) {
+//            System.out.println(operations.get(i).name);
+//        }
         
         generateCode(); // Output generated code
     }
@@ -166,14 +161,14 @@ public class Assembler {
      * @param varDecl 
      */
     private void handleVarDecl(astNodes varDecl) {
-        heap[heapRow][heapColumn] = "A9";
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = "00";
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = "8D";
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = "" + currentRegister[0] + currentRegister[1];
-        incrementHeapColumn(); 
+        heap[heapNum] = "A9";
+        incrementHeap();
+        heap[heapNum] = "00";
+        incrementHeap();
+        heap[heapNum] = "8D";
+        incrementHeap();
+        heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
+        incrementHeap(); 
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
@@ -198,14 +193,14 @@ public class Assembler {
             }
         }
         
-        heap[heapRow][heapColumn] = "A9";
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = assignStatement.children.get(1).name;
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = "8D";
-        incrementHeapColumn();
-        heap[heapRow][heapColumn] = "" + temp[0] + temp[1];
-        incrementHeapColumn();
+        heap[heapNum] = "A9";
+        incrementHeap();
+        heap[heapNum] = assignStatement.children.get(1).name;
+        incrementHeap();
+        heap[heapNum] = "8D";
+        incrementHeap();
+        heap[heapNum] = "" + temp[0] + temp[1];
+        incrementHeap();
         incrementRegister();
         
         endOperation();
@@ -222,12 +217,13 @@ public class Assembler {
         endOperation();
     }
     
+    
     /**
      * Double X's are placed after a statement
      */
     private void endOperation() {
-        heap[heapRow][heapColumn] = "XX";
-        incrementHeapColumn();
+        heap[heapNum] = "XX";
+        incrementHeap();
     }
     
     
@@ -251,25 +247,13 @@ public class Assembler {
      * columns value returns to 0 and moves onto next row
      * @return 
      */
-    private boolean incrementHeapColumn() {
-        heapColumn++;
-        if(heapColumn >= 8) {
-            heapColumn = 0;
-            return incrementHeapRow();
-        }
-        return true;
-    }
-    
-    /**
-     * Rows are incremented only after reaching the 8/9th column number
-     * Stops at row 12 because these are the tables dimensions 
-     * @return 
-     */
-    private boolean incrementHeapRow() {
-        heapRow++;
-        if(heapRow >= 12) {
-            heapRow = 0;
-            return false;
+    private boolean incrementHeap() {
+        heapNum++;
+        heapCount++;
+        if(heapCount == 7) {
+            System.out.println("NOHERE");
+            //parser.getAstOutputAreaCodeGen().append("\n");
+            heapCount = 0;
         }
         return true;
     }
@@ -294,26 +278,18 @@ public class Assembler {
      * Outputs generated code from the disassembled
      */
     private void generateCode() {
-        String LIST = "";
-        for(String Heap[] : heap) {  // We loop through the newly created array list of chars
-            if(heapColumn >= 8) {
-                LIST += LIST + Arrays.deepToString(Heap) + " \n";
-            } else {
-                LIST += LIST + Arrays.deepToString(Heap);
+        for(int k = 0; k < heap.length; k++) {
+            if(g == 8) {
+                g = 0;
+                parser.getAstOutputAreaCodeGen().append("\n");
             }
-             // Back "" is the space after every char they are closed to keep chars together  
-        }  
-//        for(int i = 0; i < heap[0].length; i++) {
-//            for(int j = 0; j < heap[0].length; j++) {
-//                if(heap[i][j] == null) {
-//                    System.out.println("00");
-//                    heap[i][j] = "00";
-//                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
-//                } else {
-//                    System.out.println(heap[i][j]);
-//                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
-//                }
-//            }
-//        }
+            if(heap[k] == null) {
+                g++;
+                parser.getAstOutputAreaCodeGen().append("00 ");
+            } else {
+                g++;
+                parser.getAstOutputAreaCodeGen().append(heap[k] + " ");
+            }
+        }
     }
 }
