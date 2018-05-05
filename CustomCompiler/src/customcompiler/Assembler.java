@@ -172,6 +172,7 @@ public class Assembler {
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
+        System.out.println("VARDEcl " + varDecl.children.get(1).name);
         endOperation();
     }
     
@@ -183,25 +184,28 @@ public class Assembler {
      */
     private void handleAssignStatement(astNodes assignStatement) {
         char[] temp = currentRegister;
-        boolean newRegister = true;
+        
+            
         
         for(int i = 0; i < variables.size(); i++) {
-            if(variables.get(i).equals(assignStatement.children.get(0).name)) {
-                temp = getVariableInRegister(i);
-                newRegister = false;
-                break;
-            }
+           if(assignStatement.children.get(i).name.equals(variables.get(i))) {
+               temp = getVariableInRegister(i);
+               if(temp[1] == 0) {
+                   System.out.println("ITS 0");
+               }
+               System.out.println("fefe: " + Arrays.toString(temp));
+           }
         }
         
         heap[heapNum] = "A9";
         heapNum++;
-        heap[heapNum] = assignStatement.children.get(1).name;
+        heap[heapNum] = "0" + assignStatement.children.get(1).name;
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
         heap[heapNum] = "" + temp[0] + temp[1];
         heapNum++;
-        incrementRegister();
+        // Instead of INCREMENTING REGISTER FIND A WAY TO SEARCH UP SAVED T(NUM) LOCATIONs
         
         endOperation();
     }
@@ -233,6 +237,7 @@ public class Assembler {
      * This is based off of ASCII order
      */
     private void incrementRegister() {
+        int f = 0;
         if((int)currentRegister[1] < 57) {
             currentRegister[1] = (char)(currentRegister[1] + 1);
         } else {
@@ -250,9 +255,9 @@ public class Assembler {
      * @return 
      */
     private char[] getVariableInRegister(int n) {
-        char[] output = new char[1];
-        output[0] = (char)('T' + (n / 10));
-        output[1] = (char)(n % 10);
+        char[] output = new char[2];
+        output[0] = (char) ('T' + (n / 10));
+        output[1] = (char) (n % 10);
         return output;
     }
     
