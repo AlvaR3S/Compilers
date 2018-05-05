@@ -24,8 +24,8 @@ public class Assembler {
     int g = 0;
     
     char[] currentRegister = {'T','0'};
-    LinkedList<String> variables;
-    LinkedList<Integer> variableScopes;
+    ArrayList<String> variables;
+    ArrayList<String> regVariables;
     Lexer lex = new Lexer();
     Parser parser;
     customAST ast;
@@ -68,8 +68,8 @@ public class Assembler {
      * @param parser 
      */
     public Assembler(Parser parser) {
-        variables = new LinkedList<String>();
-        variableScopes = new LinkedList<Integer>();
+        variables = new ArrayList<String>();
+        regVariables = new ArrayList<String>();
         this.parser = parser;
         ast = parser.getAst();
         idList = parser.getIdList();
@@ -169,10 +169,13 @@ public class Assembler {
         heapNum++;
         heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
         heapNum++;
+        
+        regVariables.add("" + currentRegister[0] + currentRegister[1]);
+        variables.add(varDecl.children.get(1).name);
+        
         incrementRegister();
         
-        variables.add(varDecl.children.get(1).name);
-        System.out.println("VARDEcl " + varDecl.children.get(1).name);
+        System.out.println("VARDEcl " + regVariables.get(0));
         endOperation();
     }
     
@@ -184,18 +187,8 @@ public class Assembler {
      */
     private void handleAssignStatement(astNodes assignStatement) {
         char[] temp = currentRegister;
+       
         
-            
-        
-        for(int i = 0; i < variables.size(); i++) {
-           if(assignStatement.children.get(i).name.equals(variables.get(i))) {
-               temp = getVariableInRegister(i);
-               if(temp[1] == 0) {
-                   System.out.println("ITS 0");
-               }
-               System.out.println("fefe: " + Arrays.toString(temp));
-           }
-        }
         
         heap[heapNum] = "A9";
         heapNum++;
@@ -203,7 +196,14 @@ public class Assembler {
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
-        heap[heapNum] = "" + temp[0] + temp[1];
+        
+        for(int i = 0; i < variables.size(); i++) {
+            if(variables.get(i).equals(assignStatement.children.get(0).name)) {
+                heap[heapNum] = "" + regVariables.get(i);
+                break;
+            }
+        }
+        
         heapNum++;
         // Instead of INCREMENTING REGISTER FIND A WAY TO SEARCH UP SAVED T(NUM) LOCATIONs
         
@@ -237,7 +237,6 @@ public class Assembler {
      * This is based off of ASCII order
      */
     private void incrementRegister() {
-        int f = 0;
         if((int)currentRegister[1] < 57) {
             currentRegister[1] = (char)(currentRegister[1] + 1);
         } else {
@@ -259,7 +258,7 @@ public class Assembler {
         output[0] = (char) ('T' + (n / 10));
         output[1] = (char) (n % 10);
         return output;
-    }
+     }
     
     
     /**

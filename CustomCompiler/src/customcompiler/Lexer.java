@@ -776,19 +776,6 @@ public class Lexer extends javax.swing.JFrame {
                     
                     Assembler assembler = new Assembler(this);
                     assembler.gatherAndGenerate();
-//                    for(int k = 0; k < assembler.heap[0].length; k++) {
-//                        for(int j = 0; j < assembler.heap[0].length; j++) {
-//                            if(assembler.heap[k][j] == null) {
-//                                System.out.println("00");
-//                                assembler.heap[k][j] = "00";
-//                                astOutputAreaCodeGen.append(assembler.heap[k][j]);
-//                            } else {    
-//                                System.out.println(Arrays.toString(assembler.heap));
-//                                astOutputAreaCodeGen.append(assembler.heap[k][j]);
-//                            }
-//                        }
-//                    }
-                    //astOutputAreaCodeGen.append(Arrays.deepToString(assembler.heap));
                     
                     ContinueProgram(); // If program not done
                 }  
