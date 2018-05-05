@@ -2842,7 +2842,7 @@ public class Lexer extends javax.swing.JFrame {
 
         astOutputAreaCodeGen.setEditable(false);
         astOutputAreaCodeGen.setColumns(20);
-        astOutputAreaCodeGen.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        astOutputAreaCodeGen.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         astOutputAreaCodeGen.setRows(5);
         astOutputAreaCodeGen.setTabSize(2);
         astOutputAreaCodeGen.setToolTipText("");

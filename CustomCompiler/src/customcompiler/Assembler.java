@@ -162,13 +162,13 @@ public class Assembler {
      */
     private void handleVarDecl(astNodes varDecl) {
         heap[heapNum] = "A9";
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = "00";
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = "8D";
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
-        incrementHeap(); 
+        heapNum++;
         incrementRegister();
         
         variables.add(varDecl.children.get(1).name);
@@ -194,13 +194,13 @@ public class Assembler {
         }
         
         heap[heapNum] = "A9";
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = assignStatement.children.get(1).name;
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = "8D";
-        incrementHeap();
+        heapNum++;
         heap[heapNum] = "" + temp[0] + temp[1];
-        incrementHeap();
+        heapNum++;
         incrementRegister();
         
         endOperation();
@@ -223,7 +223,7 @@ public class Assembler {
      */
     private void endOperation() {
         heap[heapNum] = "XX";
-        incrementHeap();
+        heapNum++;
     }
     
     
@@ -240,24 +240,7 @@ public class Assembler {
             currentRegister[1] = '0';
         }
     }
-    
-    
-    /**
-     * Increments the columns and when the end is reached
-     * columns value returns to 0 and moves onto next row
-     * @return 
-     */
-    private boolean incrementHeap() {
-        heapNum++;
-        heapCount++;
-        if(heapCount == 7) {
-            System.out.println("NOHERE");
-            //parser.getAstOutputAreaCodeGen().append("\n");
-            heapCount = 0;
-        }
-        return true;
-    }
-    
+
     
     /**
      * Increments the Letter part of the VarDecl
@@ -278,10 +261,12 @@ public class Assembler {
      * Outputs generated code from the disassembled
      */
     private void generateCode() {
+        parser.getAstOutputAreaCodeGen().append("\n                Program 1 Code Generation\n" +
+                                        "   -----------------------------------------\n\t   ");
         for(int k = 0; k < heap.length; k++) {
-            if(g == 8) {
+            if(g == 12) {
                 g = 0;
-                parser.getAstOutputAreaCodeGen().append("\n");
+                parser.getAstOutputAreaCodeGen().append("\n\t   ");
             }
             if(heap[k] == null) {
                 g++;
@@ -291,5 +276,6 @@ public class Assembler {
                 parser.getAstOutputAreaCodeGen().append(heap[k] + " ");
             }
         }
+        parser.getAstOutputAreaCodeGen().append("\n   -----------------------------------------\n");
     }
 }
