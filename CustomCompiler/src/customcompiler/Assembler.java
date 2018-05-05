@@ -33,6 +33,10 @@ public class Assembler {
 
     public String[][] getHeap() { return heap; }
 
+    public int getHeapColumn() {
+        return heapColumn;
+    }
+    
     public enum Mnemonic {}
     
     public static enum OPCode {
@@ -183,8 +187,6 @@ public class Assembler {
      * @param assignStatement
      */
     private void handleAssignStatement(astNodes assignStatement) {
-        //Load the heap with the necessary OPcodes for the assign statement
-        //from the information in the ASTNode
         char[] temp = currentRegister;
         boolean newRegister = true;
         
@@ -292,15 +294,26 @@ public class Assembler {
      * Outputs generated code from the disassembled
      */
     private void generateCode() {
-        for(int i = 0; i < heap[0].length; i++) {
-            for(int j = 0; j < heap[0].length; j++) {
-                if(heap[i][j] == null) {
-                    System.out.println("00");
-                } else {
-                    System.out.println(heap[i][j]);
-                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
-                }
+        String LIST = "";
+        for(String Heap[] : heap) {  // We loop through the newly created array list of chars
+            if(heapColumn >= 8) {
+                LIST += LIST + Arrays.deepToString(Heap) + " \n";
+            } else {
+                LIST += LIST + Arrays.deepToString(Heap);
             }
-        }
+             // Back "" is the space after every char they are closed to keep chars together  
+        }  
+//        for(int i = 0; i < heap[0].length; i++) {
+//            for(int j = 0; j < heap[0].length; j++) {
+//                if(heap[i][j] == null) {
+//                    System.out.println("00");
+//                    heap[i][j] = "00";
+//                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
+//                } else {
+//                    System.out.println(heap[i][j]);
+//                    lex.getAstOutputAreaCodeGen().append(heap[i][j]);
+//                }
+//            }
+//        }
     }
 }

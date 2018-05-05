@@ -777,7 +777,7 @@ public class Lexer extends javax.swing.JFrame {
                     
                     matchAndDevour(tokenType.EOP); 
                     System.out.println("matched $\n");
-
+                    
                     outputAreaParser.append("PARSER: Parse completed successfully\n\n");
                     
                     Assembler assembler = new Assembler(this);
@@ -2171,7 +2171,7 @@ public class Lexer extends javax.swing.JFrame {
                         for(String CHAR : charList) {  // We loop through the newly created array list of chars
                            CHARLIST = CHARLIST + CHAR + ""; // Back "" is the space after every char they are closed to keep chars together  
                         }   
-
+                        
                         // add charList to ast before next quote
                         ast.addNode(CHARLIST, "leaf");
                         
@@ -2182,10 +2182,10 @@ public class Lexer extends javax.swing.JFrame {
                             cst.endChildren(); // IF there is only one char
                         }
                         
-
+                        
                         // Allows me to get the current quote and add to node as leaf
                         cst.addNode(tokens.get(currentToken).getData(), "leaf");
-
+                        
                         matchAndDevour(tokenType.Quote);
                         outputAreaParser.append("PARSER: parseQuote()\n");
 
