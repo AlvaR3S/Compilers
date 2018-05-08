@@ -31,6 +31,8 @@ public class Assembler {
     customAST ast;
     ArrayList<String> idList;
     ArrayList<Integer> scopeList;
+    char[] varNumList;
+    
 
     
     public enum Mnemonic {}
@@ -185,14 +187,26 @@ public class Assembler {
      * This contains the correct OPCodes for Assignment Statement instances
      * @param assignStatement
      */
-    private void handleAssignStatement(astNodes assignStatement) {
-        char[] temp = currentRegister;
-       
+    private void handleAssignStatement(astNodes assignStatement) { 
         
         
         heap[heapNum] = "A9";
+        for(int i = 0; i < heap[heapNum].length(); i++) {
+            System.out.println(Arrays.toString(heap[heapNum].toCharArray()));
+            System.out.println(Arrays.toString(heap[heapNum].getBytes()));
+            break;
+        }
         heapNum++;
+        
+        
+            
+                
+            
+        
+
         heap[heapNum] = "0" + assignStatement.children.get(1).name;
+
+        
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
