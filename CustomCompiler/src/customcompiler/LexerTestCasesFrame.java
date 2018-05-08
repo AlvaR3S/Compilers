@@ -490,18 +490,9 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         
         if(checkBox11.isSelected()) {
             inputArea.append("{ /* Assignment Statement */\n"
-                    + "\t a = b"
-                    + "\n"
-                    + "\t b = 2"
-                    + "\n"
-                    + "\t c = 5 + 2"
-                    + "\n"
-                    + "\t d = \"burger\""
-                    + "\n"
-                    + "\t a = true"
-                    + "\n"
-                    + "\t c = false"
-                    + "\n"
+                    + "   int i\n" 
+                    + "   i = 5 \n" 
+                    + "   print(i)\n" 
                     + "}$");
         }
         
@@ -647,10 +638,6 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox10ActionPerformed
 
-    private void checkBox11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkBox11ActionPerformed
-
     private void checkBox12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox12ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox12ActionPerformed
@@ -678,6 +665,10 @@ public class LexerTestCasesFrame extends javax.swing.JFrame {
     private void checkBox18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox18ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_checkBox18ActionPerformed
+
+    private void checkBox11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBox11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkBox11ActionPerformed
 
 //    /**
 //     * @param args the command line arguments

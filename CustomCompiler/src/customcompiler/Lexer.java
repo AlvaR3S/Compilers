@@ -209,17 +209,13 @@ public class Lexer extends javax.swing.JFrame {
         
         public TokenType getType() {
             return this;
-        }
-        
-        
+        }    
     }
     
     // Stores token type and data
     public class Token {
         public TokenType type;
         public String data;
-        
-        
          
         // Creating the characteristics of a token
         public Token(TokenType type, String data) {

@@ -216,9 +216,25 @@ public class Assembler {
      * This contains the correct OPCodes for Print Statement instances
      * @param printStat 
      */
-    private void handlePrintStatement(astNodes printStat) {
+    private void handlePrintStatement(astNodes printStatement) {
         //Load the heap w/ the necessary OPcodes for the print statement
+        
+        heap[heapNum] = "AC";
+        heapNum++;
+        
+        for(int i = 0; i < variables.size(); i++) {
+            if(variables.get(i).equals(printStatement.children.get(0).name)) {
+                heap[heapNum] = "" + regVariables.get(i);
+                break;
+            }
+        }
+        heapNum++;
         endOperation();
+        heap[heapNum] = "A2";
+        heapNum++;
+        heap[heapNum] = "01";
+        heapNum++;
+        SystemCall();
     }
     
     
@@ -227,6 +243,15 @@ public class Assembler {
      */
     private void endOperation() {
         heap[heapNum] = "XX";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void SystemCall() {
+        heap[heapNum] = "FF";
         heapNum++;
     }
     
