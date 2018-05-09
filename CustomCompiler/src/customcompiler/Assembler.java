@@ -36,6 +36,7 @@ public class Assembler {
     char[] varNumList;
     ArrayList<String> stringList;
     ArrayList<String> printList;
+    ArrayList<String> typeList;
     
 
     
@@ -82,6 +83,7 @@ public class Assembler {
         scopeList = parser.getScopeList();
         stringList = new ArrayList<String>();
         printList = new ArrayList<String>();
+        typeList = new ArrayList<String>();
     }
     
     
@@ -174,9 +176,10 @@ public class Assembler {
         
         regVariables.add("" + currentRegister[0] + currentRegister[1]);
         variables.add(varDecl.children.get(1).name);
+        typeList.add(varDecl.children.get(0).name);
         
         incrementRegister();
-        
+        System.out.println("type: " + varDecl.children.get(0).name);
         System.out.println("VARDEcl " + regVariables.get(0));
         endOperation();
     }
@@ -188,8 +191,6 @@ public class Assembler {
      * @param assignStatement
      */
     private void handleAssignStatement(astNodes assignStatement) { 
-        
-        
         heap[heapNum] = "A9";
         for(int i = 0; i < heap[heapNum].length(); i++) {
             System.out.println(Arrays.toString(heap[heapNum].toCharArray()));
@@ -198,9 +199,29 @@ public class Assembler {
         }
         heapNum++;
         
-
+        for(int h = 0; h < variables.size(); h++) {
+            if(variables.get(h).equals(assignStatement.children.get(0).name)) {
+               System.out.println("matched");
+                if(variables.indexOf(h) == typeList.indexOf(h)) { // If this var pos matches their type position
+                   System.out.println("value: " + assignStatement.children.get(1).name);
+                   System.out.println("var: " + assignStatement.children.get(0).name);
+                   System.out.println("type: " + typeList.get(h));
+                    if(typeList.get(h).contains("string")) {
+                        System.out.println("im a string");
+                    } else if(typeList.get(h).contains("int")) {
+                        System.out.println("im a int");
+                    } else if(typeList.get(h).contains("boolean")) {
+                        System.out.println("im a boolean");
+                    } else {
+                        System.out.println("blues clues");
+                   }
+               }
+           } else {
+               System.out.println("not a match");
+           }
+        }
         heap[heapNum] = "0" + assignStatement.children.get(1).name;
-        
+        System.out.println(assignStatement.children.get(1).name);
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
@@ -252,8 +273,6 @@ public class Assembler {
             heapNum++;
             SystemCall();
         } else {
-          
-            
             if(currentPrintStatement.length() > 1) {
                 System.out.println("YEA: " + currentPrintStatement.length());
                 heap[heapNum] = "AD";
@@ -266,7 +285,6 @@ public class Assembler {
                    System.out.println();
                    System.out.println(f);
                    System.out.println(Arrays.toString(src));
-                   
                 }
                 
                 endOperation();
@@ -325,7 +343,7 @@ public class Assembler {
             i--;
         }
 
-        for(int b = 0; b < currentString.length(); b++) {
+        for(int b = 0; b < currentString.length(); b++) { 
             heap[heapNum] = printList.get(b);
             heapNum++;
         }
