@@ -6,6 +6,7 @@
 package customcompiler;
 
 import customcompiler.Lexer.*;
+import java.nio.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -225,11 +226,6 @@ public class Assembler {
      */
     private void handlePrintStatement(astNodes printStatement) {
         String currentPrintStatement = printStatement.children.get(0).name;
-//        for(int k = 0; k < printStatement.children.size(); k++) {
-//            System.out.println("" + regVariables.get(k));
-//            System.out.println(printStatement.children.get(k).name);
-//        }
-//        
         
         System.out.println("there"); 
         
@@ -256,41 +252,39 @@ public class Assembler {
             heapNum++;
             SystemCall();
         } else {
+          
+            
             if(currentPrintStatement.length() > 1) {
                 System.out.println("YEA: " + currentPrintStatement.length());
                 heap[heapNum] = "AD";
                 heapNum++;
-
-
-
-
-                StringToHex(currentPrintStatement);
-
-
+                String f = "S0XX";
+                byte[] src = f.getBytes();
+                ByteBuffer endian = ByteBuffer.wrap(src);
+                endian.order(ByteOrder.LITTLE_ENDIAN);
+                while(endian.hasRemaining()) {
+                   System.out.println();
+                   System.out.println(f);
+                   System.out.println(Arrays.toString(src));
+                   
+                }
+                
                 endOperation();
                 heap[heapNum] = "A2";
                 heapNum++;
                 heap[heapNum] = "01";
                 heapNum++;
                 SystemCall();
+                AddStringToHex(currentPrintStatement);
+                
             } else {
-//                if(variables.get(0).equals(currentPrintStatement)) {
-//                    System.out.println("var: " + currentPrintStatement);
-//                    System.out.println("IS a var: " + currentPrintStatement.length());
-//                    System.out.println("current: " + printStatement.children.get(0).name);
-//                } else {
-                    System.out.println("var: " + currentPrintStatement);
-                    System.out.println("NOT a var: " + currentPrintStatement.length());
-                    System.out.println("current: " + printStatement.children.get(0).name);
-                //}    
+                System.out.println("var: " + currentPrintStatement);
+                System.out.println("NOT a var: " + currentPrintStatement.length());
+                System.out.println("current: " + printStatement.children.get(0).name);  
             }
         }
     }
-    
-    
-    //public String toHex(String arg) { return String.format("%x", new BigInteger(arg.getBytes())); }
-    
-    
+
     /**
      * Double X's are placed after a statement
      */
@@ -308,24 +302,24 @@ public class Assembler {
         heapNum++;
     }
     
+    
     /**
      * Converts Strings into Hexadecimals and 
      * adds them to the heap
      * @return 
      */
-    private String StringToHex(String currentString) {
+    private String AddStringToHex(String currentString) {
         byte[] f = currentString.getBytes();
             
         String stringStream = DatatypeConverter.printHexBinary(f);
 
-
         stringStream = stringStream.replaceAll("..", "$0 ").trim();
-
 
         for(int k = 0; k < stringStream.length(); k+=1) {
             char charAt = stringStream.charAt(k);
             stringList.add("" + charAt);
         }
+        
         for(int i = 0; i < stringList.size(); i+=4) {
             printList.add(stringList.get(i) + stringList.get(i + 1));
             i--;
@@ -336,8 +330,8 @@ public class Assembler {
             heapNum++;
         }
         return heap[heapNum];
-        
     }
+    
     
     /**
      * Increments the Saved Number of VarDecls accordingly
