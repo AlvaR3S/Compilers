@@ -20,7 +20,7 @@ import javax.xml.bind.DatatypeConverter;
  * @author reynaldoalvarez
  */
 public class Assembler {
-    String[] heap = new String[96];
+    String[] heap = new String[256];
     int heapNum = 0;
     int heapCount = 0;
     int g = 0;
