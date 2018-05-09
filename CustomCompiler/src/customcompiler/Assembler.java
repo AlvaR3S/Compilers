@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import javax.swing.JTextArea;
+import javax.xml.bind.DatatypeConverter;
 
 
 
@@ -32,6 +33,8 @@ public class Assembler {
     ArrayList<String> idList;
     ArrayList<Integer> scopeList;
     char[] varNumList;
+    ArrayList<String> stringList;
+    ArrayList<String> printList;
     
 
     
@@ -76,6 +79,8 @@ public class Assembler {
         ast = parser.getAst();
         idList = parser.getIdList();
         scopeList = parser.getScopeList();
+        stringList = new ArrayList<String>();
+        printList = new ArrayList<String>();
     }
     
     
@@ -91,12 +96,6 @@ public class Assembler {
         
         // Takes the AST information and implements code gen
         disassembleOperations(operations);
-        
-        // Testing if the operations found are correct 
-        // for personal checking (Console output)
-//        for(int i = 0; i < operations.size(); i++) {
-//            System.out.println(operations.get(i).name);
-//        }
         
         generateCode(); // Output generated code
     }
@@ -198,14 +197,8 @@ public class Assembler {
         }
         heapNum++;
         
-        
-            
-                
-            
-        
 
         heap[heapNum] = "0" + assignStatement.children.get(1).name;
-
         
         heapNum++;
         heap[heapNum] = "8D";
@@ -228,28 +221,52 @@ public class Assembler {
     /**
      * When a Parent is Print Statement
      * This contains the correct OPCodes for Print Statement instances
-     * @param printStat 
+     * @param printStatement 
      */
     private void handlePrintStatement(astNodes printStatement) {
         //Load the heap w/ the necessary OPcodes for the print statement
         
-        heap[heapNum] = "AC";
-        heapNum++;
-        
-        for(int i = 0; i < variables.size(); i++) {
-            if(variables.get(i).equals(printStatement.children.get(0).name)) {
-                heap[heapNum] = "" + regVariables.get(i);
-                break;
+        if(heap[heapNum] == null) {
+            heap[heapNum] = "AD";
+            heapNum++;
+            
+            String currentPrintStatement = printStatement.children.get(0).name;
+            
+            StringToHex(currentPrintStatement);
+            
+            
+            endOperation();
+            heap[heapNum] = "A2";
+            heapNum++;
+            heap[heapNum] = "01";
+            heapNum++;
+            SystemCall();
+        } else {
+            heap[heapNum] = "AC";
+            heapNum++;
+            
+            for(int i = 0; i < variables.size(); i++) {
+                if(variables.get(i).equals(printStatement.children.get(0).name)) {
+                    heap[heapNum] = "" + regVariables.get(i);
+                    System.out.println("" + regVariables.get(i));
+                    System.out.println(printStatement.children.get(0).name);
+                    break;
+                } else {
+                    System.out.println(printStatement.children.get(0).name);
+                }
             }
+            heapNum++;
+            endOperation();
+            heap[heapNum] = "A2";
+            heapNum++;
+            heap[heapNum] = "01";
+            heapNum++;
+            SystemCall();
         }
-        heapNum++;
-        endOperation();
-        heap[heapNum] = "A2";
-        heapNum++;
-        heap[heapNum] = "01";
-        heapNum++;
-        SystemCall();
     }
+    
+    
+    //public String toHex(String arg) { return String.format("%x", new BigInteger(arg.getBytes())); }
     
     
     /**
@@ -269,6 +286,35 @@ public class Assembler {
         heapNum++;
     }
     
+    /**
+     * C
+     * @return 
+     */
+    private String StringToHex(String currentString) {
+        byte[] f = currentString.getBytes();
+            
+        String stringStream = DatatypeConverter.printHexBinary(f);
+
+
+        stringStream = stringStream.replaceAll("..", "$0 ").trim();
+
+
+        for(int k = 0; k < stringStream.length(); k+=1) {
+            char charAt = stringStream.charAt(k);
+            stringList.add("" + charAt);
+        }
+        for(int i = 0; i < stringList.size(); i+=4) {
+            printList.add(stringList.get(i) + stringList.get(i + 1));
+            i--;
+        }
+
+        for(int b = 0; b < currentString.length(); b++) {
+            heap[heapNum] = printList.get(b);
+            heapNum++;
+        }
+        return heap[heapNum];
+        
+    }
     
     /**
      * Increments the Saved Number of VarDecls accordingly
