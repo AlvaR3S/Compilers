@@ -231,9 +231,9 @@ public class Assembler {
 //        }
 //        
         
-        System.out.println("there");
+        System.out.println("there"); 
         
-        if(printStatement.children.size() > 1) {
+        if(variables.size() > 0) {
             heap[heapNum] = "AC";
             heapNum++;
             
@@ -274,11 +274,16 @@ public class Assembler {
                 heapNum++;
                 SystemCall();
             } else {
-                System.out.println("NOT: " + currentPrintStatement.length());
-                
+//                if(variables.get(0).equals(currentPrintStatement)) {
+//                    System.out.println("var: " + currentPrintStatement);
+//                    System.out.println("IS a var: " + currentPrintStatement.length());
+//                    System.out.println("current: " + printStatement.children.get(0).name);
+//                } else {
+                    System.out.println("var: " + currentPrintStatement);
+                    System.out.println("NOT a var: " + currentPrintStatement.length());
+                    System.out.println("current: " + printStatement.children.get(0).name);
+                //}    
             }
-            
-            
         }
     }
     
