@@ -224,17 +224,31 @@ public class Assembler {
      * @param printStatement 
      */
     private void handlePrintStatement(astNodes printStatement) {
-        //Load the heap w/ the necessary OPcodes for the print statement
+        String currentPrintStatement = printStatement.children.get(0).name;
+//        for(int k = 0; k < printStatement.children.size(); k++) {
+//            System.out.println("" + regVariables.get(k));
+//            System.out.println(printStatement.children.get(k).name);
+//        }
+//        
         
-        if(heap[heapNum] == null) {
-            heap[heapNum] = "AD";
+        System.out.println("there");
+        
+        if(printStatement.children.size() > 1) {
+            heap[heapNum] = "AC";
             heapNum++;
             
-            String currentPrintStatement = printStatement.children.get(0).name;
+            for(int i = 0; i < variables.size(); i++) {
+                if(variables.get(i).equals(currentPrintStatement)) {
+                    heap[heapNum] = "" + regVariables.get(i);
+                    System.out.println("" + regVariables.get(i));
+                    System.out.println(currentPrintStatement);
+                    break;
+                } else {
+                   System.out.println("Vars are not the same.\n");
+                }
+            }
             
-            StringToHex(currentPrintStatement);
-            
-            
+            heapNum++;
             endOperation();
             heap[heapNum] = "A2";
             heapNum++;
@@ -242,26 +256,29 @@ public class Assembler {
             heapNum++;
             SystemCall();
         } else {
-            heap[heapNum] = "AC";
-            heapNum++;
-            
-            for(int i = 0; i < variables.size(); i++) {
-                if(variables.get(i).equals(printStatement.children.get(0).name)) {
-                    heap[heapNum] = "" + regVariables.get(i);
-                    System.out.println("" + regVariables.get(i));
-                    System.out.println(printStatement.children.get(0).name);
-                    break;
-                } else {
-                    System.out.println(printStatement.children.get(0).name);
-                }
+            if(currentPrintStatement.length() > 1) {
+                System.out.println("YEA: " + currentPrintStatement.length());
+                heap[heapNum] = "AD";
+                heapNum++;
+
+
+
+
+                StringToHex(currentPrintStatement);
+
+
+                endOperation();
+                heap[heapNum] = "A2";
+                heapNum++;
+                heap[heapNum] = "01";
+                heapNum++;
+                SystemCall();
+            } else {
+                System.out.println("NOT: " + currentPrintStatement.length());
+                
             }
-            heapNum++;
-            endOperation();
-            heap[heapNum] = "A2";
-            heapNum++;
-            heap[heapNum] = "01";
-            heapNum++;
-            SystemCall();
+            
+            
         }
     }
     
@@ -287,7 +304,8 @@ public class Assembler {
     }
     
     /**
-     * C
+     * Converts Strings into Hexadecimals and 
+     * adds them to the heap
      * @return 
      */
     private String StringToHex(String currentString) {
