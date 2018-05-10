@@ -36,6 +36,7 @@ public class Assembler {
     customAST ast;
     
     ArrayList<Integer> scopeList;
+    ArrayList<Integer> accumulator;
     
     ArrayList<String> variables;
     ArrayList<String> regVariables;
@@ -43,6 +44,7 @@ public class Assembler {
     ArrayList<String> stringList;
     ArrayList<String> printList;
     ArrayList<String> typeList;
+    
   
     /**
      * Starts the Code Generation phase
@@ -60,6 +62,7 @@ public class Assembler {
         stringList = new ArrayList<String>();
         printList = new ArrayList<String>();
         typeList = new ArrayList<String>();
+        accumulator = new ArrayList<Integer>();
     }
     
     
@@ -266,12 +269,7 @@ public class Assembler {
                 savedPoint = heapNum;
                 System.out.println("sa: " + savedPoint);
                 System.out.println("he: " + heapNum);
-                
-                
-                
-                
                 GetAccumulator(currentPrintStatement); // Turn into hexadecimal and place in correct position
-                
             } else {
                 System.out.println("I am a digit");
                 System.out.println(currentPrintStatement.charAt(0));
@@ -298,11 +296,11 @@ public class Assembler {
         System.out.println("sa: " + savedPoint);
         for(int n = 0; n < heap.length; n++) {
             if(n == (heap.length - (1 + savedPoint))) {
-                heap[heapNum] = printList.get(0);
+                heap[heapNum] = Integer.toString(accumulator.get(0), 16).toUpperCase();
                 heapNum++;
                 endOperation();
                 A0(); // Load the Y register with a constant
-                heap[heapNum] = printList.get(0);
+                heap[heapNum] = Integer.toString(accumulator.get(0), 16).toUpperCase();
                 heapNum++;
                 safePoint = heapNum;
                 Num8D(); // Store the accumulator in memory
@@ -314,6 +312,7 @@ public class Assembler {
                 heapNum--;
             }
         }
+        accumulator.clear(); // Clear for next accumulator 
         System.out.println("printList: " + printList.get(0));
         return heap[heapNum];
     }
@@ -422,19 +421,21 @@ public class Assembler {
         }
         
         for(int i = 0; i < stringList.size(); i+=4) {
-            printList.add(stringList.get(i) + stringList.get(i + 1));
+            printList.add(stringList.get(i) + stringList.get(i + 1));                                                               
             i--;
         }
-        
+        stringList.clear();
         for(int j = heapNum; j < heap.length - 1; j++) {
             heapNum++;
         }
-        stringList.clear();
+        
         for(int b = 0; b < printList.size(); b++) { 
             heapNum--;
         }
-       
         
+        accumulator.add(heapNum); // Storing the accumulators location on heap
+        
+        System.out.println("reg: " + heapNum);
         for(int b = 0; b < printList.size(); b++) { 
             heap[heapNum] = printList.get(b);
             heapNum++;
