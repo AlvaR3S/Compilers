@@ -191,6 +191,9 @@ public class Assembler {
      * @param assignStatement
      */
     private void handleAssignStatement(astNodes assignStatement) { 
+        String currentVariable = assignStatement.children.get(0).name;
+        String currentValue = assignStatement.children.get(1).name;
+       // String heapNum = Integer.toString(heapNum);
         heap[heapNum] = "A9";
         for(int i = 0; i < heap[heapNum].length(); i++) {
             System.out.println(Arrays.toString(heap[heapNum].toCharArray()));
@@ -200,34 +203,39 @@ public class Assembler {
         heapNum++;
         
         for(int h = 0; h < variables.size(); h++) {
-            if(variables.get(h).equals(assignStatement.children.get(0).name)) {
+            if(variables.get(h).equals(currentVariable)) {
+               
                System.out.println("matched");
                 if(variables.indexOf(h) == typeList.indexOf(h)) { // If this var pos matches their type position
-                   System.out.println("value: " + assignStatement.children.get(1).name);
-                   System.out.println("var: " + assignStatement.children.get(0).name);
+                   System.out.println("value: " + currentValue);
+                   System.out.println("var: " + currentVariable);
                    System.out.println("type: " + typeList.get(h));
                     if(typeList.get(h).contains("string")) {
-                        System.out.println("im a string");
+                        System.out.println("CHECK: "+ DatatypeConverter.parseByte(Integer.toString(heapNum)));
+                        heap[heapNum] = currentValue + "";
+                        heapNum++;
                     } else if(typeList.get(h).contains("int")) {
-                        System.out.println("im a int");
+                        heap[heapNum] = "0" + currentValue;
+                        heapNum++;
                     } else if(typeList.get(h).contains("boolean")) {
-                        System.out.println("im a boolean");
+                        heap[heapNum] = currentValue;
+                        heapNum++;
                     } else {
                         System.out.println("blues clues");
                    }
                }
-           } else {
+            } else {
                System.out.println("not a match");
-           }
+            }
         }
-        heap[heapNum] = "0" + assignStatement.children.get(1).name;
-        System.out.println(assignStatement.children.get(1).name);
-        heapNum++;
+        
+        System.out.println(currentValue);
+        
         heap[heapNum] = "8D";
         heapNum++;
         
         for(int i = 0; i < variables.size(); i++) {
-            if(variables.get(i).equals(assignStatement.children.get(0).name)) {
+            if(variables.get(i).equals(currentVariable)) {
                 heap[heapNum] = "" + regVariables.get(i);
                 break;
             }
@@ -250,7 +258,12 @@ public class Assembler {
         
         System.out.println("there"); 
         
-        if(variables.size() > 0) {
+//        for(int p = 0; p < ; p++) {
+//            
+//        }
+//        
+        
+        if(variables.size() > 0 && currentPrintStatement.length() == 1) {
             heap[heapNum] = "AC";
             heapNum++;
             
@@ -258,7 +271,8 @@ public class Assembler {
                 if(variables.get(i).equals(currentPrintStatement)) {
                     heap[heapNum] = "" + regVariables.get(i);
                     System.out.println("" + regVariables.get(i));
-                    System.out.println(currentPrintStatement);
+                    System.out.println("print: "+ currentPrintStatement);
+                    System.out.println("printSize: "+ currentPrintStatement.length());
                     break;
                 } else {
                    System.out.println("Vars are not the same.\n");
@@ -274,18 +288,22 @@ public class Assembler {
             SystemCall();
         } else {
             if(currentPrintStatement.length() > 1) {
+//                ByteBuffer endian = ByteBuffer.allocate(4);
+//                endian.order(ByteOrder.LITTLE_ENDIAN);
+//                while(endian.hasRemaining()) {
+//                   System.out.println();
+//                   System.out.println(f);
+//                   System.out.println(Arrays.toString(src));
+//                }
+                
+
+
                 System.out.println("YEA: " + currentPrintStatement.length());
                 heap[heapNum] = "AD";
                 heapNum++;
-                String f = "S0XX";
-                byte[] src = f.getBytes();
-                ByteBuffer endian = ByteBuffer.wrap(src);
-                endian.order(ByteOrder.LITTLE_ENDIAN);
-                while(endian.hasRemaining()) {
-                   System.out.println();
-                   System.out.println(f);
-                   System.out.println(Arrays.toString(src));
-                }
+                
+                
+                
                 
                 endOperation();
                 heap[heapNum] = "A2";
@@ -296,9 +314,17 @@ public class Assembler {
                 AddStringToHex(currentPrintStatement);
                 
             } else {
+                for(int k = 0; k < currentPrintStatement.length(); k++) {
+                    if(Character.isDigit(currentPrintStatement.charAt(k))) {
+                        System.out.println("I am a digit");
+                    } else {
+                        System.out.println("I am a letter");
+                    }
+                }
+                
                 System.out.println("var: " + currentPrintStatement);
                 System.out.println("NOT a var: " + currentPrintStatement.length());
-                System.out.println("current: " + printStatement.children.get(0).name);  
+                System.out.println("current: " + printStatement.children.get(0).name);
             }
         }
     }
@@ -378,7 +404,7 @@ public class Assembler {
         output[0] = (char) ('T' + (n / 10));
         output[1] = (char) (n % 10);
         return output;
-     }
+    }
     
     
     /**
