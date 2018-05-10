@@ -425,7 +425,7 @@ public class Assembler {
             i--;
         }
         stringList.clear();
-        for(int j = heapNum; j < heap.length - 1; j++) {
+        for(int j = heapNum; j < heap.length; j++) {
             heapNum++;
         }
         
@@ -434,12 +434,14 @@ public class Assembler {
         }
         
         accumulator.add(heapNum); // Storing the accumulators location on heap
-        
+        heapNum--;
         System.out.println("reg: " + heapNum);
         for(int b = 0; b < printList.size(); b++) { 
             heap[heapNum] = printList.get(b);
             heapNum++;
-        }        
+        }       
+        
+        printList.add(printList.size(), "00");
         
         return heap[heapNum];
     }
