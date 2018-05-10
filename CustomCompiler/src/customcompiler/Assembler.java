@@ -23,6 +23,7 @@ public class Assembler {
     int heapNum = 0;
     int heapCount = 0;
     int g = 0;
+    int savedPoint;
     
     char[] varNumList;
     char[] currentRegister = {'T','0'};
@@ -276,6 +277,9 @@ public class Assembler {
                 heap[heapNum] = "AD";
                 heapNum++;
                 
+                savedPoint = heapNum;
+                System.out.println("sa: " + savedPoint);
+                System.out.println("he: " + heapNum);
                 
                 
                 
@@ -284,8 +288,18 @@ public class Assembler {
                 Num01();
                 SystemCall();
                 StringToHex(currentPrintStatement);
+                System.out.println("printList: " + printList.get(0));
+                System.out.println("sa: " + savedPoint);
+                for(int n = 0; n < heap.length; n++) {
+                    if(n == (heap.length - (1 + savedPoint))) {
+                        heap[heapNum] = printList.get(0);
+                    } else {
+                        heapNum--;
+                    }
+                    
+                }
                 
-                
+                System.out.println("printList: " + printList.get(0));
                 
             } else {
                 for(int k = 0; k < currentPrintStatement.length(); k++) {
@@ -434,16 +448,16 @@ public class Assembler {
         for(int j = heapNum; j < heap.length - 1; j++) {
             heapNum++;
         }
-        
-        for(int b = 0; b < currentString.length(); b++) { 
+        stringList.clear();
+        for(int b = 0; b < printList.size(); b++) { 
             heapNum--;
         }
        
         
-        for(int b = 0; b < currentString.length(); b++) { 
+        for(int b = 0; b < printList.size(); b++) { 
             heap[heapNum] = printList.get(b);
             heapNum++;
-        }
+        }        
         
         return heap[heapNum];
     }
