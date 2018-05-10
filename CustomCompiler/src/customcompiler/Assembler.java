@@ -311,13 +311,13 @@ public class Assembler {
                 heap[heapNum] = "01";
                 heapNum++;
                 SystemCall();
-                AddStringToHex(currentPrintStatement);
+                StringToHex(currentPrintStatement);
                 
             } else {
                 for(int k = 0; k < currentPrintStatement.length(); k++) {
                     if(Character.isDigit(currentPrintStatement.charAt(k))) {
                         System.out.println("I am a digit");
-                        heap[heapNum] = "A9";
+                        heap[heapNum] = "A2";
                         heapNum++;
                         heap[heapNum] = "01";
                         heapNum++;
@@ -328,6 +328,9 @@ public class Assembler {
                         SystemCall();
                     } else {
                         System.out.println("I am a letter");
+                        heap[heapNum] = "AD";
+                        heapNum++;
+                        StringToHex(currentPrintStatement);
                     }
                 }
                 
@@ -361,7 +364,7 @@ public class Assembler {
      * adds them to the heap
      * @return 
      */
-    private String AddStringToHex(String currentString) {
+    private String StringToHex(String currentString) {
         byte[] f = currentString.getBytes();
             
         String stringStream = DatatypeConverter.printHexBinary(f);
@@ -377,11 +380,16 @@ public class Assembler {
             printList.add(stringList.get(i) + stringList.get(i + 1));
             i--;
         }
-
-        for(int b = 0; b < currentString.length(); b++) { 
-            heap[heapNum] = printList.get(b);
+        
+        for(int j = heapNum; j < heap.length - 2; j++) {
             heapNum++;
         }
+        
+        for(int b = 0; b < currentString.length(); b++) { 
+            heap[heapNum] = printList.get(b);
+            heapNum--;
+        }
+                
         return heap[heapNum];
     }
     
