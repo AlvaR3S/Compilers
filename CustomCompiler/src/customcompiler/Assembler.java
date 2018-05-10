@@ -280,22 +280,19 @@ public class Assembler {
                 
                 
                 endOperation();
-                A2();
+                A2(); 
                 Num01();
                 SystemCall();
                 StringToHex(currentPrintStatement);
                 
+                
+                
             } else {
                 for(int k = 0; k < currentPrintStatement.length(); k++) {
-                    if(Character.isDigit(currentPrintStatement.charAt(k))) {
-                        System.out.println("I am a digit");
-                        A0(); // Load the Y register with a constant
-                        GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
-                        A2(); // Load the X register with a constant
-                        Num01(); // Print the integer stored in the Y register
-                        SystemCall();
-                    } else {
+                    if(Character.isLetter(currentPrintStatement.charAt(0))) {
                         System.out.println("I am a letter");
+                        System.out.println(currentPrintStatement.charAt(k));
+                        
                         AD(); // Load the accumulator from memory
                         String store = StringToHex(currentPrintStatement); // Location where value is stored 
                         endOperation();
@@ -308,6 +305,14 @@ public class Assembler {
                         A2(); // Load the X register with a constant
                         Num02(); // Print the 00-terminated string stored at the address in the Y register
                         SystemCall(); // Print letter out
+                    } else {
+                        System.out.println("I am a digit");
+                        System.out.println(currentPrintStatement.charAt(k));
+                        A0(); // Load the Y register with a constant
+                        GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
+                        A2(); // Load the X register with a constant
+                        Num01(); // Print the integer stored in the Y register
+                        SystemCall();
                     }
                 }
                 
@@ -426,15 +431,20 @@ public class Assembler {
             i--;
         }
         
-        for(int j = heapNum; j < heap.length - 2; j++) {
+        for(int j = heapNum; j < heap.length - 1; j++) {
             heapNum++;
         }
         
         for(int b = 0; b < currentString.length(); b++) { 
-            heap[heapNum] = printList.get(b);
             heapNum--;
         }
-         
+       
+        
+        for(int b = 0; b < currentString.length(); b++) { 
+            heap[heapNum] = printList.get(b);
+            heapNum++;
+        }
+        
         return heap[heapNum];
     }
     
