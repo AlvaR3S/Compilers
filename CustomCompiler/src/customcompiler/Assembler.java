@@ -20,53 +20,27 @@ import javax.xml.bind.DatatypeConverter;
  * @author reynaldoalvarez
  */
 public class Assembler {
-    String[] heap = new String[256];
     int heapNum = 0;
     int heapCount = 0;
     int g = 0;
     
+    char[] varNumList;
     char[] currentRegister = {'T','0'};
-    ArrayList<String> variables;
-    ArrayList<String> regVariables;
+    
+    String[] heap = new String[256];
+    
     Lexer lex = new Lexer();
     Parser parser;
     customAST ast;
-    ArrayList<String> idList;
+    
     ArrayList<Integer> scopeList;
-    char[] varNumList;
+    
+    ArrayList<String> variables;
+    ArrayList<String> regVariables;
+    ArrayList<String> idList;
     ArrayList<String> stringList;
     ArrayList<String> printList;
     ArrayList<String> typeList;
-    
-
-    
-    public enum Mnemonic {}
-    
-    public static enum OPCode {
-        LDAC("A9"), 
-        LDAM("AD"), 
-        STAM("8D"), 
-        ADC("6D"),
-        LDXC("A2"), 
-        LDXM("AE"), 
-        LDYC("A0"), 
-        LDYM("AC"),
-        NOP("EA"), 
-        BRK("00"), 
-        CPX("EC"), 
-        BNE("D0"),
-        INC("EE"), 
-        SYS("FF");
-        
-        private final String opCode;
-        
-        OPCode(String opCode) {
-            this.opCode = opCode;
-        }
-        
-        public String toString(){return opCode;}
-    }
-    
   
     /**
      * Starts the Code Generation phase
@@ -306,10 +280,8 @@ public class Assembler {
                 
                 
                 endOperation();
-                heap[heapNum] = "A2";
-                heapNum++;
-                heap[heapNum] = "01";
-                heapNum++;
+                A2();
+                Num01();
                 SystemCall();
                 StringToHex(currentPrintStatement);
                 
@@ -317,20 +289,25 @@ public class Assembler {
                 for(int k = 0; k < currentPrintStatement.length(); k++) {
                     if(Character.isDigit(currentPrintStatement.charAt(k))) {
                         System.out.println("I am a digit");
-                        heap[heapNum] = "A2";
-                        heapNum++;
-                        heap[heapNum] = "01";
-                        heapNum++;
-                        heap[heapNum] = "A0";
-                        heapNum++;
-                        heap[heapNum] = "0" + currentPrintStatement;
-                        heapNum++;
+                        A0(); // Load the Y register with a constant
+                        GetConstant(currentPrintStatement);
+                        A2(); // Load the X register with a constant
+                        Num01(); // Print the integer stored in the Y register
                         SystemCall();
                     } else {
                         System.out.println("I am a letter");
-                        heap[heapNum] = "AD";
+                        AD(); // Load the accumulator from memory
+                        String store = StringToHex(currentPrintStatement); // Location where value is stored 
+                        endOperation();
+                        A0(); // Load the Y register with a constant
+                        heap[heapNum] = store; // Location of where the string value is for the Y register
                         heapNum++;
-                        StringToHex(currentPrintStatement);
+                        Num8D(); // Store the accumulator in memory
+                        // ****** VALUE WILL STORE THE CURRENT STRING INTO MEMMORY *****
+                        endOperation();
+                        A2(); // Load the X register with a constant
+                        Num02(); // Print the 00-terminated string stored at the address in the Y register
+                        SystemCall(); // Print letter out
                     }
                 }
                 
@@ -340,6 +317,71 @@ public class Assembler {
             }
         }
     }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private String GetConstant(String constant) {
+        heap[heapNum] = "0" + constant;
+        heapNum++;
+        return heap[heapNum];
+    }
+    
+    
+    /**
+     * Load the X register with a constant
+     */
+    private void A2() {
+        heap[heapNum] = "A2";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void Num02() {
+        heap[heapNum] = "02";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void Num01() {
+        heap[heapNum] = "01";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void Num8D() {
+        heap[heapNum] = "8D";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void A0() {
+        heap[heapNum] = "A0";
+        heapNum++;
+    }
+    
+    
+    /**
+     * Double X's are placed after a statement
+     */
+    private void AD() {
+        heap[heapNum] = "AD";
+        heapNum++;
+    }
+    
 
     /**
      * Double X's are placed after a statement
@@ -361,7 +403,7 @@ public class Assembler {
     
     /**
      * Converts Strings into Hexadecimals and 
-     * adds them to the heap
+     * adds them to the heap at the end of table
      * @return 
      */
     private String StringToHex(String currentString) {
@@ -389,7 +431,7 @@ public class Assembler {
             heap[heapNum] = printList.get(b);
             heapNum--;
         }
-                
+         
         return heap[heapNum];
     }
     
@@ -407,7 +449,7 @@ public class Assembler {
             currentRegister[1] = '0';
         }
     }
-
+    
     
     /**
      * Increments the Letter part of the VarDecl
