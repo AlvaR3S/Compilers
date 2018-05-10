@@ -266,17 +266,12 @@ public class Assembler {
                 savedPoint = heapNum;
                 System.out.println("sa: " + savedPoint);
                 System.out.println("he: " + heapNum);
-                endOperation();
-                A0(); // Load the Y register with a constant
-                safePoint = heapNum;
-                Num8D(); // Store the accumulator in memory
-                // ****** VALUE WILL STORE THE CURRENT STRING INTO MEMMORY *****
-                endOperation();
-                A2(); // Load the X register with a constant
-                Num02(); // Print the 00-terminated string stored at the address in the Y register
-                SystemCall(); // Print letter out
-                GetAccumulator(currentPrintStatement);
-                GetAccumulatorS(currentPrintStatement);
+                
+                
+                
+                
+                GetAccumulator(currentPrintStatement); // Turn into hexadecimal and place in correct position
+                
             } else {
                 System.out.println("I am a digit");
                 System.out.println(currentPrintStatement.charAt(0));
@@ -292,6 +287,7 @@ public class Assembler {
         }
     }
     
+ 
     /**
      * Returns the Current integer being evaluated
      * @return
@@ -303,34 +299,21 @@ public class Assembler {
         for(int n = 0; n < heap.length; n++) {
             if(n == (heap.length - (1 + savedPoint))) {
                 heap[heapNum] = printList.get(0);
-            } else {
-                heapNum--;
-            }
-
-        }
-
-        System.out.println("printList: " + printList.get(0));
-        return heap[heapNum];
-    }
-    
-    
-    /**
-     * Returns the Current integer being evaluated
-     * @return
-     */
-    private String GetAccumulatorS(String currentString) {
-        StringToHex(currentString);
-        System.out.println("printList: " + printList.get(0));
-        System.out.println("sp: " + safePoint);
-        for(int n = 0; n < heap.length; n++) {
-            if(n == (heap.length - (1 + safePoint))) {
+                heapNum++;
+                endOperation();
+                A0(); // Load the Y register with a constant
                 heap[heapNum] = printList.get(0);
+                heapNum++;
+                safePoint = heapNum;
+                Num8D(); // Store the accumulator in memory
+                endOperation();
+                A2(); // Load the X register with a constant
+                Num02(); // Print the 00-terminated string stored at the address in the Y register
+                SystemCall(); // Print letter out
             } else {
                 heapNum--;
             }
-
         }
-
         System.out.println("printList: " + printList.get(0));
         return heap[heapNum];
     }
