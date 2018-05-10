@@ -290,7 +290,7 @@ public class Assembler {
                     if(Character.isDigit(currentPrintStatement.charAt(k))) {
                         System.out.println("I am a digit");
                         A0(); // Load the Y register with a constant
-                        GetConstant(currentPrintStatement);
+                        GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
                         A2(); // Load the X register with a constant
                         Num01(); // Print the integer stored in the Y register
                         SystemCall();
@@ -320,7 +320,8 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Returns the Current integer being evaluated
+     * @return
      */
     private String GetConstant(String constant) {
         heap[heapNum] = "0" + constant;
@@ -339,7 +340,8 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Print the 00-terminated string stored 
+     * at the address in the Y register
      */
     private void Num02() {
         heap[heapNum] = "02";
@@ -348,7 +350,7 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Print the integer stored in the Y register
      */
     private void Num01() {
         heap[heapNum] = "01";
@@ -357,7 +359,7 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Store the accumulator in memory
      */
     private void Num8D() {
         heap[heapNum] = "8D";
@@ -366,7 +368,7 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Load the Y register with a constant
      */
     private void A0() {
         heap[heapNum] = "A0";
@@ -375,7 +377,7 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Load the accumulator from memory
      */
     private void AD() {
         heap[heapNum] = "AD";
@@ -384,7 +386,7 @@ public class Assembler {
     
 
     /**
-     * Double X's are placed after a statement
+     * Double 00's are placed after a statement
      */
     private void endOperation() {
         heap[heapNum] = "00";
@@ -393,7 +395,8 @@ public class Assembler {
     
     
     /**
-     * Double X's are placed after a statement
+     * Double FF's are placed after
+     * finishing a print statement
      */
     private void SystemCall() {
         heap[heapNum] = "FF";
