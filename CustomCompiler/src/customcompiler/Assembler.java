@@ -317,6 +317,15 @@ public class Assembler {
                 for(int k = 0; k < currentPrintStatement.length(); k++) {
                     if(Character.isDigit(currentPrintStatement.charAt(k))) {
                         System.out.println("I am a digit");
+                        heap[heapNum] = "A9";
+                        heapNum++;
+                        heap[heapNum] = "01";
+                        heapNum++;
+                        heap[heapNum] = "A0";
+                        heapNum++;
+                        heap[heapNum] = "0" + currentPrintStatement;
+                        heapNum++;
+                        SystemCall();
                     } else {
                         System.out.println("I am a letter");
                     }
@@ -333,7 +342,7 @@ public class Assembler {
      * Double X's are placed after a statement
      */
     private void endOperation() {
-        heap[heapNum] = "XX";
+        heap[heapNum] = "00";
         heapNum++;
     }
     
