@@ -24,6 +24,7 @@ public class Assembler {
     int heapCount = 0;
     int g = 0;
     int savedPoint;
+    int safePoint;
     
     char[] varNumList;
     char[] currentRegister = {'T','0'};
@@ -232,12 +233,7 @@ public class Assembler {
         String currentPrintStatement = printStatement.children.get(0).name;
         
         System.out.println("there"); 
-        
-//        for(int p = 0; p < ; p++) {
-//            
-//        }
-//        
-        
+
         if(variables.size() > 0 && currentPrintStatement.length() == 1) {
             heap[heapNum] = "AC";
             heapNum++;
@@ -262,79 +258,81 @@ public class Assembler {
             heapNum++;
             SystemCall();
         } else {
-            if(currentPrintStatement.length() > 1) {
-//                ByteBuffer endian = ByteBuffer.allocate(4);
-//                endian.order(ByteOrder.LITTLE_ENDIAN);
-//                while(endian.hasRemaining()) {
-//                   System.out.println();
-//                   System.out.println(f);
-//                   System.out.println(Arrays.toString(src));
-//                }
-                
+            if(Character.isLetter(currentPrintStatement.charAt(0))) {
+                System.out.println("I am a letter");
+                System.out.println(currentPrintStatement.charAt(0));
 
-
-                System.out.println("YEA: " + currentPrintStatement.length());
-                heap[heapNum] = "AD";
-                heapNum++;
-                
+                AD(); // Load the accumulator from memory
                 savedPoint = heapNum;
                 System.out.println("sa: " + savedPoint);
                 System.out.println("he: " + heapNum);
-                
-                
-                
                 endOperation();
-                A2(); 
-                Num01();
-                SystemCall();
-                StringToHex(currentPrintStatement);
-                System.out.println("printList: " + printList.get(0));
-                System.out.println("sa: " + savedPoint);
-                for(int n = 0; n < heap.length; n++) {
-                    if(n == (heap.length - (1 + savedPoint))) {
-                        heap[heapNum] = printList.get(0);
-                    } else {
-                        heapNum--;
-                    }
-                    
-                }
-                
-                System.out.println("printList: " + printList.get(0));
-                
+                A0(); // Load the Y register with a constant
+                safePoint = heapNum;
+                Num8D(); // Store the accumulator in memory
+                // ****** VALUE WILL STORE THE CURRENT STRING INTO MEMMORY *****
+                endOperation();
+                A2(); // Load the X register with a constant
+                Num02(); // Print the 00-terminated string stored at the address in the Y register
+                SystemCall(); // Print letter out
+                GetAccumulator(currentPrintStatement);
+                GetAccumulatorS(currentPrintStatement);
             } else {
-                for(int k = 0; k < currentPrintStatement.length(); k++) {
-                    if(Character.isLetter(currentPrintStatement.charAt(0))) {
-                        System.out.println("I am a letter");
-                        System.out.println(currentPrintStatement.charAt(k));
-                        
-                        AD(); // Load the accumulator from memory
-                        String store = StringToHex(currentPrintStatement); // Location where value is stored 
-                        endOperation();
-                        A0(); // Load the Y register with a constant
-                        heap[heapNum] = store; // Location of where the string value is for the Y register
-                        heapNum++;
-                        Num8D(); // Store the accumulator in memory
-                        // ****** VALUE WILL STORE THE CURRENT STRING INTO MEMMORY *****
-                        endOperation();
-                        A2(); // Load the X register with a constant
-                        Num02(); // Print the 00-terminated string stored at the address in the Y register
-                        SystemCall(); // Print letter out
-                    } else {
-                        System.out.println("I am a digit");
-                        System.out.println(currentPrintStatement.charAt(k));
-                        A0(); // Load the Y register with a constant
-                        GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
-                        A2(); // Load the X register with a constant
-                        Num01(); // Print the integer stored in the Y register
-                        SystemCall();
-                    }
-                }
-                
+                System.out.println("I am a digit");
+                System.out.println(currentPrintStatement.charAt(0));
+                A0(); // Load the Y register with a constant
+                GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
+                A2(); // Load the X register with a constant
+                Num01(); // Print the integer stored in the Y register
+                SystemCall();
                 System.out.println("var: " + currentPrintStatement);
                 System.out.println("NOT a var: " + currentPrintStatement.length());
                 System.out.println("current: " + printStatement.children.get(0).name);
             }
         }
+    }
+    
+    /**
+     * Returns the Current integer being evaluated
+     * @return
+     */
+    private String GetAccumulator(String currentString) {
+        StringToHex(currentString);
+        System.out.println("printList: " + printList.get(0));
+        System.out.println("sa: " + savedPoint);
+        for(int n = 0; n < heap.length; n++) {
+            if(n == (heap.length - (1 + savedPoint))) {
+                heap[heapNum] = printList.get(0);
+            } else {
+                heapNum--;
+            }
+
+        }
+
+        System.out.println("printList: " + printList.get(0));
+        return heap[heapNum];
+    }
+    
+    
+    /**
+     * Returns the Current integer being evaluated
+     * @return
+     */
+    private String GetAccumulatorS(String currentString) {
+        StringToHex(currentString);
+        System.out.println("printList: " + printList.get(0));
+        System.out.println("sp: " + safePoint);
+        for(int n = 0; n < heap.length; n++) {
+            if(n == (heap.length - (1 + safePoint))) {
+                heap[heapNum] = printList.get(0);
+            } else {
+                heapNum--;
+            }
+
+        }
+
+        System.out.println("printList: " + printList.get(0));
+        return heap[heapNum];
     }
     
     
