@@ -214,8 +214,15 @@ public class Assembler {
                         heap[heapNum] = "0" + currentValue;
                         heapNum++;
                     } else if(typeList.get(h).contains("boolean")) {
-                        heap[heapNum] = currentValue;
-                        heapNum++;
+                       for(int p = heapNum; p < heap.length; p++) {
+                            if(heap[p] == null) {
+                                System.out.println("Found.");
+                                stringSave = p;
+                                heapNum++;
+                                GetAccumulator2(currentValue);
+                                break;
+                            }
+                        }
                     } else {
                         System.out.println("blues clues");
                     }
