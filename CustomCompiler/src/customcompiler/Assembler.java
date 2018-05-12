@@ -226,7 +226,7 @@ public class Assembler {
         heapNum++;
         // Instead of INCREMENTING REGISTER FIND A WAY TO SEARCH UP SAVED T(NUM) LOCATIONs
         
-        endOperation();
+        endOperation(); 
     }
     
     
@@ -298,20 +298,20 @@ public class Assembler {
                     GetAccumulator(OpCodes);
                     break;
                 } else {
-                    
                     storeLocation.add(y);
-                    y = loadPoint;
                     if(storeLocation.get(0) < 16) {
-                        heap[y] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();   
+                        heap[loadPoint] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();   
+                        //storeLocation.clear();
                         break;
                     } else {
-                        heap[y] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                        heap[loadPoint] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                        storeLocation.clear();
                         break;
                     }
                 }
             }
         }
-        storeLocation.clear();
+        
         return heap[heapNum];
     }
     
