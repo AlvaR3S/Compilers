@@ -159,7 +159,6 @@ public class Assembler {
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
-//        heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
         firstSave = heapNum;
         heapNum++;
         
@@ -182,7 +181,7 @@ public class Assembler {
     private void handleAssignStatement(astNodes assignStatement) { 
         String currentVariable = assignStatement.children.get(0).name;
         String currentValue = assignStatement.children.get(1).name;
-        // String heapNum = Integer.toString(heapNum);
+        
         heap[heapNum] = "A9";
         for(int i = 0; i < heap[heapNum].length(); i++) {
             System.out.println(Arrays.toString(heap[heapNum].toCharArray()));
@@ -193,8 +192,7 @@ public class Assembler {
 
         for(int h = 0; h < variables.size(); h++) {
             if(variables.get(h).equals(currentVariable)) {
-               
-               System.out.println("matched");
+                System.out.println("matched");
                 if(variables.indexOf(h) == typeList.indexOf(h)) { // If this var pos matches their type position
                    System.out.println("value: " + currentValue);
                    System.out.println("var: " + currentVariable);
@@ -268,8 +266,26 @@ public class Assembler {
                 endOperation();
                 heap[heapNum] = "A2";
                 heapNum++;
-                heap[heapNum] = "02";
-                heapNum++;
+                
+                for(int m = 0; m < typeList.size(); m++) {
+                    if(typeList.get(m).contains("int")) {
+                        heap[heapNum] = "01";
+                        heapNum++;
+                        break;
+                    } else if(typeList.get(m).contains("string")) {
+                        heap[heapNum] = "02";
+                        heapNum++;
+                        break;
+                    } else if(typeList.get(m).contains("boolean")) {
+                        heap[heapNum] = "02";
+                        heapNum++;
+                        break;
+                    } else {
+                        heap[heapNum] = "01";
+                        heapNum++;
+                        break;
+                    }
+                }
                 SystemCall();
                 for(int y = heapNum; y < heap.length; y++) {
                     if(heap[y] == null) {
