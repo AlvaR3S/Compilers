@@ -25,6 +25,7 @@ public class Assembler {
     int g = 0;
     int savedPoint;
     int safePoint;
+    int loadPoint;
     
     char[] varNumList;
     char[] currentRegister = {'T','0'};
@@ -37,6 +38,7 @@ public class Assembler {
     
     ArrayList<Integer> scopeList;
     ArrayList<Integer> accumulator;
+    ArrayList<Integer> storeLocation;
     
     ArrayList<String> variables;
     ArrayList<String> regVariables;
@@ -63,6 +65,7 @@ public class Assembler {
         printList = new ArrayList<String>();
         typeList = new ArrayList<String>();
         accumulator = new ArrayList<Integer>();
+        storeLocation = new ArrayList<Integer>();
     }
     
     
@@ -264,12 +267,11 @@ public class Assembler {
             if(Character.isLetter(currentPrintStatement.charAt(0))) {
                 System.out.println("I am a letter");
                 System.out.println(currentPrintStatement.charAt(0));
-
                 AD(); // Load the accumulator from memory
                 savedPoint = heapNum;
                 System.out.println("sa: " + savedPoint);
                 System.out.println("he: " + heapNum);
-                GetAccumulator(currentPrintStatement); // Turn into hexadecimal and place in correct position
+                LoadCommands(currentPrintStatement); // Loads OpCode commands for this print statement
             } else {
                 System.out.println("I am a digit");
                 System.out.println(currentPrintStatement.charAt(0));
@@ -283,6 +285,33 @@ public class Assembler {
                 System.out.println("current: " + printStatement.children.get(0).name);
             }
         }
+    }
+    
+    private String LoadCommands(String OpCodes) {
+        GetAccumulator(OpCodes);
+        for(int y = heapNum; y < heap.length; y++) {
+            if(heap[y] == null) {
+                y++;
+                if(!(heap[y] == null)) {
+                    // Not done looping
+                    GetAccumulator(OpCodes);
+                    break;
+                } else {
+                    storeLocation.add(y);
+                    y = loadPoint;
+                    if(storeLocation.get(0) < 16) {
+                        heap[y] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                    } else {
+                        heap[y] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                    }
+                    break;
+                        
+                    
+                }
+            }    
+        }
+        storeLocation.clear();
+        return heap[heapNum];
     }
     
  
@@ -304,10 +333,13 @@ public class Assembler {
                 heapNum++;
                 safePoint = heapNum;
                 Num8D(); // Store the accumulator in memory
+                loadPoint = heapNum;
+                heapNum++;
                 endOperation();
                 A2(); // Load the X register with a constant
                 Num02(); // Print the 00-terminated string stored at the address in the Y register
                 SystemCall(); // Print letter out
+                break;
             } else {
                 heapNum--;
             }
@@ -424,8 +456,9 @@ public class Assembler {
             printList.add(stringList.get(i) + stringList.get(i + 1));                                                               
             i--;
         }
+        
         stringList.clear();
-        for(int j = heapNum; j < heap.length; j++) {
+        for(int j = heapNum; j < heap.length - 1; j++) {
             heapNum++;
         }
         
@@ -433,16 +466,22 @@ public class Assembler {
             heapNum--;
         }
         
+        
+        //endOperation();
         accumulator.add(heapNum); // Storing the accumulators location on heap
-        heapNum--;
         System.out.println("reg: " + heapNum);
         for(int b = 0; b < printList.size(); b++) { 
             heap[heapNum] = printList.get(b);
             heapNum++;
+            if(b == printList.size() - 1) {
+                System.out.println("here");
+                printList.add(printList.size(), "00");
+                break;
+            }
         }       
         
-        printList.add(printList.size(), "00");
         
+
         return heap[heapNum];
     }
     
