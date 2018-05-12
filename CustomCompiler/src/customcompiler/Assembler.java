@@ -26,6 +26,8 @@ public class Assembler {
     int savedPoint;
     int safePoint;
     int loadPoint;
+    int stringSave;
+    
     
     char[] varNumList;
     char[] currentRegister = {'T','0'};
@@ -39,6 +41,7 @@ public class Assembler {
     ArrayList<Integer> scopeList;
     ArrayList<Integer> accumulator;
     ArrayList<Integer> storeLocation;
+    ArrayList<Integer> valueList;
     
     ArrayList<String> variables;
     ArrayList<String> regVariables;
@@ -46,6 +49,7 @@ public class Assembler {
     ArrayList<String> stringList;
     ArrayList<String> printList;
     ArrayList<String> typeList;
+    
     
   
     /**
@@ -66,6 +70,7 @@ public class Assembler {
         typeList = new ArrayList<String>();
         accumulator = new ArrayList<Integer>();
         storeLocation = new ArrayList<Integer>();
+        valueList = new ArrayList<Integer>();
     }
     
     
@@ -175,7 +180,7 @@ public class Assembler {
     private void handleAssignStatement(astNodes assignStatement) { 
         String currentVariable = assignStatement.children.get(0).name;
         String currentValue = assignStatement.children.get(1).name;
-       // String heapNum = Integer.toString(heapNum);
+        // String heapNum = Integer.toString(heapNum);
         heap[heapNum] = "A9";
         for(int i = 0; i < heap[heapNum].length(); i++) {
             System.out.println(Arrays.toString(heap[heapNum].toCharArray()));
@@ -183,7 +188,7 @@ public class Assembler {
             break;
         }
         heapNum++;
-        
+
         for(int h = 0; h < variables.size(); h++) {
             if(variables.get(h).equals(currentVariable)) {
                
@@ -194,8 +199,15 @@ public class Assembler {
                    System.out.println("type: " + typeList.get(h));
                     if(typeList.get(h).contains("string")) {
                         System.out.println("CHECK: "+ DatatypeConverter.parseByte(Integer.toString(heapNum)));
-                        heap[heapNum] = currentValue + "";
-                        heapNum++;
+                        for(int p = heapNum; p < heap.length; p++) {
+                            if(heap[p] == null) {
+                                System.out.println("Found.");
+                                stringSave = p;
+                                heapNum++;
+                                GetAccumulator2(currentValue);
+                                break;
+                            }
+                        }
                     } else if(typeList.get(h).contains("int")) {
                         heap[heapNum] = "0" + currentValue;
                         heapNum++;
@@ -204,28 +216,28 @@ public class Assembler {
                         heapNum++;
                     } else {
                         System.out.println("blues clues");
-                   }
-               }
+                    }
+                }
             } else {
                System.out.println("not a match");
             }
         }
         
+        
         System.out.println(currentValue);
         
         heap[heapNum] = "8D";
         heapNum++;
+        heapCount = heapNum;
         
+        valueList.clear();
         for(int i = 0; i < variables.size(); i++) {
             if(variables.get(i).equals(currentVariable)) {
                 heap[heapNum] = "" + regVariables.get(i);
                 break;
             }
         }
-        
         heapNum++;
-        // Instead of INCREMENTING REGISTER FIND A WAY TO SEARCH UP SAVED T(NUM) LOCATIONs
-        
         endOperation(); 
     }
     
@@ -236,57 +248,85 @@ public class Assembler {
      * @param printStatement 
      */
     private void handlePrintStatement(astNodes printStatement) {
-        String currentPrintStatement = printStatement.children.get(0).name;
-        
         System.out.println("there"); 
-
-        if(variables.size() > 0 && currentPrintStatement.length() == 1) {
-            heap[heapNum] = "AC";
-            heapNum++;
-            
-            for(int i = 0; i < variables.size(); i++) {
-                if(variables.get(i).equals(currentPrintStatement)) {
-                    heap[heapNum] = "" + regVariables.get(i);
-                    System.out.println("" + regVariables.get(i));
-                    System.out.println("print: "+ currentPrintStatement);
-                    System.out.println("printSize: "+ currentPrintStatement.length());
-                    break;
+        String currentPrintStatement = printStatement.children.get(0).name;
+        if(Character.isLetter(currentPrintStatement.charAt(0))) {
+            if(variables.size() > 0 && currentPrintStatement.length() == 1) {
+                heap[heapNum] = "AC";
+                heapNum++;
+                for(int i = 0; i < variables.size(); i++) {
+                    if(variables.get(i).equals(currentPrintStatement)) {
+                        heap[heapNum] = "" + regVariables.get(i);
+                        System.out.println("" + regVariables.get(i));
+                        System.out.println("print: " + currentPrintStatement);
+                        System.out.println("printSize: " + currentPrintStatement.length());
+                        break;
+                    } else {
+                       System.out.println("Vars are not the same.\n");
+                    }
+                }
+                heapNum++;
+                endOperation();
+                heap[heapNum] = "A2";
+                heapNum++;
+                heap[heapNum] = "02";
+                heapNum++;
+                SystemCall();
+            } else {
+                if(Character.isLetter(currentPrintStatement.charAt(0))) {
+                    System.out.println("I am a letter");
+                    System.out.println(currentPrintStatement.charAt(0));
+                    AD(); // Load the accumulator from memory
+                    savedPoint = heapNum;
+                    System.out.println("sa: " + savedPoint);
+                    System.out.println("he: " + heapNum);
+                    LoadCommands(currentPrintStatement); // Loads OpCode commands for this print statement
                 } else {
-                   System.out.println("Vars are not the same.\n");
+                    System.out.println("I am a digit");
+                    System.out.println(currentPrintStatement.charAt(0));
+                    A0(); // Load the Y register with a constant
+                    GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
+                    A2(); // Load the X register with a constant
+                    Num01(); // Print the integer stored in the Y register
+                    SystemCall();
+                    System.out.println("var: " + currentPrintStatement);
+                    System.out.println("NOT a var: " + currentPrintStatement.length());
+                    System.out.println("current: " + printStatement.children.get(0).name);
                 }
             }
-            
-            heapNum++;
-            endOperation();
-            heap[heapNum] = "A2";
-            heapNum++;
-            heap[heapNum] = "01";
-            heapNum++;
-            SystemCall();
         } else {
-            if(Character.isLetter(currentPrintStatement.charAt(0))) {
-                System.out.println("I am a letter");
-                System.out.println(currentPrintStatement.charAt(0));
-                AD(); // Load the accumulator from memory
-                savedPoint = heapNum;
-                System.out.println("sa: " + savedPoint);
-                System.out.println("he: " + heapNum);
-                LoadCommands(currentPrintStatement); // Loads OpCode commands for this print statement
-                
-            } else {
-                System.out.println("I am a digit");
-                System.out.println(currentPrintStatement.charAt(0));
-                A0(); // Load the Y register with a constant
-                GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
-                A2(); // Load the X register with a constant
-                Num01(); // Print the integer stored in the Y register
-                SystemCall();
-                System.out.println("var: " + currentPrintStatement);
-                System.out.println("NOT a var: " + currentPrintStatement.length());
-                System.out.println("current: " + printStatement.children.get(0).name);
-            }
+            System.out.println("I am a digit");
+            System.out.println(currentPrintStatement.charAt(0));
+            A0(); // Load the Y register with a constant
+            GetConstant(currentPrintStatement); // Returns the Current integer being evaluated
+            A2(); // Load the X register with a constant
+            Num01(); // Print the integer stored in the Y register
+            SystemCall();
+            System.out.println("var: " + currentPrintStatement);
+            System.out.println("NOT a var: " + currentPrintStatement.length());
+            System.out.println("current: " + printStatement.children.get(0).name);
         }
     }
+    private String GetAccumulator2(String OpCodes) {
+        StringToHex(OpCodes);
+        System.out.println("printList: " + printList.get(0));
+        System.out.println("sa: " + stringSave);
+        for(int n = 0; n < heap.length; n++) {
+            if(n == (heap.length - (1 + stringSave))) {
+                heap[heapNum] = Integer.toString(accumulator.get(0), 16).toUpperCase();
+                heapNum++;
+                break;
+            } else {
+                heapNum--;
+            }
+        }
+        accumulator.clear(); // Clear for next accumulator 
+        System.out.println("printList: " + printList.get(0));
+        
+        return heap[heapNum];
+    }
+    
+    
     
     private String LoadCommands(String OpCodes) {
         GetAccumulator(OpCodes);
@@ -301,7 +341,7 @@ public class Assembler {
                     storeLocation.add(y);
                     if(storeLocation.get(0) < 16) {
                         heap[loadPoint] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();   
-                        //storeLocation.clear();
+                        storeLocation.clear();
                         break;
                     } else {
                         heap[loadPoint] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
@@ -467,8 +507,6 @@ public class Assembler {
             heapNum--;
         }
         
-        
-        //endOperation();
         accumulator.add(heapNum); // Storing the accumulators location on heap
         System.out.println("reg: " + heapNum);
         for(int b = 0; b < printList.size(); b++) { 
@@ -481,8 +519,6 @@ public class Assembler {
             }
         }       
         
-        
-
         return heap[heapNum];
     }
     
