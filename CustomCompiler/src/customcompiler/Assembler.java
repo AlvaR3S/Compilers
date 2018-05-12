@@ -272,6 +272,7 @@ public class Assembler {
                 System.out.println("sa: " + savedPoint);
                 System.out.println("he: " + heapNum);
                 LoadCommands(currentPrintStatement); // Loads OpCode commands for this print statement
+                
             } else {
                 System.out.println("I am a digit");
                 System.out.println(currentPrintStatement.charAt(0));
@@ -297,18 +298,18 @@ public class Assembler {
                     GetAccumulator(OpCodes);
                     break;
                 } else {
+                    
                     storeLocation.add(y);
                     y = loadPoint;
                     if(storeLocation.get(0) < 16) {
-                        heap[y] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                        heap[y] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();   
+                        break;
                     } else {
                         heap[y] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                        break;
                     }
-                    break;
-                        
-                    
                 }
-            }    
+            }
         }
         storeLocation.clear();
         return heap[heapNum];
