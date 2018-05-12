@@ -27,6 +27,7 @@ public class Assembler {
     int safePoint;
     int loadPoint;
     int stringSave;
+    int firstSave;
     
     
     char[] varNumList;
@@ -158,7 +159,8 @@ public class Assembler {
         heapNum++;
         heap[heapNum] = "8D";
         heapNum++;
-        heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
+//        heap[heapNum] = "" + currentRegister[0] + currentRegister[1];
+        firstSave = heapNum;
         heapNum++;
         
         regVariables.add("" + currentRegister[0] + currentRegister[1]);
@@ -254,17 +256,7 @@ public class Assembler {
             if(variables.size() > 0 && currentPrintStatement.length() == 1) {
                 heap[heapNum] = "AC";
                 heapNum++;
-                for(int i = 0; i < variables.size(); i++) {
-                    if(variables.get(i).equals(currentPrintStatement)) {
-                        heap[heapNum] = "" + regVariables.get(i);
-                        System.out.println("" + regVariables.get(i));
-                        System.out.println("print: " + currentPrintStatement);
-                        System.out.println("printSize: " + currentPrintStatement.length());
-                        break;
-                    } else {
-                       System.out.println("Vars are not the same.\n");
-                    }
-                }
+                stringSave = heapNum;
                 heapNum++;
                 endOperation();
                 heap[heapNum] = "A2";
@@ -272,6 +264,30 @@ public class Assembler {
                 heap[heapNum] = "02";
                 heapNum++;
                 SystemCall();
+                for(int y = heapNum; y < heap.length; y++) {
+                    if(heap[y] == null) {
+                        y++;
+                        if(!(heap[y] == null)) {
+                            // Not done looping
+                            break;
+                        } else {
+                            storeLocation.add(y);
+                            if(storeLocation.get(0) < 16) {
+                                heap[heapCount] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase(); 
+                                heap[stringSave] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase(); 
+                                heap[firstSave] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase(); 
+                                storeLocation.clear();
+                                break;
+                            } else {
+                                heap[heapCount] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
+                                heap[stringSave] = Integer.toString(storeLocation.get(0), 16).toUpperCase(); 
+                                heap[firstSave] = Integer.toString(storeLocation.get(0), 16).toUpperCase(); 
+                                storeLocation.clear();
+                                break;
+                            }
+                        }
+                    }
+                }
             } else {
                 if(Character.isLetter(currentPrintStatement.charAt(0))) {
                     System.out.println("I am a letter");
@@ -340,7 +356,7 @@ public class Assembler {
                 } else {
                     storeLocation.add(y);
                     if(storeLocation.get(0) < 16) {
-                        heap[loadPoint] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();   
+                        heap[loadPoint] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();     
                         storeLocation.clear();
                         break;
                     } else {
