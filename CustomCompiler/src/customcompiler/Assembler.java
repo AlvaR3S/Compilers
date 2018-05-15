@@ -28,6 +28,7 @@ public class Assembler {
     int loadPoint;
     int stringSave;
     int firstSave;
+   
     
     
     char[] varNumList;
@@ -236,15 +237,15 @@ public class Assembler {
         heap[heapNum] = "8D";
         heapNum++;
         heapCount = heapNum;
-        
-        valueList.clear();
-        for(int i = 0; i < variables.size(); i++) {
-            if(variables.get(i).equals(currentVariable)) {
-                heap[heapNum] = "" + regVariables.get(i);
-                break;
-            }
-        }
-        heapNum++;
+        LoadCommands(currentValue);
+//        valueList.clear();
+//        for(int i = 0; i < variables.size(); i++) {
+//            if(variables.get(i).equals(currentVariable)) {
+//                heap[heapNum] = "" + regVariables.get(i);
+//                break;
+//            }
+//        }
+       
         endOperation(); 
     }
     
@@ -352,7 +353,7 @@ public class Assembler {
         System.out.println("sa: " + stringSave);
         for(int n = 0; n < heap.length; n++) {
             if(n == (heap.length - (1 + stringSave))) {
-                heap[heapNum] = Integer.toString(accumulator.get(0), 16).toUpperCase();
+                heap[firstSave] = Integer.toString(accumulator.get(0), 16).toUpperCase();
                 heapNum++;
                 break;
             } else {
@@ -380,13 +381,12 @@ public class Assembler {
                     storeLocation.add(y);
                     if(storeLocation.get(0) < 16) {
                         heap[loadPoint] = "0" + Integer.toString(storeLocation.get(0), 16).toUpperCase();     
-                        storeLocation.clear();
-                        break;
                     } else {
                         heap[loadPoint] = Integer.toString(storeLocation.get(0), 16).toUpperCase();
-                        storeLocation.clear();
-                        break;
-                    }
+                    }                    
+                    //storeLocation.clear();
+                    
+                    break;
                 }
             }
         }
@@ -545,6 +545,7 @@ public class Assembler {
         for(int b = 0; b < printList.size(); b++) { 
             heapNum--;
         }
+        
         
         accumulator.add(heapNum); // Storing the accumulators location on heap
         System.out.println("reg: " + heapNum);
